@@ -10,6 +10,8 @@ import { Flame, Star, BookOpen, CheckCircle, Trash2, Volume2, VolumeX, ShieldAle
 import { motion } from "framer-motion";
 import { ProgressBackup } from "../../components/ProgressBackup";
 import { getStoredTheme, toggleTheme, type Theme } from "../../lib/theme";
+import Link from "next/link";
+import { Library, ChevronRight } from "lucide-react";
 
 export default function PerfilPage() {
   const {
@@ -200,6 +202,15 @@ export default function PerfilPage() {
                 <div className={`w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-200 ${theme === "dark" ? "translate-x-5" : "translate-x-0"}`} />
               </button>
             </div>
+
+            {/* Biblioteca de contenido (admin) */}
+            <Link href="/biblioteca" className="pt-3 border-t-2 border-brand-cream flex justify-between items-center group">
+              <div className="flex items-center gap-2.5 text-sm font-semibold text-slate-700">
+                <Library className="w-4.5 h-4.5 text-brand-majorelle" />
+                <span>Biblioteca de contenido</span>
+              </div>
+              <ChevronRight className="w-4.5 h-4.5 text-slate-400 group-hover:text-brand-coral transition-colors" />
+            </Link>
 
             {/* Reset */}
             <div className="pt-3 border-t-2 border-brand-cream flex justify-between items-center">
