@@ -50,10 +50,15 @@ export async function initCloudSync() {
     /* non-critical */
   }
 
-  // 2. Keep cloud in sync going forward (debounced)
+  // 2. Back up whatever progress this device already has, right away.
+  //    (If the cloud was empty/behind, this captures the local progress on
+  //    first launch even if the user does nothing else this session.)
+  scheduleSave();
+
+  // 3. Keep cloud in sync going forward (debounced)
   useStore.subscribe(scheduleSave);
 
-  // 3. Flush on tab hide / close so nothing is lost
+  // 4. Flush on tab hide / close so nothing is lost
   window.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") pushToCloud();
   });
