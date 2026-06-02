@@ -59,7 +59,7 @@ export default function LeccionPage() {
 
   if (!lesson) {
     return (
-      <div className="h-dvh bg-brand-cream flex flex-col items-center justify-center p-4">
+      <div className="h-dvh flex flex-col items-center justify-center p-4">
         <div className="w-10 h-10 border-4 border-brand-coral border-t-transparent rounded-full animate-spin" />
         <p className="mt-3 text-slate-400 font-title font-medium text-sm">Cargando lección...</p>
       </div>
@@ -189,7 +189,7 @@ export default function LeccionPage() {
   // Out of lives
   if (localLives <= 0 && !isLessonFinished) {
     return (
-      <div className="h-dvh bg-brand-cream flex flex-col items-center justify-center max-w-md mx-auto px-6 text-center gap-5 shadow-md">
+      <div className="h-dvh flex flex-col items-center justify-center max-w-md mx-auto px-6 text-center gap-5">
         <Meshi mood="sleeping" size={180} showBubble={true} bubbleText="¡Oh no Sara, te has quedado sin corazones! 😿" />
         <h2 className="text-2xl font-bold font-title text-brand-dark">¡Sin vidas!</h2>
         <p className="text-sm text-slate-400 max-w-xs leading-relaxed">
@@ -214,7 +214,7 @@ export default function LeccionPage() {
     const accuracy = Math.max(0, Math.round(((lesson.exercises.length - errorsCount) / lesson.exercises.length) * 100));
 
     return (
-      <div className="h-dvh bg-brand-cream flex flex-col max-w-md mx-auto shadow-md overflow-hidden">
+      <div className="h-dvh flex flex-col max-w-md mx-auto overflow-hidden">
         {/* Scrollable content area */}
         <div className="flex-1 overflow-y-auto no-scrollbar px-5 pt-6 pb-4 flex flex-col gap-5">
           {/* Cat + title */}
@@ -248,14 +248,14 @@ export default function LeccionPage() {
             transition={{ delay: 0.25 }}
             className="grid grid-cols-2 gap-3"
           >
-            <div className="bg-white rounded-2xl p-4 border-2 border-amber-100 flex flex-col items-center text-center shadow-sm">
+            <div className="glass rounded-2xl p-4 flex flex-col items-center text-center">
               <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center mb-2">
                 <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
               </div>
               <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">XP Ganado</span>
               <span className="text-xl font-bold font-title text-brand-dark mt-0.5">+{totalXP}</span>
             </div>
-            <div className="bg-white rounded-2xl p-4 border-2 border-brand-pink/40 flex flex-col items-center text-center shadow-sm">
+            <div className="glass rounded-2xl p-4 flex flex-col items-center text-center">
               <div className="w-10 h-10 rounded-xl bg-brand-pink/15 flex items-center justify-center mb-2">
                 <Trophy className="w-5 h-5 text-brand-coral" />
               </div>
@@ -287,7 +287,7 @@ export default function LeccionPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-white rounded-2xl p-4 border-2 border-brand-beige shadow-sm"
+            className="glass rounded-2xl p-4"
           >
             <h4 className="text-[10px] font-bold font-title text-slate-400 uppercase tracking-wider mb-3">
               Vocabulario aprendido (+{lessonVocabulary[lessonId]?.length ?? 0} palabras)
@@ -304,7 +304,7 @@ export default function LeccionPage() {
         </div>
 
         {/* Fixed footer CTA */}
-        <div className="flex-shrink-0 px-5 pb-6 pt-3 bg-brand-cream border-t-2 border-brand-beige">
+        <div className="flex-shrink-0 px-5 pb-6 pt-3 glass border-t border-white/40">
           <button
             onClick={() => {
               useStore.getState().incrementStreak();
@@ -321,9 +321,9 @@ export default function LeccionPage() {
 
   // Active lesson
   return (
-    <div className="h-dvh bg-brand-cream flex flex-col max-w-md mx-auto relative shadow-md select-none overflow-hidden">
+    <div className="h-dvh flex flex-col max-w-md mx-auto relative select-none overflow-hidden">
       {/* Header */}
-      <header className="h-14 px-4 bg-white flex items-center gap-3 border-b-2 border-brand-beige flex-shrink-0 z-30">
+      <header className="h-14 px-4 glass flex items-center gap-3 border-b border-white/40 flex-shrink-0 z-30">
         <button
           onClick={handleExitLesson}
           className="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors flex-shrink-0"
@@ -335,7 +335,7 @@ export default function LeccionPage() {
         <div className="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden">
           <motion.div
             layout
-            className="h-full bg-gradient-to-r from-brand-coral to-brand-pink rounded-full"
+            className="h-full bg-gradient-to-r from-brand-saffron via-brand-coral to-brand-rose rounded-full"
             animate={{ width: `${progressPercent}%` }}
             transition={{ duration: 0.35 }}
           />
@@ -352,7 +352,7 @@ export default function LeccionPage() {
 
       {/* Meshi strip */}
       <section className="px-3 pt-2 pb-1.5 flex-shrink-0">
-        <div className="bg-white rounded-2xl px-2 py-1 border-2 border-brand-beige shadow-sm flex items-center overflow-hidden">
+        <div className="glass rounded-2xl px-2 py-1 flex items-center overflow-hidden">
           <Meshi mood={meshiMood} size={60} showBubble={true} bubbleText={meshiSpeech} interactive={false} />
         </div>
       </section>
@@ -385,7 +385,7 @@ export default function LeccionPage() {
           ? lastAnswerCorrect
             ? "bg-emerald-50 border-t-2 border-emerald-200"
             : "bg-rose-50 border-t-2 border-rose-200"
-          : "bg-white border-t-2 border-brand-beige"
+          : "glass border-t border-white/40"
       }`}>
         {/* Feedback */}
         <AnimatePresence>
