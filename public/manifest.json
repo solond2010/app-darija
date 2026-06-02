@@ -1,0 +1,37 @@
+{
+  "name": "Meshi - Aprende Darija",
+  "short_name": "Meshi",
+  "description": "Aprende Darija con Meshi el gato 🐱🇲🇦",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF8F0",
+  "theme_color": "#FF6B6B",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["education", "lifestyle"],
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Lecciones",
+      "short_name": "Lecciones",
+      "description": "Ir al mapa de lecciones",
+      "url": "/",
+      "icons": [{ "src": "/icon.png", "sizes": "512x512" }]
+    },
+    {
+      "name": "Repaso",
+      "short_name": "Repaso",
+      "description": "Repasar vocabulario",
+      "url": "/repaso",
+      "icons": [{ "src": "/icon.png", "sizes": "512x512" }]
+    }
+  ]
+}
