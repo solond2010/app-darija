@@ -12,6 +12,7 @@ import { ProgressBackup } from "../../components/ProgressBackup";
 import { getStoredTheme, toggleTheme, type Theme } from "../../lib/theme";
 import Link from "next/link";
 import { Library, ChevronRight } from "lucide-react";
+import { AuthCard } from "../../components/AuthCard";
 
 export default function PerfilPage() {
   const {
@@ -87,6 +88,15 @@ export default function PerfilPage() {
               <Trophy className="w-6 h-6 text-amber-300 fill-amber-300" />
             </div>
           </div>
+        </motion.section>
+
+        {/* Account (login / register) */}
+        <motion.section
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.04 }}
+        >
+          <AuthCard />
         </motion.section>
 
         {/* Stats grid */}

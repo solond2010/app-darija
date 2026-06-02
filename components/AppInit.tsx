@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { useStore } from "../lib/store";
-import { initCloudSync } from "../lib/cloudSync";
+import { supabase } from "../lib/supabase";
+import { startSync, stopSync } from "../lib/progressSync";
 
 const VAPID_PUBLIC_KEY =
   "BCBd9pjscuAWjlyF4UygErc_yHEYUbLegVBJDUFszebOeNWZurTNixOJsD27ZO5SxNNwBOLyDdpc4tz4OqvZcas";
@@ -84,9 +85,16 @@ export function AppInit() {
     // Sync play status to server so the daily cron is accurate
     syncStatus();
 
-    // Cloud backup: pull progress on launch + keep it synced (so Sara never
-    // loses her progress, even on a new device or after clearing the browser).
-    initCloudSync();
+    // Cloud backup via the user's account (Supabase): start syncing whenever
+    // there's a session, stop on sign-out. Works app-wide, on any page.
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) startSync(data.session.user.id);
+    });
+    const { data: authSub } = supabase.auth.onAuthStateChange((_e, session) => {
+      if (session) startSync(session.user.id);
+      else stopSync();
+    });
+    return () => authSub.subscription.unsubscribe();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

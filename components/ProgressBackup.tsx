@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import { Download, Upload, Copy, Check, CloudCheck, ShieldCheck } from "lucide-react";
 import { useStore } from "../lib/store";
-import { flushCloud } from "../lib/cloudSync";
+import { flushNow } from "../lib/progressSync";
 
 function encodeSnapshot(obj: unknown): string {
   // URL-safe base64 of the JSON, easy to copy/paste anywhere.
@@ -66,7 +66,7 @@ export const ProgressBackup: React.FC = () => {
       return;
     }
     importSnapshot(data as never);
-    flushCloud();
+    flushNow();
     setFeedback({ type: "ok", msg: "¡Progreso restaurado correctamente! 🎉" });
     setImporting(false);
     setCode("");
