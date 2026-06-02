@@ -50,7 +50,8 @@ export default function RootLayout({
       lang="es"
       className={`${nunito.variable} ${fredoka.variable} h-full antialiased overflow-x-hidden`}
     >
-      <body className="min-h-full flex flex-col bg-brand-cream text-brand-dark overflow-x-hidden select-none">
+      <body className="min-h-full flex flex-col text-brand-dark overflow-x-hidden select-none">
+        <div className="aurora-bg" aria-hidden="true" />
         <AppInit />
         {children}
         <NotificationSetup />

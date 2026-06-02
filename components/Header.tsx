@@ -59,13 +59,13 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      <header className="sticky top-0 h-14 bg-white/85 backdrop-blur-xl border-b-2 border-brand-beige flex items-center justify-between px-4 z-40 max-w-md mx-auto w-full">
+      <header className="sticky top-0 h-14 glass border-b border-white/40 flex items-center justify-between px-4 z-40 max-w-md mx-auto w-full">
         {/* Logo */}
         <div className="flex items-center gap-1.5">
-          <div className="w-7 h-7 rounded-xl bg-brand-coral/10 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-brand-saffron via-brand-coral to-brand-rose flex items-center justify-center glow-coral">
             <span className="text-base leading-none">🐱</span>
           </div>
-          <span className="font-bold text-lg font-title text-brand-coral tracking-tight">
+          <span className="font-extrabold text-lg font-title text-gradient tracking-tight">
             Meshi
           </span>
         </div>

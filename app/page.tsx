@@ -40,7 +40,7 @@ export default function Home() {
 
   if (!mounted || !isHydrated) {
     return (
-      <div className="min-h-screen bg-brand-cream flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen flex flex-col items-center justify-center p-4">
         <div className="w-10 h-10 border-4 border-brand-coral border-t-transparent rounded-full animate-spin" />
         <p className="mt-3 text-slate-400 font-title font-medium text-sm">Cargando Meshi...</p>
       </div>
@@ -58,10 +58,7 @@ export default function Home() {
   const dailyProgressPercent = Math.min(100, (todayXP / dailyGoal) * 100);
 
   return (
-    <div className="min-h-screen bg-brand-cream pb-20 flex flex-col max-w-md mx-auto relative overflow-hidden">
-      {/* Decorative background blobs */}
-      <div className="absolute -top-16 -right-16 w-56 h-56 bg-brand-coral/8 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-64 -left-20 w-48 h-48 bg-brand-mint/20 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen pb-20 flex flex-col max-w-md mx-auto relative overflow-hidden">
 
       <Header />
 
@@ -100,7 +97,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="bg-white rounded-3xl px-4 pt-3 pb-4 border-2 border-brand-beige shadow-sm flex items-center mt-1"
+          className="glass rounded-3xl px-4 pt-3 pb-4 flex items-center mt-1"
         >
           <Meshi
             mood="normal"
@@ -118,9 +115,9 @@ export default function Home() {
             transition={{ duration: 0.35, delay: 0.05 }}
           >
             <Link href={`/leccion/${nextLesson.lesson.id}`}>
-              <div className="bg-white border-2 border-brand-coral/30 border-b-[3px] border-b-brand-coral/50 rounded-2xl px-4 py-3.5 flex items-center gap-3 shadow-sm hover:bg-brand-coral/5 transition-colors active:scale-[0.98]">
-                <div className="bg-brand-coral/10 rounded-xl p-2.5 flex-shrink-0">
-                  <Zap className="w-4.5 h-4.5 text-brand-coral" />
+              <div className="glass rounded-2xl px-4 py-3.5 flex items-center gap-3 hover:bg-white/80 transition-all active:scale-[0.98] border-l-4 border-l-brand-coral">
+                <div className="bg-gradient-to-br from-brand-saffron to-brand-coral rounded-xl p-2.5 flex-shrink-0 glow-coral">
+                  <Zap className="w-4.5 h-4.5 text-white fill-white" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Continuar</p>
@@ -139,7 +136,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="bg-white rounded-2xl px-4 py-3.5 border-2 border-brand-beige shadow-sm"
+          className="glass rounded-2xl px-4 py-3.5"
         >
           <div className="flex items-center justify-between mb-2.5">
             <div className="flex items-center gap-2">
@@ -169,8 +166,8 @@ export default function Home() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.15 }}
-          className="relative overflow-hidden rounded-3xl p-5 shadow-md"
-          style={{ background: "linear-gradient(135deg, #FF6B6B 0%, #FF9E9E 100%)" }}
+          className="relative overflow-hidden rounded-3xl p-5 sheen glow-coral"
+          style={{ background: "linear-gradient(135deg, #5B5FEF 0%, #FF6B6B 52%, #FF9E2C 110%)" }}
         >
           {/* Decorative circles */}
           <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full pointer-events-none" />
@@ -231,10 +228,10 @@ export default function Home() {
           className="flex-1"
         >
           <div className="text-center mb-5">
-            <h4 className="text-xs font-bold font-title text-slate-400 uppercase tracking-[0.15em]">
+            <h4 className="text-sm font-extrabold font-title text-gradient uppercase tracking-[0.18em]">
               Tu Ruta de Aprendizaje
             </h4>
-            <div className="w-8 h-1 bg-gradient-to-r from-brand-coral to-brand-pink mx-auto mt-2 rounded-full" />
+            <div className="w-10 h-1 bg-gradient-to-r from-brand-saffron via-brand-coral to-brand-rose mx-auto mt-2 rounded-full" />
           </div>
           <LessonMap />
         </motion.section>

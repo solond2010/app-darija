@@ -125,10 +125,10 @@ export const LessonMap: React.FC = () => {
                           <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.93 }}
-                            className={`w-[68px] h-[68px] rounded-full flex items-center justify-center text-xl font-bold shadow-md transition-all ${
+                            className={`w-[68px] h-[68px] rounded-full flex items-center justify-center text-xl font-bold transition-all ${
                               completed
-                                ? "bg-brand-mint text-[#1A5C4A] border-[3px] border-[#84D9C4] shadow-[0_4px_0_#6DC9B0]"
-                                : "bg-brand-coral text-white border-[3px] border-[#FF9E9E] shadow-[0_4px_0_#C94A4A]"
+                                ? "bg-gradient-to-br from-brand-teal to-[#0A8576] text-white border-[3px] border-white/60 shadow-[0_6px_18px_rgba(17,181,164,0.45)]"
+                                : "bg-gradient-to-br from-brand-saffron via-brand-coral to-brand-rose text-white border-[3px] border-white/60 glow-coral"
                             }`}
                           >
                             {completed
