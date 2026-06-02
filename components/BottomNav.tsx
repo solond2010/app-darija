@@ -27,7 +27,7 @@ export const BottomNav: React.FC = () => {
           <Link
             key={item.path}
             href={item.path}
-            className="flex flex-col items-center justify-center w-full h-full gap-0.5 transition-all"
+            className="flex flex-col items-center justify-center w-full h-full gap-0.5 transition-all active:scale-90"
           >
             <div
               className={`flex flex-col items-center gap-0.5 px-3.5 py-1.5 rounded-2xl transition-all duration-200 ${

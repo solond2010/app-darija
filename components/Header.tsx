@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useStore } from "../lib/store";
 import { Flame, Star, Heart, HelpCircle, Volume2, VolumeX, Timer } from "lucide-react";
 import { NumberGuide } from "./NumberGuide";
+import { ThemeToggle } from "./ThemeToggle";
 
 function useNextLifeTimer(lastLifeLostAt: string | null, lives: number) {
   const [secondsUntilNext, setSecondsUntilNext] = useState<number | null>(null);
@@ -126,6 +127,7 @@ export const Header: React.FC = () => {
             >
               <HelpCircle className="w-4 h-4" />
             </button>
+            <ThemeToggle />
           </div>
         </div>
       </header>

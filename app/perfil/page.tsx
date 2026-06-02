@@ -6,8 +6,10 @@ import { BottomNav } from "../../components/BottomNav";
 import { Meshi } from "../../components/Suki";
 import { useStore, getLevelInfo } from "../../lib/store";
 import { achievementsData } from "../../data/achievements";
-import { Flame, Star, BookOpen, CheckCircle, Trash2, Volume2, VolumeX, ShieldAlert, Trophy } from "lucide-react";
+import { Flame, Star, BookOpen, CheckCircle, Trash2, Volume2, VolumeX, ShieldAlert, Trophy, Moon, Sun } from "lucide-react";
 import { motion } from "framer-motion";
+import { ProgressBackup } from "../../components/ProgressBackup";
+import { getStoredTheme, toggleTheme, type Theme } from "../../lib/theme";
 
 export default function PerfilPage() {
   const {
@@ -15,8 +17,10 @@ export default function PerfilPage() {
     soundsEnabled, toggleSounds, resetProgress, isHydrated, setHydrated,
   } = useStore();
   const [mounted, setMounted] = useState(false);
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
+    setTheme(getStoredTheme());
     setHydrated(true);
     setMounted(true);
   }, [setHydrated]);
@@ -47,11 +51,7 @@ export default function PerfilPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-brand-cream pb-20 flex flex-col max-w-md mx-auto relative overflow-hidden">
-      {/* Decorative blobs */}
-      <div className="absolute -top-12 -left-12 w-48 h-48 bg-brand-lavender/30 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-48 -right-16 w-40 h-40 bg-brand-mint/20 rounded-full blur-3xl pointer-events-none" />
-
+    <div className="min-h-screen pb-20 flex flex-col max-w-md mx-auto relative overflow-hidden">
       <Header />
 
       <main className="flex-1 px-4 pt-3 flex flex-col gap-4 overflow-y-auto no-scrollbar pb-6">
@@ -61,28 +61,28 @@ export default function PerfilPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35 }}
-          className="relative overflow-hidden rounded-3xl p-5 mt-1"
-          style={{ background: "linear-gradient(135deg, #E8D5FF 0%, #FFB4B4 100%)" }}
+          className="relative overflow-hidden rounded-3xl p-5 mt-1 sheen glow-majorelle"
+          style={{ background: "linear-gradient(135deg, #5B5FEF 0%, #A855F7 55%, #FF4D8D 110%)" }}
         >
           <div className="absolute -right-6 -bottom-6 w-24 h-24 bg-white/20 rounded-full pointer-events-none" />
           <div className="absolute -left-4 -top-4 w-16 h-16 bg-white/20 rounded-full pointer-events-none" />
 
           <div className="relative flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-white/40 backdrop-blur-sm flex items-center justify-center text-3xl shadow-sm border-2 border-white/60">
+            <div className="w-16 h-16 rounded-2xl bg-white/25 backdrop-blur-sm flex items-center justify-center text-3xl shadow-sm border-2 border-white/40">
               🧕
             </div>
             <div>
-              <h3 className="text-2xl font-bold font-title text-brand-dark">Sara</h3>
+              <h3 className="text-2xl font-bold font-title text-white drop-shadow-sm">Sara</h3>
               <div className="flex items-center gap-1.5 mt-1">
-                <div className="bg-white/40 backdrop-blur-sm rounded-full px-2.5 py-0.5">
-                  <span className="text-xs font-bold text-brand-dark">
+                <div className="bg-white/25 backdrop-blur-sm rounded-full px-2.5 py-0.5">
+                  <span className="text-xs font-bold text-white">
                     Nivel {levelInfo.level}: {levelInfo.name}
                   </span>
                 </div>
               </div>
             </div>
-            <div className="ml-auto bg-white/30 rounded-2xl p-2">
-              <Trophy className="w-6 h-6 text-brand-coral" />
+            <div className="ml-auto bg-white/20 rounded-2xl p-2">
+              <Trophy className="w-6 h-6 text-amber-300 fill-amber-300" />
             </div>
           </div>
         </motion.section>
@@ -97,7 +97,7 @@ export default function PerfilPage() {
           {statItems.map((stat, i) => {
             const Icon = stat.icon;
             return (
-              <div key={i} className={`bg-white rounded-2xl p-4 border-2 ${stat.border} flex items-center gap-3 shadow-sm`}>
+              <div key={i} className="glass rounded-2xl p-4 flex items-center gap-3">
                 <div className={`p-2.5 rounded-xl ${stat.color} flex-shrink-0`}>
                   <Icon className="w-4.5 h-4.5" />
                 </div>
@@ -129,8 +129,8 @@ export default function PerfilPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.14 + i * 0.04 }}
-                className={`bg-white rounded-2xl p-4 border-2 shadow-sm flex items-start gap-3 relative overflow-hidden ${
-                  unlocked ? "border-brand-lavender/60" : "border-brand-beige opacity-55"
+                className={`glass rounded-2xl p-4 flex items-start gap-3 relative overflow-hidden ${
+                  unlocked ? "" : "opacity-55"
                 }`}
               >
                 {unlocked && (
@@ -166,7 +166,7 @@ export default function PerfilPage() {
             Configuración
           </h4>
 
-          <div className="bg-white rounded-3xl p-4 border-2 border-brand-beige flex flex-col gap-4 shadow-sm">
+          <div className="glass rounded-3xl p-4 flex flex-col gap-4">
             {/* Sound toggle */}
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2.5 text-sm font-semibold text-slate-700">
@@ -181,6 +181,23 @@ export default function PerfilPage() {
                 className={`w-11 h-6 rounded-full p-0.5 transition-colors duration-200 ${soundsEnabled ? "bg-brand-coral" : "bg-slate-200"}`}
               >
                 <div className={`w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-200 ${soundsEnabled ? "translate-x-5" : "translate-x-0"}`} />
+              </button>
+            </div>
+
+            {/* Theme toggle */}
+            <div className="pt-3 border-t-2 border-brand-cream flex justify-between items-center">
+              <div className="flex items-center gap-2.5 text-sm font-semibold text-slate-700">
+                {theme === "dark"
+                  ? <Moon className="w-4.5 h-4.5 text-brand-majorelle" />
+                  : <Sun className="w-4.5 h-4.5 text-brand-saffron" />
+                }
+                <span>Modo oscuro</span>
+              </div>
+              <button
+                onClick={() => setTheme(toggleTheme())}
+                className={`w-11 h-6 rounded-full p-0.5 transition-colors duration-200 ${theme === "dark" ? "bg-brand-majorelle" : "bg-slate-200"}`}
+              >
+                <div className={`w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-200 ${theme === "dark" ? "translate-x-5" : "translate-x-0"}`} />
               </button>
             </div>
 
@@ -199,6 +216,19 @@ export default function PerfilPage() {
               </button>
             </div>
           </div>
+        </motion.section>
+
+        {/* Progress backup / restore */}
+        <motion.section
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.26 }}
+          className="flex flex-col gap-2"
+        >
+          <h4 className="text-[10px] font-bold font-title text-slate-400 uppercase tracking-[0.15em] pl-1">
+            Tu progreso a salvo
+          </h4>
+          <ProgressBackup />
         </motion.section>
 
         {/* Meshi cheering footer */}

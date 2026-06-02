@@ -48,6 +48,40 @@ export interface AppState {
   toggleSounds: () => void;
   resetProgress: () => void;
   updateStreakDaily: () => void;
+
+  // Backup / restore
+  exportSnapshot: () => ProgressSnapshot;
+  importSnapshot: (data: Partial<ProgressSnapshot>) => void;
+  mergeCloud: (data: Partial<ProgressSnapshot>) => boolean;
+}
+
+// Serializable shape of a saved progress (everything except UI-only flags).
+export interface ProgressSnapshot {
+  userName: string;
+  xp: number;
+  streak: number;
+  lives: number;
+  lastActiveDate: string | null;
+  soundsEnabled: boolean;
+  todayXP: number;
+  todayXPDate: string | null;
+  dailyGoal: number;
+  lastLifeLostAt: string | null;
+  completedLessons: string[];
+  unlockedUnits: string[];
+  learnedWords: LearnedWord[];
+  unlockedAchievements: string[];
+  savedAt: string;
+}
+
+/** A rough "how much progress" score, used to decide which copy wins when merging. */
+export function progressWeight(s: Partial<ProgressSnapshot>): number {
+  return (
+    (s.xp ?? 0) * 1000 +
+    (s.completedLessons?.length ?? 0) * 100 +
+    (s.unlockedAchievements?.length ?? 0) * 10 +
+    (s.learnedWords?.length ?? 0)
+  );
 }
 
 export function getLevelInfo(xp: number) {
@@ -289,6 +323,59 @@ export const useStore = create<AppState>()(
           learnedWords: [],
           unlockedAchievements: [],
         });
+      },
+
+      exportSnapshot: () => {
+        const s = get();
+        return {
+          userName: s.userName,
+          xp: s.xp,
+          streak: s.streak,
+          lives: s.lives,
+          lastActiveDate: s.lastActiveDate,
+          soundsEnabled: s.soundsEnabled,
+          todayXP: s.todayXP,
+          todayXPDate: s.todayXPDate,
+          dailyGoal: s.dailyGoal,
+          lastLifeLostAt: s.lastLifeLostAt,
+          completedLessons: s.completedLessons,
+          unlockedUnits: s.unlockedUnits,
+          learnedWords: s.learnedWords,
+          unlockedAchievements: s.unlockedAchievements,
+          savedAt: new Date().toISOString(),
+        };
+      },
+
+      // Overwrite local progress with an imported snapshot (manual restore).
+      importSnapshot: (data) => {
+        if (!data || typeof data !== "object") return;
+        set((state) => ({
+          userName: data.userName ?? state.userName,
+          xp: data.xp ?? state.xp,
+          streak: data.streak ?? state.streak,
+          lives: data.lives ?? state.lives,
+          lastActiveDate: data.lastActiveDate ?? state.lastActiveDate,
+          soundsEnabled: data.soundsEnabled ?? state.soundsEnabled,
+          todayXP: data.todayXP ?? state.todayXP,
+          todayXPDate: data.todayXPDate ?? state.todayXPDate,
+          dailyGoal: data.dailyGoal ?? state.dailyGoal,
+          lastLifeLostAt: data.lastLifeLostAt ?? state.lastLifeLostAt,
+          completedLessons: data.completedLessons ?? state.completedLessons,
+          unlockedUnits: data.unlockedUnits ?? state.unlockedUnits,
+          learnedWords: data.learnedWords ?? state.learnedWords,
+          unlockedAchievements: data.unlockedAchievements ?? state.unlockedAchievements,
+        }));
+      },
+
+      // Restore from cloud ONLY if the cloud copy has more progress than local.
+      // Returns true if local state was replaced. Prevents an empty/older device
+      // from wiping good progress.
+      mergeCloud: (data) => {
+        if (!data || typeof data !== "object") return false;
+        const local = get().exportSnapshot();
+        if (progressWeight(data) <= progressWeight(local)) return false;
+        get().importSnapshot(data);
+        return true;
       },
 
       updateStreakDaily: () => {

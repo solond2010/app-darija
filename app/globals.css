@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* ── Brand palette (Marrakech) ── */
   --color-brand-coral: #FF6B6B;
@@ -285,3 +287,85 @@ h1, h2, h3, h4, h5, h6, .font-title {
 @media (prefers-reduced-motion: reduce) {
   .aurora-bg, .sheen::before, .animate-float, .animate-glow { animation: none !important; }
 }
+
+/* ═══════════════════════════════ DARK MODE ═══════════════════════════════ */
+/* Implemented at the design-system level so every screen adapts at once.     */
+.dark { color-scheme: dark; }
+
+.dark body { background: #14111F; color: #ECE8F5; }
+
+/* Aurora becomes deep "Marrakech night" */
+.dark .aurora-bg {
+  background:
+    radial-gradient(40% 44% at 16% 10%, rgba(255, 158, 44, 0.20) 0%, transparent 60%),
+    radial-gradient(36% 42% at 88% 6%, rgba(255, 77, 141, 0.18) 0%, transparent 60%),
+    radial-gradient(50% 54% at 84% 80%, rgba(91, 95, 239, 0.26) 0%, transparent 62%),
+    radial-gradient(44% 48% at 6% 84%, rgba(17, 181, 164, 0.20) 0%, transparent 60%),
+    radial-gradient(70% 70% at 50% 50%, rgba(20, 17, 31, 0) 0%, #14111F 78%);
+  filter: saturate(1.1);
+}
+.dark .aurora-bg::after {
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23FFFFFF' stroke-width='1.1'%3E%3Cpath d='M30 0 L60 30 L30 60 L0 30 Z'/%3E%3Cpath d='M30 14 L46 30 L30 46 L14 30 Z'/%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Glass surfaces */
+.dark .glass {
+  background: rgba(38, 32, 58, 0.55);
+  border-color: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.dark .glass-strong {
+  background: rgba(28, 23, 44, 0.82);
+  border-color: rgba(255, 255, 255, 0.11);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+.dark .card-soft {
+  background: rgba(38, 32, 58, 0.55);
+  border-color: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark .btn-3d-secondary {
+  background: rgba(48, 40, 70, 0.85);
+  color: #FF96A6;
+  border-color: rgba(255, 107, 107, 0.3);
+}
+.dark .btn-3d-gray {
+  background: linear-gradient(180deg, #2A2440 0%, #221C36 100%);
+  color: #C9C3DC;
+  border-bottom-color: #160F26;
+}
+.dark .skeleton {
+  background: linear-gradient(90deg, #241e36 25%, #2e2742 50%, #241e36 75%);
+  background-size: 200% 100%;
+}
+
+/* Common utility remaps — covers components that use literal colors */
+.dark .bg-white { background-color: #241E36 !important; }
+.dark .bg-brand-cream { background-color: #14111F !important; }
+.dark .text-brand-dark { color: #ECE8F5 !important; }
+.dark .text-slate-700 { color: #DAD5E8 !important; }
+.dark .text-slate-600 { color: #C7C1DA !important; }
+.dark .text-slate-500 { color: #A7A1BD !important; }
+.dark .text-slate-400 { color: #8B85A1 !important; }
+.dark .text-slate-300 { color: #756F8C !important; }
+.dark .bg-slate-50 { background-color: rgba(255, 255, 255, 0.05) !important; }
+.dark .bg-slate-100 { background-color: rgba(255, 255, 255, 0.07) !important; }
+.dark .bg-slate-200 { background-color: rgba(255, 255, 255, 0.12) !important; }
+.dark .border-brand-beige { border-color: rgba(255, 255, 255, 0.08) !important; }
+.dark .border-brand-cream { border-color: rgba(255, 255, 255, 0.06) !important; }
+.dark .bg-brand-beige { background-color: rgba(255, 255, 255, 0.06) !important; }
+.dark .border-slate-200 { border-color: rgba(255, 255, 255, 0.1) !important; }
+.dark .border-slate-300 { border-color: rgba(255, 255, 255, 0.14) !important; }
+.dark .bg-slate-300 { background-color: rgba(255, 255, 255, 0.16) !important; }
+
+/* Soft pastel chips stay legible on dark */
+.dark .bg-orange-50 { background-color: rgba(255, 158, 44, 0.14) !important; }
+.dark .bg-amber-50 { background-color: rgba(255, 194, 71, 0.14) !important; }
+.dark .bg-rose-50 { background-color: rgba(255, 77, 141, 0.14) !important; }
+.dark .bg-red-100 { background-color: rgba(255, 77, 141, 0.18) !important; }
+.dark .bg-blue-50 { background-color: rgba(91, 95, 239, 0.16) !important; }
+.dark .bg-emerald-50 { background-color: rgba(17, 181, 164, 0.16) !important; }
+.dark .bg-amber-100 { background-color: rgba(255, 194, 71, 0.18) !important; }
+.dark .bg-emerald-100 { background-color: rgba(17, 181, 164, 0.2) !important; }

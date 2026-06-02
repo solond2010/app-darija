@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Nunito, Fredoka } from "next/font/google";
 import "./globals.css";
+import Script from "next/script";
 import { AppInit } from "../components/AppInit";
 import { NotificationSetup } from "../components/NotificationSetup";
 
@@ -48,9 +49,13 @@ export default function RootLayout({
   return (
     <html
       lang="es"
+      suppressHydrationWarning
       className={`${nunito.variable} ${fredoka.variable} h-full antialiased overflow-x-hidden`}
     >
       <body className="min-h-full flex flex-col text-brand-dark overflow-x-hidden select-none">
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`(function(){try{var t=localStorage.getItem('meshi-theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(t==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();`}
+        </Script>
         <div className="aurora-bg" aria-hidden="true" />
         <AppInit />
         {children}

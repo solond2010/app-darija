@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useStore } from "../lib/store";
+import { initCloudSync } from "../lib/cloudSync";
 
 const VAPID_PUBLIC_KEY =
   "BCBd9pjscuAWjlyF4UygErc_yHEYUbLegVBJDUFszebOeNWZurTNixOJsD27ZO5SxNNwBOLyDdpc4tz4OqvZcas";
@@ -82,6 +83,10 @@ export function AppInit() {
 
     // Sync play status to server so the daily cron is accurate
     syncStatus();
+
+    // Cloud backup: pull progress on launch + keep it synced (so Sara never
+    // loses her progress, even on a new device or after clearing the browser).
+    initCloudSync();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
