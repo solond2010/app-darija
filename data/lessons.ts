@@ -98,7 +98,7 @@ export const unitsData: Unit[] = [
             type: "match-pairs",
             question: "Empareja cada saludo con su significado correcto:",
             pairs: [
-              { left: "Sbah l-5ir", right: "Buenos días" },
+              { left: "Sba7 l-5ir", right: "Buenos días" },
               { left: "Msa l-5ir", right: "Buenas tardes" },
               { left: "Bslama", right: "Adiós" },
               { left: "3afak", right: "Por favor" },
@@ -125,7 +125,7 @@ export const unitsData: Unit[] = [
             id: "1.1.8",
             type: "flashcard-reveal",
             question: "Intenta recordar el significado de esta palabra:",
-            front: "Smeh li",
+            front: "Sme7 li",
             back: "Perdona / Lo siento",
             hint: "Se usa para pedir disculpas.",
           },
@@ -145,7 +145,7 @@ export const unitsData: Unit[] = [
               {
                 speaker: "Sara",
                 text: "___",
-                options: ["Wa 3alaykum salam", "Bslama", "Smeh li"],
+                options: ["Wa 3alaykum salam", "Bslama", "Sme7 li"],
                 answer: "Wa 3alaykum salam",
               },
               { speaker: "Meshi", text: "Labas, bikhir? ✨" },
@@ -399,7 +399,7 @@ export const unitsData: Unit[] = [
             type: "match-pairs",
             question: "Asocia los adjetivos de estados:",
             pairs: [
-              { left: "Zw3ana", right: "Hambrienta" },
+              { left: "Ji3ana", right: "Hambrienta" },
               { left: "3atshana", right: "Sedienta" },
               { left: "Mesh3ola", right: "Ocupada" },
               { left: "Fer7ana", right: "Contenta" },
@@ -418,8 +418,8 @@ export const unitsData: Unit[] = [
             id: "2.1.7",
             type: "multiple-choice",
             question: "¿Cómo se dice 'Triste' (femenino) en Darija del norte?",
-            options: ["Nafsanya", "Nafsani", "Fer7ana", "3ayana"],
-            answer: "Nafsanya",
+            options: ["Me7zana", "Me7zan", "Fer7ana", "3ayana"],
+            answer: "Me7zana",
           },
           {
             id: "2.1.8",
@@ -439,7 +439,7 @@ export const unitsData: Unit[] = [
           {
             id: "2.1.10",
             type: "true-false",
-            question: "¿'Zw3an' significa 'Hambriento'?",
+            question: "¿'Ji3an' significa 'Hambriento'?",
             answer: true,
           },
         ],
@@ -2043,10 +2043,10 @@ export const unitsData: Unit[] = [
           {
             id: "11.2.5",
             type: "multiple-choice",
-            question: "¿Cómo se dice 'Perdón / Disculpa' (más formal que 'Smeh li')?",
-            options: ["Wakha", "Maxi mushkil", "Smahli", "Bslama"],
-            answer: "Smahli",
-            hint: "'Smahli' es un poco más formal. 'Smeh li' es más coloquial. Ambas se usan.",
+            question: "¿Cómo se dice 'Perdón / Disculpa' (más formal que 'Sme7 li')?",
+            options: ["Wakha", "Maxi mushkil", "Sma7li", "Bslama"],
+            answer: "Sma7li",
+            hint: "'Sma7li' es un poco más formal. 'Sme7 li' es más coloquial. Ambas se usan.",
           },
           {
             id: "11.2.6",
@@ -2083,7 +2083,7 @@ export const unitsData: Unit[] = [
                 options: ["Hamdullah, kulshi mzian!", "Ana n3as bkri", "Bghit nmshi"],
                 answer: "Hamdullah, kulshi mzian!",
               },
-              { speaker: "Meshi", text: "¡Mzyan! Smahli, nssit shi 7aja... (he olvidado algo)" },
+              { speaker: "Meshi", text: "¡Mzyan! Sma7li, nssit shi 7aja... (he olvidado algo)" },
               {
                 speaker: "Sara",
                 text: "___",
