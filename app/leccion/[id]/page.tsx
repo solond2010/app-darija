@@ -127,12 +127,9 @@ export default function LeccionPage() {
       setErrorsCount((p) => p + 1);
       setMeshiMood("sad");
       setMeshiSpeech(getRandomMessage("incorrect").text);
-      if (attempts === 1) {
-        setAttempts(2);
-        setSelectedAns(null);
-      } else {
-        setAttempts(3);
-      }
+      // Keep the wrong choice visible (red + ✗) while showing feedback.
+      // It gets cleared on retry in handleContinue.
+      setAttempts(attempts === 1 ? 2 : 3);
     }
   };
 
