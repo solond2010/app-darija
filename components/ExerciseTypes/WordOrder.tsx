@@ -95,7 +95,7 @@ export const WordOrder: React.FC<WordOrderProps> = ({
                   ? isCorrect
                     ? "bg-emerald-100 border-emerald-300 text-emerald-700"
                     : "bg-rose-100 border-rose-300 text-rose-700"
-                  : "bg-brand-coral text-white border-brand-coral border-b-[#C94A4A] active:translate-y-0.5"
+                  : "bg-gradient-to-br from-brand-saffron to-brand-coral text-white border-brand-coral/70 border-b-brand-coral active:translate-y-0.5 shadow-sm"
               }`}
             >
               {word}
@@ -117,7 +117,7 @@ export const WordOrder: React.FC<WordOrderProps> = ({
               className={`py-2 px-4 rounded-xl border-2 border-b-[3px] font-bold font-title text-sm transition-all ${
                 isUsed
                   ? "bg-slate-100 border-slate-100 text-transparent pointer-events-none shadow-none"
-                  : "bg-white border-brand-beige border-b-[#E0D5C0] text-brand-dark option-btn shadow-sm"
+                  : "bg-white/70 backdrop-blur-md border-white/80 border-b-brand-beige text-brand-dark option-btn shadow-sm"
               }`}
             >
               {word}

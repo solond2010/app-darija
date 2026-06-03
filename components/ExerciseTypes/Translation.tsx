@@ -43,7 +43,7 @@ export const Translation: React.FC<TranslationProps> = ({
               ? isCorrect
                 ? "bg-emerald-50 border-emerald-300 text-emerald-800"
                 : "bg-rose-50 border-rose-300 text-rose-800"
-              : "bg-white border-brand-beige focus:border-brand-pink/60 text-brand-dark placeholder:text-slate-300 shadow-sm"
+              : "bg-white/70 backdrop-blur-md border-white/80 focus:border-brand-coral text-brand-dark placeholder:text-slate-300 shadow-sm"
           }`}
         />
         {isAnswerChecked && (
