@@ -30,6 +30,7 @@ export const MatchPairs: React.FC<MatchPairsProps> = ({
 
   // Scramble items on mount
   useEffect(() => {
+    if (!pairs || pairs.length === 0) return; // guard against empty/invalid exercise
     const lefts = pairs.map((p) => p.left);
     const rights = pairs.map((p) => p.right);
     setLeftItems([...lefts].sort(() => Math.random() - 0.5));

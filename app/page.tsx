@@ -15,7 +15,7 @@ import Link from "next/link";
 export default function Home() {
   const {
     xp, streak, isHydrated,
-    todayXP, dailyGoal, lastActiveDate, completedLessons, unlockedUnits,
+    todayXP, todayXPDate, dailyGoal, lastActiveDate, completedLessons, unlockedUnits,
   } = useStore();
   const [mounted, setMounted] = useState(false);
   const [meshiMsg, setMeshiMsg] = useState({ text: "", emoji: "😺" });
@@ -55,8 +55,10 @@ export default function Home() {
 
   const today = new Date().toLocaleDateString("en-CA");
   const isStreakAtRisk = streak > 0 && lastActiveDate !== today;
-  const dailyGoalMet = todayXP >= dailyGoal;
-  const dailyProgressPercent = Math.min(100, (todayXP / dailyGoal) * 100);
+  // Only count today's XP; on a new day it resets visually until XP is earned.
+  const todayXPDisplay = todayXPDate === today ? todayXP : 0;
+  const dailyGoalMet = todayXPDisplay >= dailyGoal;
+  const dailyProgressPercent = Math.min(100, (todayXPDisplay / dailyGoal) * 100);
 
   return (
     <div className="min-h-screen pb-20 flex flex-col max-w-md mx-auto relative overflow-hidden">
@@ -149,7 +151,7 @@ export default function Home() {
               </span>
             </div>
             <span className="text-xs font-bold text-slate-400">
-              {todayXP} / {dailyGoal} XP
+              {todayXPDisplay} / {dailyGoal} XP
             </span>
           </div>
           <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">

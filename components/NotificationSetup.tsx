@@ -108,7 +108,7 @@ export function NotificationSetup() {
           transition={{ type: "spring", damping: 22, stiffness: 300 }}
           className="fixed bottom-24 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none"
         >
-          <div className="bg-white rounded-3xl shadow-xl border-2 border-brand-beige w-full max-w-sm pointer-events-auto overflow-hidden">
+          <div className="relative glass-strong rounded-3xl shadow-xl w-full max-w-sm pointer-events-auto overflow-hidden">
             {/* Close */}
             <button
               onClick={handleDismiss}
