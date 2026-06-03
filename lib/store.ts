@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { achievementsData } from "../data/achievements";
+import type { Unit } from "../data/lessons";
 
 export interface LearnedWord {
   darija: string;
@@ -43,7 +44,7 @@ export interface AppState {
   decrementLive: () => void;
   refillLives: () => void;
   checkAndRefillLives: () => void;
-  completeLesson: (lessonId: string, gotPerfect: boolean) => { achievementsUnlocked: string[] };
+  completeLesson: (lessonId: string, gotPerfect: boolean, units: Unit[]) => { achievementsUnlocked: string[] };
   addLearnedWords: (words: LearnedWord[]) => void;
   toggleSounds: () => void;
   resetProgress: () => void;
@@ -214,12 +215,9 @@ export const useStore = create<AppState>()(
         });
       },
 
-      completeLesson: (lessonId, gotPerfect) => {
+      completeLesson: (lessonId, gotPerfect, units) => {
         const state = get();
         const newlyUnlocked: string[] = [];
-
-        const unitNumber = Math.floor(parseFloat(lessonId));
-        const unitId = `unidad-${unitNumber}`;
 
         const alreadyCompleted = state.completedLessons.includes(lessonId);
         const updatedCompleted = alreadyCompleted
@@ -228,26 +226,18 @@ export const useStore = create<AppState>()(
 
         const updatedUnlockedUnits = [...state.unlockedUnits];
 
-        if (unitId === "unidad-1" && updatedCompleted.includes("1.1") && updatedCompleted.includes("1.2") && updatedCompleted.includes("1.3")) {
-          if (!updatedUnlockedUnits.includes("unidad-2")) updatedUnlockedUnits.push("unidad-2");
-        } else if (unitId === "unidad-2" && updatedCompleted.includes("2.1") && updatedCompleted.includes("2.2")) {
-          if (!updatedUnlockedUnits.includes("unidad-3")) updatedUnlockedUnits.push("unidad-3");
-        } else if (unitId === "unidad-3" && updatedCompleted.includes("3.1")) {
-          if (!updatedUnlockedUnits.includes("unidad-4")) updatedUnlockedUnits.push("unidad-4");
-        } else if (unitId === "unidad-4" && updatedCompleted.includes("4.1") && updatedCompleted.includes("4.2")) {
-          if (!updatedUnlockedUnits.includes("unidad-5")) updatedUnlockedUnits.push("unidad-5");
-        } else if (unitId === "unidad-5" && updatedCompleted.includes("5.1") && updatedCompleted.includes("5.2")) {
-          if (!updatedUnlockedUnits.includes("unidad-6")) updatedUnlockedUnits.push("unidad-6");
-        } else if (unitId === "unidad-6" && updatedCompleted.includes("6.1") && updatedCompleted.includes("6.2")) {
-          if (!updatedUnlockedUnits.includes("unidad-7")) updatedUnlockedUnits.push("unidad-7");
-        } else if (unitId === "unidad-7" && updatedCompleted.includes("7.1") && updatedCompleted.includes("7.2")) {
-          if (!updatedUnlockedUnits.includes("unidad-8")) updatedUnlockedUnits.push("unidad-8");
-        } else if (unitId === "unidad-8" && updatedCompleted.includes("8.1") && updatedCompleted.includes("8.2")) {
-          if (!updatedUnlockedUnits.includes("unidad-9")) updatedUnlockedUnits.push("unidad-9");
-        } else if (unitId === "unidad-9" && updatedCompleted.includes("9.1") && updatedCompleted.includes("9.2")) {
-          if (!updatedUnlockedUnits.includes("unidad-10")) updatedUnlockedUnits.push("unidad-10");
-        } else if (unitId === "unidad-10" && updatedCompleted.includes("10.1") && updatedCompleted.includes("10.2")) {
-          if (!updatedUnlockedUnits.includes("unidad-11")) updatedUnlockedUnits.push("unidad-11");
+        // Find the unit this lesson belongs to, from the live content.
+        const safeUnits = Array.isArray(units) ? units : [];
+        const unitIndex = safeUnits.findIndex((u) => u.lessons.some((l) => l.id === lessonId));
+        const unit = unitIndex >= 0 ? safeUnits[unitIndex] : null;
+        const unitFullyDone = unit
+          ? unit.lessons.every((l) => updatedCompleted.includes(l.id))
+          : false;
+
+        // Unlock the NEXT unit when the current one is fully completed.
+        if (unit && unitFullyDone) {
+          const next = safeUnits[unitIndex + 1];
+          if (next && !updatedUnlockedUnits.includes(next.id)) updatedUnlockedUnits.push(next.id);
         }
 
         // ---- Achievements ----
@@ -257,32 +247,22 @@ export const useStore = create<AppState>()(
         if (gotPerfect && !state.unlockedAchievements.includes("perfect_lesson")) {
           newlyUnlocked.push("perfect_lesson");
         }
-        if (unitId === "unidad-1" && updatedCompleted.includes("1.1") && updatedCompleted.includes("1.2") && updatedCompleted.includes("1.3") && !state.unlockedAchievements.includes("unit_1_complete")) {
-          newlyUnlocked.push("unit_1_complete");
-        }
-        if (unitId === "unidad-4" && updatedCompleted.includes("4.1") && updatedCompleted.includes("4.2") && !state.unlockedAchievements.includes("yemma_favorite")) {
-          newlyUnlocked.push("yemma_favorite");
-        }
-        if (unitId === "unidad-5" && updatedCompleted.includes("5.1") && updatedCompleted.includes("5.2") && !state.unlockedAchievements.includes("ama_de_casa")) {
-          newlyUnlocked.push("ama_de_casa");
-        }
-        if (unitId === "unidad-6" && updatedCompleted.includes("6.1") && updatedCompleted.includes("6.2") && !state.unlockedAchievements.includes("masterchef_marroqui")) {
-          newlyUnlocked.push("masterchef_marroqui");
-        }
-        if (unitId === "unidad-7" && updatedCompleted.includes("7.1") && updatedCompleted.includes("7.2") && !state.unlockedAchievements.includes("trabajadora_del_ano")) {
-          newlyUnlocked.push("trabajadora_del_ano");
-        }
-        if (unitId === "unidad-8" && updatedCompleted.includes("8.1") && updatedCompleted.includes("8.2") && !state.unlockedAchievements.includes("estilista_del_zoco")) {
-          newlyUnlocked.push("estilista_del_zoco");
-        }
-        if (unitId === "unidad-9" && updatedCompleted.includes("9.1") && updatedCompleted.includes("9.2") && !state.unlockedAchievements.includes("calculadora_humana")) {
-          newlyUnlocked.push("calculadora_humana");
-        }
-        if (unitId === "unidad-10" && updatedCompleted.includes("10.1") && updatedCompleted.includes("10.2") && !state.unlockedAchievements.includes("guia_de_la_medina")) {
-          newlyUnlocked.push("guia_de_la_medina");
-        }
-        if (unitId === "unidad-11" && updatedCompleted.includes("11.1") && updatedCompleted.includes("11.2") && !state.unlockedAchievements.includes("visionaria")) {
-          newlyUnlocked.push("visionaria");
+
+        // Unit-completion achievements, mapped by unit id.
+        const UNIT_ACHIEVEMENTS: Record<string, string> = {
+          "unidad-1": "unit_1_complete",
+          "unidad-4": "yemma_favorite",
+          "unidad-5": "ama_de_casa",
+          "unidad-6": "masterchef_marroqui",
+          "unidad-7": "trabajadora_del_ano",
+          "unidad-8": "estilista_del_zoco",
+          "unidad-9": "calculadora_humana",
+          "unidad-10": "guia_de_la_medina",
+          "unidad-11": "visionaria",
+        };
+        if (unit && unitFullyDone) {
+          const ach = UNIT_ACHIEVEMENTS[unit.id];
+          if (ach && !state.unlockedAchievements.includes(ach)) newlyUnlocked.push(ach);
         }
 
         set({

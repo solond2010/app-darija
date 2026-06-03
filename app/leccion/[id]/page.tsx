@@ -160,7 +160,7 @@ export default function LeccionPage() {
   const handleLessonCompletion = () => {
     setIsLessonFinished(true);
     const gotPerfect = errorsCount === 0;
-    const { achievementsUnlocked } = completeLesson(lessonId, gotPerfect);
+    const { achievementsUnlocked } = completeLesson(lessonId, gotPerfect, unitsData);
     setUnlockedBadges(achievementsUnlocked);
 
     // Detect level-up: compare level before and after adding XP.

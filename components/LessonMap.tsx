@@ -29,16 +29,14 @@ export const LessonMap: React.FC = () => {
 
   const isLessonUnlocked = (lessonId: string, unitId: string) => {
     if (!unlockedUnits.includes(unitId)) return false;
-    if (lessonId === "1.1") return true;
 
     const allLessons: { id: string; unitId: string }[] = [];
     unitsData.forEach((u) => u.lessons.forEach((l) => allLessons.push({ id: l.id, unitId: u.id })));
 
     const index = allLessons.findIndex((l) => l.id === lessonId);
-    if (index > 0) {
-      return completedLessons.includes(allLessons[index - 1].id);
-    }
-    return true;
+    // First lesson overall is always unlocked; otherwise require the previous one done.
+    if (index <= 0) return true;
+    return completedLessons.includes(allLessons[index - 1].id);
   };
 
   // Winding offsets: snake pattern
