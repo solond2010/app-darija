@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useStore, LearnedWord } from "../../../lib/store";
+import { useStore, LearnedWord, getLevelInfo } from "../../../lib/store";
 import { Exercise } from "../../../data/lessons";
 import { useContent } from "../../../lib/content";
+import { useCelebration } from "../../../lib/celebration";
 import { getRandomMessage } from "../../../data/meshi-messages";
 import { Meshi, MeshiMood } from "../../../components/Suki";
 import { ExerciseRenderer } from "../../../components/ExerciseTypes/ExerciseRenderer";
@@ -163,12 +164,27 @@ export default function LeccionPage() {
     const gotPerfect = errorsCount === 0;
     const { achievementsUnlocked } = completeLesson(lessonId, gotPerfect);
     setUnlockedBadges(achievementsUnlocked);
+
+    // Detect level-up: compare level before and after adding XP.
+    const levelBefore = getLevelInfo(useStore.getState().xp).level;
     addXP(gotPerfect ? 150 + totalXPEarned : 50 + totalXPEarned);
+    const after = getLevelInfo(useStore.getState().xp);
+
     const words = lessonVocabulary[lessonId];
     if (words) addLearnedWords(words);
     if (gotPerfect) {
       if (soundsEnabled) sound.playFanfare();
       confetti({ particleCount: 160, spread: 80, origin: { y: 0.55 } });
+    } else {
+      // A little spark for every completion too.
+      confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
+    }
+
+    if (after.level > levelBefore) {
+      if (soundsEnabled) sound.playFanfare();
+      setTimeout(() => {
+        useCelebration.getState().triggerLevelUp({ level: after.level, name: after.name });
+      }, 650);
     }
     // Tell the server Sara played today → cron won't send reminder tonight
     const state = useStore.getState();

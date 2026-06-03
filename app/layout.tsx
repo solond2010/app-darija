@@ -4,6 +4,7 @@ import "./globals.css";
 import Script from "next/script";
 import { AppInit } from "../components/AppInit";
 import { NotificationSetup } from "../components/NotificationSetup";
+import { CelebrationOverlay } from "../components/CelebrationOverlay";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -59,6 +60,7 @@ export default function RootLayout({
         <div className="aurora-bg" aria-hidden="true" />
         <AppInit />
         {children}
+        <CelebrationOverlay />
         <NotificationSetup />
       </body>
     </html>
