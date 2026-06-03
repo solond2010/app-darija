@@ -113,7 +113,7 @@ export const useStore = create<AppState>()(
       dailyGoal: 20,
       lastLifeLostAt: null,
       completedLessons: [],
-      unlockedUnits: ["unidad-1"],
+      unlockedUnits: ["unidad-1", "norte-1"],
       learnedWords: [],
       unlockedAchievements: [],
       isHydrated: false,
@@ -299,7 +299,7 @@ export const useStore = create<AppState>()(
           todayXPDate: null,
           lastLifeLostAt: null,
           completedLessons: [],
-          unlockedUnits: ["unidad-1"],
+          unlockedUnits: ["unidad-1", "norte-1"],
           learnedWords: [],
           unlockedAchievements: [],
         });
