@@ -7,7 +7,7 @@ import { Meshi } from "../components/Suki";
 import { LessonMap } from "../components/LessonMap";
 import { useStore, getLevelInfo } from "../lib/store";
 import { getRandomMessage } from "../data/meshi-messages";
-import { unitsData } from "../data/lessons";
+import { useContent } from "../lib/content";
 import { Flame, Star, Trophy, Zap, Target, ChevronRight, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -19,6 +19,7 @@ export default function Home() {
   } = useStore();
   const [mounted, setMounted] = useState(false);
   const [meshiMsg, setMeshiMsg] = useState({ text: "", emoji: "😺" });
+  const unitsData = useContent((s) => s.units);
 
   useEffect(() => {
     setMounted(true);
@@ -36,7 +37,7 @@ export default function Home() {
       }
     }
     return null;
-  }, [unlockedUnits, completedLessons]);
+  }, [unlockedUnits, completedLessons, unitsData]);
 
   if (!mounted || !isHydrated) {
     return (

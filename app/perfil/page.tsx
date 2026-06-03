@@ -13,6 +13,8 @@ import { getStoredTheme, toggleTheme, type Theme } from "../../lib/theme";
 import Link from "next/link";
 import { Library, ChevronRight } from "lucide-react";
 import { AuthCard } from "../../components/AuthCard";
+import { useAccount } from "../../lib/useAccount";
+import { Pencil } from "lucide-react";
 
 export default function PerfilPage() {
   const {
@@ -21,6 +23,7 @@ export default function PerfilPage() {
   } = useStore();
   const [mounted, setMounted] = useState(false);
   const [theme, setTheme] = useState<Theme>("light");
+  const { isAdmin } = useAccount();
 
   useEffect(() => {
     setTheme(getStoredTheme());
@@ -213,7 +216,18 @@ export default function PerfilPage() {
               </button>
             </div>
 
-            {/* Biblioteca de contenido (admin) */}
+            {/* Editor de lecciones (solo admin) */}
+            {isAdmin && (
+              <Link href="/admin" className="pt-3 border-t-2 border-brand-cream flex justify-between items-center group">
+                <div className="flex items-center gap-2.5 text-sm font-semibold text-slate-700">
+                  <Pencil className="w-4.5 h-4.5 text-brand-coral" />
+                  <span>Editor de lecciones</span>
+                </div>
+                <ChevronRight className="w-4.5 h-4.5 text-slate-400 group-hover:text-brand-coral transition-colors" />
+              </Link>
+            )}
+
+            {/* Biblioteca de contenido */}
             <Link href="/biblioteca" className="pt-3 border-t-2 border-brand-cream flex justify-between items-center group">
               <div className="flex items-center gap-2.5 text-sm font-semibold text-slate-700">
                 <Library className="w-4.5 h-4.5 text-brand-majorelle" />

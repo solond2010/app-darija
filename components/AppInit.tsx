@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { useStore } from "../lib/store";
 import { supabase } from "../lib/supabase";
 import { startSync, stopSync } from "../lib/progressSync";
+import { loadContent } from "../lib/content";
 
 const VAPID_PUBLIC_KEY =
   "BCBd9pjscuAWjlyF4UygErc_yHEYUbLegVBJDUFszebOeNWZurTNixOJsD27ZO5SxNNwBOLyDdpc4tz4OqvZcas";
@@ -84,6 +85,9 @@ export function AppInit() {
 
     // Sync play status to server so the daily cron is accurate
     syncStatus();
+
+    // Load admin-edited lesson content from the cloud (falls back to bundled defaults)
+    loadContent();
 
     // Cloud backup via the user's account (Supabase): start syncing whenever
     // there's a session, stop on sign-out. Works app-wide, on any page.

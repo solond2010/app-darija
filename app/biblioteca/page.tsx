@@ -6,8 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft, ChevronDown, Search, BookOpen, Layers, ListChecks, Sparkles, Check,
 } from "lucide-react";
-import { unitsData, Exercise } from "../../data/lessons";
-import { lessonVocabulary } from "../../data/vocabulary";
+import { Exercise } from "../../data/lessons";
+import { useContent } from "../../lib/content";
 
 const TYPE_LABELS: Record<string, string> = {
   "multiple-choice": "Opción múltiple",
@@ -115,6 +115,8 @@ export default function BibliotecaPage() {
   const [openUnits, setOpenUnits] = useState<Record<string, boolean>>({ "unidad-1": true });
   const [openLessons, setOpenLessons] = useState<Record<string, boolean>>({});
   const [query, setQuery] = useState("");
+  const unitsData = useContent((s) => s.units);
+  const lessonVocabulary = useContent((s) => s.vocabulary);
 
   const stats = useMemo(() => {
     let lessons = 0, exercises = 0, words = 0;
@@ -126,7 +128,7 @@ export default function BibliotecaPage() {
       });
     });
     return { units: unitsData.length, lessons, exercises, words };
-  }, []);
+  }, [unitsData, lessonVocabulary]);
 
   const q = query.trim().toLowerCase();
   const matchesLesson = (lessonId: string, title: string, desc: string) => {

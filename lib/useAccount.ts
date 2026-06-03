@@ -6,7 +6,7 @@ import { supabase } from "./supabase";
 import { startSync, stopSync } from "./progressSync";
 
 // Email allowed to access the admin / content editor. Change here if needed.
-export const ADMIN_EMAIL = "solond2010@gmail.com";
+export const ADMIN_EMAIL = "mohaat68@gmail.com";
 
 export function useAccount() {
   const [session, setSession] = useState<Session | null>(null);

@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useStore, LearnedWord } from "../../../lib/store";
-import { unitsData, Exercise } from "../../../data/lessons";
+import { Exercise } from "../../../data/lessons";
+import { useContent } from "../../../lib/content";
 import { getRandomMessage } from "../../../data/meshi-messages";
 import { Meshi, MeshiMood } from "../../../components/Suki";
 import { ExerciseRenderer } from "../../../components/ExerciseTypes/ExerciseRenderer";
@@ -19,6 +20,8 @@ export default function LeccionPage() {
   const lessonId = params.id as string;
 
   const { lives, decrementLive, refillLives, addXP, completeLesson, addLearnedWords, soundsEnabled } = useStore();
+  const unitsData = useContent((s) => s.units);
+  const lessonVocabulary = useContent((s) => s.vocabulary);
 
   const [lesson, setLesson] = useState<any>(null);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -51,7 +54,7 @@ export default function LeccionPage() {
     } else {
       router.push("/");
     }
-  }, [lessonId, router]);
+  }, [lessonId, router, unitsData]);
 
   useEffect(() => {
     setIsCardFlipped(false);

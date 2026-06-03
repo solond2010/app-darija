@@ -5,10 +5,12 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Lock, Check, Play, Star } from "lucide-react";
 import { useStore } from "../lib/store";
-import { unitsData, Lesson, Unit } from "../data/lessons";
+import { Lesson, Unit } from "../data/lessons";
+import { useContent } from "../lib/content";
 
 export const LessonMap: React.FC = () => {
   const { completedLessons, unlockedUnits, isHydrated, setHydrated } = useStore();
+  const unitsData = useContent((s) => s.units);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
