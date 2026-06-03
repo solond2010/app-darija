@@ -233,18 +233,4 @@ export const lessonVocabulary: { [key: string]: LearnedWord[] } = {
     { darija: "Inshallah", spanish: "Si Dios quiere / Ojalá", category: "Expresiones" },
     { darija: "Bla mushkil", spanish: "Sin problema", category: "Expresiones" },
   ],
-
-  // ── Curso del Norte ──
-  "n1.1": [
-    { darija: "Salam", spanish: "Hola", category: "Norte · Saludos", example: "Salam! Labas? (¡Hola! ¿Qué tal?)" },
-    { darija: "Labas?", spanish: "¿Qué tal? / ¿Estás bien?", category: "Norte · Saludos", example: "Labas 3lik? (¿Estás bien?)" },
-    { darija: "Bikhir, l7amdulah", spanish: "Bien, gracias a Dios", category: "Norte · Saludos" },
-    { darija: "Sba7 l-5ir", spanish: "Buenos días", category: "Norte · Saludos" },
-    { darija: "Msa l-5ir", spanish: "Buenas tardes", category: "Norte · Saludos" },
-    { darija: "Shukran (bezzaf)", spanish: "Gracias (muchas)", category: "Norte · Saludos", example: "Shukran bezzaf! (¡Muchas gracias!)" },
-    { darija: "3afak", spanish: "Por favor", category: "Norte · Saludos", example: "Atay 3afak (Té, por favor)" },
-    { darija: "Sme7 li", spanish: "Perdona / Disculpa", category: "Norte · Saludos" },
-    { darija: "Bslama", spanish: "Adiós", category: "Norte · Saludos", example: "Yallah, bslama! (¡Venga, adiós!)" },
-    { darija: "Wakha", spanish: "Vale / De acuerdo", category: "Norte · Saludos" },
-  ],
 };

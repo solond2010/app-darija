@@ -80,13 +80,6 @@ export function AppInit() {
     updateStreakDaily();
     checkAndRefillLives();
 
-    // Make sure "free" entry-point units (e.g. the Norte course) are always
-    // unlocked, even for users whose progress was saved before they existed.
-    const FREE_UNITS = ["norte-1"];
-    const cur = useStore.getState().unlockedUnits;
-    const missing = FREE_UNITS.filter((u) => !cur.includes(u));
-    if (missing.length) useStore.setState({ unlockedUnits: [...cur, ...missing] });
-
     // Service worker + push subscription (non-blocking)
     registerAndSubscribe();
 
