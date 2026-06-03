@@ -125,7 +125,8 @@ export default function PerfilPage() {
           })}
         </motion.section>
 
-        {/* Achievements */}
+        {/* Achievements (ocultos para la cuenta admin, que no es alumno) */}
+        {!isAdmin && (
         <motion.section
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -169,6 +170,7 @@ export default function PerfilPage() {
             );
           })}
         </motion.section>
+        )}
 
         {/* Settings */}
         <motion.section
