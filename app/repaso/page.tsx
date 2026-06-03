@@ -102,7 +102,7 @@ export default function RepasoPage() {
 
   if (!mounted || !isHydrated) {
     return (
-      <div className="min-h-screen bg-brand-cream flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen flex flex-col items-center justify-center p-4">
         <div className="w-10 h-10 border-4 border-brand-coral border-t-transparent rounded-full animate-spin" />
         <p className="mt-3 text-slate-400 font-title font-medium text-sm">Cargando...</p>
       </div>
@@ -113,10 +113,7 @@ export default function RepasoPage() {
   const progressPercent = reviewStack.length > 0 ? (currentIdx / reviewStack.length) * 100 : 0;
 
   return (
-    <div className="min-h-screen bg-brand-cream pb-20 flex flex-col max-w-md mx-auto relative overflow-hidden">
-      <div className="absolute -top-12 -right-12 w-48 h-48 bg-brand-mint/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-32 -left-12 w-40 h-40 bg-brand-lavender/20 rounded-full blur-3xl pointer-events-none" />
-
+    <div className="min-h-screen pb-20 flex flex-col max-w-md mx-auto relative overflow-hidden">
       <Header />
 
       <main className="flex-1 px-5 pt-3 flex flex-col overflow-y-auto no-scrollbar pb-6">
@@ -159,7 +156,7 @@ export default function RepasoPage() {
             />
             <h3 className="text-2xl font-bold font-title text-brand-dark -mt-1">¡Repaso Finalizado!</h3>
 
-            <div className="bg-white rounded-3xl p-5 border-2 border-brand-beige w-full shadow-sm flex flex-col gap-3">
+            <div className="glass rounded-3xl p-5 w-full flex flex-col gap-3">
               <div className="flex justify-between items-center text-sm">
                 <span className="text-slate-500 font-semibold">Total revisadas</span>
                 <span className="font-bold font-title text-brand-dark">{results.hard + results.ok + results.easy} cartas</span>
@@ -213,8 +210,8 @@ export default function RepasoPage() {
                   onClick={() => startReview(cat)}
                   className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold font-title border-2 transition-all ${
                     selectedCategory === cat
-                      ? "bg-brand-coral text-white border-brand-coral"
-                      : "bg-white text-slate-500 border-brand-beige"
+                      ? "bg-gradient-to-br from-brand-saffron to-brand-coral text-white border-brand-coral/60 glow-coral"
+                      : "bg-white/70 backdrop-blur-md text-slate-500 border-white/80"
                   }`}
                 >
                   {cat}
@@ -230,7 +227,7 @@ export default function RepasoPage() {
               </div>
               <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-brand-coral to-brand-pink rounded-full"
+                  className="h-full bg-gradient-to-r from-brand-saffron via-brand-coral to-brand-rose rounded-full"
                   animate={{ width: `${progressPercent}%` }}
                   transition={{ duration: 0.3 }}
                 />
@@ -252,7 +249,7 @@ export default function RepasoPage() {
                   className="w-full h-full"
                 >
                   <div
-                    className={`w-full h-full duration-500 transform-style-3d relative rounded-3xl border-2 border-brand-beige border-b-[5px] bg-white shadow-md ${
+                    className={`w-full h-full duration-500 transform-style-3d relative rounded-3xl border border-white/70 bg-white/85 backdrop-blur-md shadow-[0_8px_30px_rgba(42,35,66,0.12)] ${
                       isFlipped ? "rotate-y-180" : ""
                     }`}
                   >

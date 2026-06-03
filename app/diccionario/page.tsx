@@ -221,7 +221,7 @@ export default function DiccionarioPage() {
 
   if (!mounted || !isHydrated) {
     return (
-      <div className="min-h-screen bg-brand-cream flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen flex flex-col items-center justify-center p-4">
         <div className="w-10 h-10 border-4 border-brand-coral border-t-transparent rounded-full animate-spin" />
         <p className="mt-3 text-slate-400 font-title font-medium text-sm">Cargando...</p>
       </div>
@@ -246,13 +246,13 @@ export default function DiccionarioPage() {
   const learnedCount = filteredVocabulary.filter((v) => hasLearnedWord(v.darija)).length;
 
   return (
-    <div className="min-h-screen bg-brand-cream pb-20 flex flex-col max-w-md mx-auto relative overflow-hidden">
+    <div className="min-h-screen pb-20 flex flex-col max-w-md mx-auto relative overflow-hidden">
       <Header />
 
       <main className="flex-1 px-4 pt-3 flex flex-col gap-3 overflow-y-auto no-scrollbar pb-6">
 
         {/* Meshi bubble */}
-        <section className="bg-white rounded-3xl px-3 py-2.5 border-2 border-brand-beige shadow-sm flex items-center mt-1 overflow-hidden">
+        <section className="glass rounded-3xl px-3 py-2.5 flex items-center mt-1 overflow-hidden">
           <Meshi
             mood="normal"
             size={80}
@@ -263,14 +263,14 @@ export default function DiccionarioPage() {
 
         {/* Stats strip */}
         <div className="flex gap-2">
-          <div className="flex-1 bg-white rounded-2xl px-3 py-2.5 border-2 border-brand-beige flex items-center gap-2 shadow-sm">
+          <div className="flex-1 glass rounded-2xl px-3 py-2.5 flex items-center gap-2">
             <BookOpen className="w-4 h-4 text-brand-coral flex-shrink-0" />
             <div>
               <p className="text-[9px] font-bold uppercase text-slate-400 tracking-wider">Total</p>
               <p className="text-sm font-bold font-title text-brand-dark leading-none">{allVocabulary.length} palabras</p>
             </div>
           </div>
-          <div className="flex-1 bg-white rounded-2xl px-3 py-2.5 border-2 border-brand-beige flex items-center gap-2 shadow-sm">
+          <div className="flex-1 glass rounded-2xl px-3 py-2.5 flex items-center gap-2">
             <Check className="w-4 h-4 text-emerald-500 flex-shrink-0" />
             <div>
               <p className="text-[9px] font-bold uppercase text-slate-400 tracking-wider">Aprendidas</p>
@@ -286,7 +286,7 @@ export default function DiccionarioPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar en Darija o Español..."
-            className="w-full pl-10 pr-4 py-3 bg-white border-2 border-brand-beige rounded-2xl text-xs font-semibold focus:outline-none focus:border-brand-pink/60 shadow-sm transition-colors"
+            className="w-full pl-10 pr-4 py-3 bg-white/70 backdrop-blur-md border-2 border-white/80 rounded-2xl text-xs font-semibold focus:outline-none focus:border-brand-coral shadow-sm transition-colors text-brand-dark"
           />
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
         </div>
@@ -302,8 +302,8 @@ export default function DiccionarioPage() {
                 onClick={() => setSelectedCategory(cat)}
                 className={`flex items-center gap-1 py-1.5 px-2.5 rounded-full text-xs font-title font-bold transition-all flex-shrink-0 border ${
                   isActive
-                    ? "bg-brand-coral border-brand-coral text-white shadow-sm"
-                    : "bg-white border-brand-beige text-slate-500"
+                    ? "bg-gradient-to-br from-brand-saffron to-brand-coral border-brand-coral/60 text-white glow-coral"
+                    : "bg-white/70 backdrop-blur-md border-white/80 text-slate-500"
                 }`}
               >
                 <span className="text-sm leading-none">{emoji}</span>
@@ -316,7 +316,7 @@ export default function DiccionarioPage() {
         {/* Vocabulary cards */}
         <div className="flex flex-col gap-2.5">
           {filteredVocabulary.length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-8 bg-white border-2 border-brand-beige rounded-3xl text-center gap-2 shadow-sm">
+            <div className="flex flex-col items-center justify-center p-8 glass rounded-3xl text-center gap-2">
               <AlertCircle className="w-8 h-8 text-slate-300" />
               <h5 className="font-bold text-sm text-brand-dark font-title">Sin resultados</h5>
               <p className="text-xs text-slate-400 max-w-xs leading-relaxed">
@@ -332,10 +332,8 @@ export default function DiccionarioPage() {
                 <motion.div
                   key={idx}
                   layout
-                  className={`bg-white rounded-2xl border-2 shadow-sm overflow-hidden transition-all cursor-pointer ${
-                    learned
-                      ? "border-brand-mint/60"
-                      : "border-brand-beige"
+                  className={`glass rounded-2xl overflow-hidden transition-all cursor-pointer ${
+                    learned ? "ring-1 ring-brand-teal/40" : ""
                   }`}
                   onClick={() => setExpandedIdx(isExpanded ? null : idx)}
                 >

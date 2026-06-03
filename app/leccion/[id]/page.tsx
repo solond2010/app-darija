@@ -5,7 +5,8 @@ import { useParams, useRouter } from "next/navigation";
 import { useStore, LearnedWord, getLevelInfo } from "../../../lib/store";
 import { Exercise } from "../../../data/lessons";
 import { useContent } from "../../../lib/content";
-import { useCelebration } from "../../../lib/celebration";
+import { useCelebration, Celebration } from "../../../lib/celebration";
+import { achievementsData } from "../../../data/achievements";
 import { getRandomMessage } from "../../../data/meshi-messages";
 import { Meshi, MeshiMood } from "../../../components/Suki";
 import { ExerciseRenderer } from "../../../components/ExerciseTypes/ExerciseRenderer";
@@ -180,11 +181,18 @@ export default function LeccionPage() {
       confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
     }
 
+    // Queue full-screen celebrations: level-up first, then each new achievement.
+    const cels: Celebration[] = [];
     if (after.level > levelBefore) {
       if (soundsEnabled) sound.playFanfare();
-      setTimeout(() => {
-        useCelebration.getState().triggerLevelUp({ level: after.level, name: after.name });
-      }, 650);
+      cels.push({ kind: "level", level: after.level, name: after.name });
+    }
+    achievementsUnlocked.forEach((id) => {
+      const a = achievementsData.find((x) => x.id === id);
+      if (a) cels.push({ kind: "achievement", emoji: a.emoji, title: a.title, message: a.unlockedMessage });
+    });
+    if (cels.length > 0) {
+      setTimeout(() => useCelebration.getState().push(cels), 650);
     }
     // Tell the server Sara played today → cron won't send reminder tonight
     const state = useStore.getState();
@@ -326,7 +334,12 @@ export default function LeccionPage() {
         <div className="flex-shrink-0 px-5 pb-6 pt-3 glass border-t border-white/40">
           <button
             onClick={() => {
+              const before = useStore.getState().streak;
               useStore.getState().incrementStreak();
+              const afterStreak = useStore.getState().streak;
+              if (afterStreak > before) {
+                useCelebration.getState().push([{ kind: "streak", days: afterStreak }]);
+              }
               router.push("/");
             }}
             className="w-full py-4 btn-3d-primary font-title text-base"
