@@ -453,26 +453,29 @@ export default function LeccionPage() {
         </div>
       </section>
 
-      {/* Exercise area */}
+      {/* Exercise area.
+          NOTE: do NOT wrap this in <AnimatePresence mode="wait">. Nested inside
+          the page-level transition (template.tsx), the exit animation could fail
+          to complete, deadlocking AnimatePresence so the old exercise stayed on
+          screen even though currentIdx had advanced (the "no avanza" bug). A
+          plain keyed motion.div remounts cleanly on every question — same
+          slide-in feel, zero deadlock risk. */}
       <main className="flex-1 min-h-0 px-4 py-3 flex flex-col justify-center items-center overflow-y-auto no-scrollbar">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentIdx}
-            initial={{ opacity: 0, x: 24 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -24 }}
-            transition={{ duration: 0.22 }}
-            className="w-full"
-          >
-            <ExerciseRenderer
-              exercise={currentExercise}
-              selectedAnswer={selectedAns}
-              onSelect={setSelectedAns}
-              isAnswerChecked={isAnswerChecked}
-              onFlip={setIsCardFlipped}
-            />
-          </motion.div>
-        </AnimatePresence>
+        <motion.div
+          key={currentIdx}
+          initial={{ opacity: 0, x: 24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.22 }}
+          className="w-full"
+        >
+          <ExerciseRenderer
+            exercise={currentExercise}
+            selectedAnswer={selectedAns}
+            onSelect={setSelectedAns}
+            isAnswerChecked={isAnswerChecked}
+            onFlip={setIsCardFlipped}
+          />
+        </motion.div>
       </main>
 
       {/* Footer action bar */}
