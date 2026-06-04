@@ -4,6 +4,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { Header } from "../components/Header";
 import { BottomNav } from "../components/BottomNav";
 import { LessonMap } from "../components/LessonMap";
+import { WeekStreak } from "../components/WeekStreak";
 import { useStore, getLevelInfo } from "../lib/store";
 import { useContent } from "../lib/content";
 import { Zap, Target, ChevronRight, AlertTriangle } from "lucide-react";
@@ -138,6 +139,9 @@ export default function Home() {
             </div>
           </div>
         </motion.section>
+
+        {/* Weekly streak strip */}
+        <WeekStreak />
 
         {/* Continue lesson button */}
         {nextLesson && (

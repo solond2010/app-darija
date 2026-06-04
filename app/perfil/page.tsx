@@ -15,6 +15,7 @@ import { Library, ChevronRight } from "lucide-react";
 import { AuthCard } from "../../components/AuthCard";
 import { useAccount } from "../../lib/useAccount";
 import { Pencil } from "lucide-react";
+import { WeekStreak } from "../../components/WeekStreak";
 
 export default function PerfilPage() {
   const {
@@ -124,6 +125,19 @@ export default function PerfilPage() {
             );
           })}
         </motion.section>
+
+        {/* Weekly streak */}
+        {!isAdmin && (
+          <motion.section
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.1 }}
+            className="flex flex-col gap-2"
+          >
+            <h4 className="text-[10px] font-bold font-title text-slate-400 uppercase tracking-[0.15em] pl-1">Tu semana</h4>
+            <WeekStreak />
+          </motion.section>
+        )}
 
         {/* Achievements (ocultos para la cuenta admin, que no es alumno) */}
         {!isAdmin && (

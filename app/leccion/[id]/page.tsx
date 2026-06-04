@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useStore, LearnedWord, getLevelInfo } from "../../../lib/store";
 import { Exercise } from "../../../data/lessons";
@@ -12,7 +12,7 @@ import { Meshi, MeshiMood } from "../../../components/Suki";
 import { ExerciseRenderer } from "../../../components/ExerciseTypes/ExerciseRenderer";
 import { sound } from "../../../utils/sound";
 import { haptics } from "../../../utils/haptics";
-import { Heart, X, Sparkles, Star, Flame, Trophy, CheckCircle2 } from "lucide-react";
+import { Heart, X, Sparkles, Star, Flame, Trophy, CheckCircle2, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { lessonVocabulary } from "../../../data/vocabulary";
@@ -43,6 +43,7 @@ export default function LeccionPage() {
 
   const [isLessonFinished, setIsLessonFinished] = useState(false);
   const [unlockedBadges, setUnlockedBadges] = useState<string[]>([]);
+  const startTimeRef = useRef<number>(Date.now());
 
   useEffect(() => {
     setLocalLives(useStore.getState().lives);
@@ -53,6 +54,7 @@ export default function LeccionPage() {
     });
     if (found) {
       setLesson(found);
+      startTimeRef.current = Date.now();
       setMeshiSpeech(`¡Yallah Sara! Vamos a empezar la lección ${lessonId}. 🐱`);
     } else {
       router.push("/");
@@ -251,6 +253,8 @@ export default function LeccionPage() {
     const nextLesson = curIdx >= 0 ? allLessonsFlat[curIdx + 1] : null;
     const teaserText: string | null = (lesson.teaser as string | undefined) || (nextLesson ? `${nextLesson.emoji} ${nextLesson.title}` : null);
     const vocabCount = lessonVocabulary[lessonId]?.length ?? 0;
+    const elapsedSec = Math.max(1, Math.round((Date.now() - startTimeRef.current) / 1000));
+    const timeLabel = `${Math.floor(elapsedSec / 60)}:${String(elapsedSec % 60).padStart(2, "0")}`;
 
     return (
       <div className="h-dvh flex flex-col max-w-md mx-auto overflow-hidden">
@@ -280,26 +284,33 @@ export default function LeccionPage() {
             <p className="text-sm text-slate-400 mt-1">Lección {lessonId} completada</p>
           </div>
 
-          {/* Stats cards */}
+          {/* Stats cards — XP · Precisión · Tiempo */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25 }}
-            className="grid grid-cols-2 gap-3"
+            className="grid grid-cols-3 gap-2.5"
           >
-            <div className="glass rounded-2xl p-4 flex flex-col items-center text-center">
-              <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center mb-2">
-                <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
+            <div className="rounded-2xl p-3 flex flex-col items-center text-center text-white glow-coral bg-gradient-to-br from-brand-saffron to-brand-coral">
+              <div className="w-9 h-9 rounded-xl bg-white/25 flex items-center justify-center mb-1.5">
+                <Star className="w-4.5 h-4.5 fill-white text-white" />
               </div>
-              <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">XP Ganado</span>
-              <span className="text-xl font-bold font-title text-brand-dark mt-0.5">+<CountUp to={totalXP} /></span>
+              <span className="text-[8px] uppercase font-bold tracking-wider opacity-90">XP</span>
+              <span className="text-xl font-bold font-title mt-0.5">+<CountUp to={totalXP} /></span>
             </div>
-            <div className="glass rounded-2xl p-4 flex flex-col items-center text-center">
-              <div className="w-10 h-10 rounded-xl bg-brand-pink/15 flex items-center justify-center mb-2">
-                <Trophy className="w-5 h-5 text-brand-coral" />
+            <div className="rounded-2xl p-3 flex flex-col items-center text-center text-white bg-gradient-to-br from-brand-coral to-brand-rose">
+              <div className="w-9 h-9 rounded-xl bg-white/25 flex items-center justify-center mb-1.5">
+                <Trophy className="w-4.5 h-4.5 text-white" />
               </div>
-              <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Precisión</span>
-              <span className="text-xl font-bold font-title text-brand-dark mt-0.5"><CountUp to={accuracy} />%</span>
+              <span className="text-[8px] uppercase font-bold tracking-wider opacity-90">Precisión</span>
+              <span className="text-xl font-bold font-title mt-0.5"><CountUp to={accuracy} />%</span>
+            </div>
+            <div className="rounded-2xl p-3 flex flex-col items-center text-center text-white bg-gradient-to-br from-brand-majorelle to-[#8b7dff]">
+              <div className="w-9 h-9 rounded-xl bg-white/25 flex items-center justify-center mb-1.5">
+                <Zap className="w-4.5 h-4.5 fill-white text-white" />
+              </div>
+              <span className="text-[8px] uppercase font-bold tracking-wider opacity-90">Tiempo</span>
+              <span className="text-xl font-bold font-title mt-0.5">{timeLabel}</span>
             </div>
           </motion.div>
 
@@ -329,13 +340,13 @@ export default function LeccionPage() {
             className="glass rounded-2xl p-4"
           >
             <h4 className="text-[10px] font-bold font-title text-slate-400 uppercase tracking-wider mb-3">
-              Vocabulario aprendido (+{lessonVocabulary[lessonId]?.length ?? 0} palabras)
+              Vocabulario aprendido · {vocabCount} {vocabCount === 1 ? "palabra" : "palabras"}
             </h4>
-            <div className="flex flex-col gap-2 max-h-40 overflow-y-auto no-scrollbar pr-1">
+            <div className="flex flex-wrap gap-2 max-h-44 overflow-y-auto no-scrollbar">
               {lessonVocabulary[lessonId]?.map((v, i) => (
-                <div key={i} className="flex justify-between items-center py-1.5 border-b border-brand-cream last:border-none text-xs">
-                  <span className="font-bold text-brand-coral">{v.darija}</span>
-                  <span className="text-slate-400 font-medium">{v.spanish}</span>
+                <div key={i} className="bg-brand-saffron/12 border border-brand-saffron/25 rounded-xl px-2.5 py-1.5 text-xs font-bold">
+                  <span className="text-brand-coral">{v.darija}</span>
+                  <span className="text-slate-400 font-semibold"> · {v.spanish}</span>
                 </div>
               ))}
             </div>
