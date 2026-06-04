@@ -37,6 +37,7 @@ export interface Lesson {
   title: string;
   description: string;
   exercises: Exercise[];
+  teaser?: string; // Hook shown on completion to entice coming back tomorrow
 }
 
 export interface Unit {
@@ -750,8 +751,8 @@ export const unitsData: Unit[] = [
             id: "4.1.10",
             type: "multiple-choice",
             question: "¿Cómo se dice 'La familia' en Darija?",
-            options: ["L-3a2ila", "D-dar", "L-makla", "Mtsharfin"],
-            answer: "L-3a2ila",
+            options: ["L-3aila", "D-dar", "L-makla", "Mtsharfin"],
+            answer: "L-3aila",
           },
         ],
       },
@@ -800,7 +801,7 @@ export const unitsData: Unit[] = [
           {
             id: "4.2.5",
             type: "true-false",
-            question: "¿'L-3a2ila kbira' significa 'La familia es pequeña'?",
+            question: "¿'L-3aila kbira' significa 'La familia es pequeña'?",
             answer: false,
             hint: "'kbira' significa 'grande'. 'Sgira' significa 'pequeña'.",
           },
@@ -811,7 +812,7 @@ export const unitsData: Unit[] = [
             pairs: [
               { left: "Had khuya", right: "Este es mi hermano" },
               { left: "Bba f-dar", right: "Papá está en casa" },
-              { left: "L-3a2ila kbira", right: "La familia es grande" },
+              { left: "L-3aila kbira", right: "La familia es grande" },
               { left: "3ndi khu", right: "Tengo un hermano" },
             ],
           },
@@ -853,7 +854,7 @@ export const unitsData: Unit[] = [
               {
                 speaker: "Sara",
                 text: "___",
-                options: ["3ndi khuya wa7ed", "L-3a2ila kbira", "Labas, l7amdulah"],
+                options: ["3ndi khuya wa7ed", "L-3aila kbira", "Labas, l7amdulah"],
                 answer: "3ndi khuya wa7ed",
               },
             ],
@@ -2109,6 +2110,7 @@ export const unitsData: Unit[] = [
         id: "12.1",
         title: "Hospitalidad y Cumplidos",
         description: "Lo que te dice la familia al recibirte y cómo responder con educación",
+        teaser: "Mañana aprenderás a responder cuando la familia te pregunte cosas… ¡incluso tu edad! 😄",
         exercises: [
           {
             id: "12.1.1",
@@ -2212,6 +2214,120 @@ export const unitsData: Unit[] = [
                 text: "___",
                 options: ["Shba3t, barakallahu fik", "La, ana mridha", "Sh7al hadshi?"],
                 answer: "Shba3t, barakallahu fik",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: "12.2",
+        title: "Conversación con la Familia",
+        description: "Las preguntas típicas de la familia y cómo responder con naturalidad",
+        teaser: "Mañana: los días de la semana y las partes del día, para quedar y organizarte con la familia 📅",
+        exercises: [
+          {
+            id: "12.2.1",
+            type: "multiple-choice",
+            question: "¿Cómo preguntas '¿Cómo está la familia?'",
+            options: ["Kif l-3aila?", "Fin saakna?", "Sh7al f-3emrek?", "Bsa7a"],
+            answer: "Kif l-3aila?",
+            hint: "'Kif' = cómo, 'l-3aila' = la familia.",
+          },
+          {
+            id: "12.2.2",
+            type: "fill-blank",
+            question: "Te preguntan por la familia. Responde: 'Todo bien, gracias a Dios'",
+            sentenceWithBlank: "Kulshi bikhir, ___.",
+            options: ["hamdullah", "bsa7a", "mar7ba", "shukran"],
+            answer: "hamdullah",
+            hint: "'Hamdullah' = gracias a Dios. La coletilla más marroquí.",
+          },
+          {
+            id: "12.2.3",
+            type: "multiple-choice",
+            question: "La familia te pregunta: '¿Te ha gustado la comida?' ¿Qué te dicen?",
+            options: ["Wash 3jebatek l-makla?", "Fin saakna?", "Kif l-3aila?", "Sh7al f-3emrek?"],
+            answer: "Wash 3jebatek l-makla?",
+            hint: "'3jeb' = gustar. 'Wash 3jebatek...?' = ¿te ha gustado...?",
+          },
+          {
+            id: "12.2.4",
+            type: "word-order",
+            question: "Responde con entusiasmo: '¡Sí, me ha gustado mucho!'",
+            words: ["bezzaf", "Iyeh", "3jebatni"],
+            orderedAnswer: ["Iyeh", "3jebatni", "bezzaf"],
+            translation: "¡Sí, me ha gustado mucho!",
+          },
+          {
+            id: "12.2.5",
+            type: "match-pairs",
+            question: "Empareja cada pregunta de la familia con su significado:",
+            pairs: [
+              { left: "Fin saakna?", right: "¿Dónde vives?" },
+              { left: "Sh7al f-3emrek?", right: "¿Cuántos años tienes?" },
+              { left: "Wash katfehmi darija?", right: "¿Entiendes darija?" },
+              { left: "Kif l-3aila?", right: "¿Cómo está la familia?" },
+            ],
+          },
+          {
+            id: "12.2.6",
+            type: "translation",
+            question: "Traduce al español: 'Fin saakna?'",
+            answer: ["donde vives", "dónde vives", "en donde vives", "donde vives?"],
+            translation: "¿Dónde vives?",
+            hint: "'Fin' = dónde (norte), 'saakna' = vives (a una mujer).",
+          },
+          {
+            id: "12.2.7",
+            type: "fill-blank",
+            question: "Responde de dónde eres: 'Vivo en España'",
+            sentenceWithBlank: "Ana ___ f-Sbanya.",
+            options: ["sakna", "saakna", "mn", "bikhir"],
+            answer: "sakna",
+            hint: "'Ana sakna f-Sbanya' = Vivo en España.",
+          },
+          {
+            id: "12.2.8",
+            type: "listening-select",
+            question: "Escucha la pregunta clásica de la familia y elige qué significa:",
+            audioText: "Sh7al f-3emrek?",
+            options: ["¿Cuántos años tienes?", "¿Cómo te llamas?", "¿De dónde eres?", "¿Has comido?"],
+            answer: "¿Cuántos años tienes?",
+            hint: "'Sh7al' = cuánto, 'f-3emrek' = en tu edad. ¡Te lo preguntarán seguro! 😄",
+          },
+          {
+            id: "12.2.9",
+            type: "true-false",
+            question: "Para decir 'Tengo 25 años', ¿dirías '3andi khamsa w 3ishrin 3am'?",
+            answer: true,
+            hint: "'3andi ... 3am' = tengo ... años. ¡Combinas con los números que ya sabes!",
+          },
+          {
+            id: "12.2.10",
+            type: "flashcard-reveal",
+            question: "¿Cómo dices que aprendes darija poco a poco?",
+            front: "Kant3allem shwiya b shwiya",
+            back: "Estoy aprendiendo poco a poco",
+            hint: "'Shwiya b shwiya' = poco a poco. ¡A la familia le encantará oírlo! 💚",
+          },
+          {
+            id: "12.2.11",
+            type: "conversation",
+            question: "La familia te hace las preguntas de siempre:",
+            dialogue: [
+              { speaker: "Meshi", text: "Sara, wash 3jebatek l-makla dyal yemma? 🐱🍲" },
+              {
+                speaker: "Sara",
+                text: "___",
+                options: ["Iyeh, 3jebatni bezzaf!", "La, ana mridha", "Fin so9?"],
+                answer: "Iyeh, 3jebatni bezzaf!",
+              },
+              { speaker: "Meshi", text: "Mzyan! W wash katfehmi darija? 🤔" },
+              {
+                speaker: "Sara",
+                text: "___",
+                options: ["Shwiya, kant3allem shwiya b shwiya", "Bslama", "Sh7al hadshi?"],
+                answer: "Shwiya, kant3allem shwiya b shwiya",
               },
             ],
           },

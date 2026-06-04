@@ -62,7 +62,7 @@ export const lessonVocabulary: { [key: string]: LearnedWord[] } = {
     { darija: "Wash?", spanish: "¿Acaso? (sí/no)", category: "Preguntas" },
   ],
   "4.1": [
-    { darija: "L-3a2ila", spanish: "La familia", category: "Familia" },
+    { darija: "L-3aila", spanish: "La familia", category: "Familia" },
     { darija: "Ba / Bba", spanish: "Papá", category: "Familia" },
     { darija: "Mma / Yemma", spanish: "Mamá", category: "Familia" },
     { darija: "Khu", spanish: "Hermano", category: "Familia" },
@@ -78,7 +78,7 @@ export const lessonVocabulary: { [key: string]: LearnedWord[] } = {
     { darija: "3ndi jouj khutat", spanish: "Tengo dos hermanas", category: "Familia" },
     { darija: "Bba f-dar", spanish: "Papá está en casa", category: "Familia" },
     { darija: "Mma tayba l-makla", spanish: "Mamá está cocinando la comida", category: "Familia" },
-    { darija: "L-3a2ila kbira", spanish: "La familia es grande", category: "Familia" },
+    { darija: "L-3aila kbira", spanish: "La familia es grande", category: "Familia" },
   ],
   "5.1": [
     { darija: "Dar", spanish: "Casa", category: "Casa", example: "Ana fi dar (Estoy en casa)" },
@@ -244,5 +244,17 @@ export const lessonVocabulary: { [key: string]: LearnedWord[] } = {
     { darija: "Shba3t", spanish: "Estoy llena / saciada", category: "Hospitalidad", example: "Shba3t, barakallahu fik (Estoy llena, gracias)" },
     { darija: "Bezzaf 3liya", spanish: "Es demasiado (para mí)", category: "Hospitalidad" },
     { darija: "Twa7echtek", spanish: "Te he echado de menos", category: "Cariño" },
+  ],
+  "12.2": [
+    { darija: "Kif l-3aila?", spanish: "¿Cómo está la familia?", category: "Familia" },
+    { darija: "Kulshi bikhir, hamdullah", spanish: "Todo bien, gracias a Dios", category: "Familia" },
+    { darija: "Wash 3jebatek l-makla?", spanish: "¿Te ha gustado la comida?", category: "Familia" },
+    { darija: "3jebatni bezzaf", spanish: "Me ha gustado mucho", category: "Familia" },
+    { darija: "Fin saakna?", spanish: "¿Dónde vives? (a una mujer)", category: "Familia" },
+    { darija: "Ana sakna f-Sbanya", spanish: "Vivo en España", category: "Familia" },
+    { darija: "Sh7al f-3emrek?", spanish: "¿Cuántos años tienes?", category: "Familia" },
+    { darija: "3andi ... 3am", spanish: "Tengo ... años", category: "Familia", example: "3andi khamsa w 3ishrin 3am (Tengo 25 años)" },
+    { darija: "Wash katfehmi darija?", spanish: "¿Entiendes darija?", category: "Familia" },
+    { darija: "Kant3allem shwiya b shwiya", spanish: "Estoy aprendiendo poco a poco", category: "Familia" },
   ],
 };

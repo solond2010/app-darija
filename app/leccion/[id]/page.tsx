@@ -237,6 +237,13 @@ export default function LeccionPage() {
     const totalXP = totalXPEarned + 50 + (isPerfect ? 100 : 0);
     const accuracy = Math.max(0, Math.round(((lesson.exercises.length - errorsCount) / lesson.exercises.length) * 100));
 
+    // "Come back tomorrow" hook: the next lesson + its teaser.
+    const allLessonsFlat = unitsData.flatMap((u) => u.lessons.map((l) => ({ id: l.id, title: l.title, teaser: l.teaser, emoji: u.emoji })));
+    const curIdx = allLessonsFlat.findIndex((l) => l.id === lessonId);
+    const nextLesson = curIdx >= 0 ? allLessonsFlat[curIdx + 1] : null;
+    const teaserText: string | null = (lesson.teaser as string | undefined) || (nextLesson ? `${nextLesson.emoji} ${nextLesson.title}` : null);
+    const vocabCount = lessonVocabulary[lessonId]?.length ?? 0;
+
     return (
       <div className="h-dvh flex flex-col max-w-md mx-auto overflow-hidden">
         {/* Scrollable content area */}
@@ -325,6 +332,33 @@ export default function LeccionPage() {
               ))}
             </div>
           </motion.div>
+
+          {/* Engagement: reward + tomorrow teaser + streak nudge */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="rounded-2xl p-4 bg-gradient-to-br from-brand-majorelle/12 to-brand-coral/10 border border-white/50 flex flex-col gap-2.5"
+          >
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">🎉</span>
+              <p className="text-sm font-bold font-title text-brand-dark">
+                ¡Has aprendido {vocabCount} {vocabCount === 1 ? "frase nueva" : "frases nuevas"}!
+              </p>
+            </div>
+            {teaserText && (
+              <div className="flex items-start gap-2.5">
+                <span className="text-xl">🔮</span>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  <b className="text-brand-majorelle">Mañana:</b> {teaserText}
+                </p>
+              </div>
+            )}
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">🔥</span>
+              <p className="text-xs text-slate-600">¡Vuelve mañana para no perder tu racha!</p>
+            </div>
+          </motion.div>
         </div>
 
         {/* Fixed footer CTA */}
@@ -341,7 +375,7 @@ export default function LeccionPage() {
             }}
             className="w-full py-4 btn-3d-primary font-title text-base"
           >
-            ¡Listo! Yallah 🐱🔥
+            {nextLesson ? "¡Hecho! Nos vemos mañana 🐱🔥" : "¡Listo! Yallah 🐱🔥"}
           </button>
         </div>
       </div>
