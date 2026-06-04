@@ -55,15 +55,15 @@ export const OptionButton: React.FC<OptionButtonProps> = ({
       whileTap={disabled ? undefined : { scale: 0.97 }}
       disabled={disabled}
       onClick={() => { if (!disabled) { haptics.tap(); onClick?.(); } }}
-      className={`w-full py-3.5 px-4 text-left font-semibold rounded-2xl border-2 border-b-[4px] backdrop-blur-md shadow-sm transition-colors ${SHELL[state]}`}
+      className={`w-full py-4.5 px-4 text-left font-bold rounded-[20px] border-2 border-b-[5px] backdrop-blur-md shadow-sm transition-colors ${SHELL[state]}`}
     >
-      <div className="flex items-center gap-3">
-        <span className={`w-7 h-7 rounded-xl text-xs font-bold font-title flex items-center justify-center flex-shrink-0 transition-colors ${BADGE[state]}`}>
-          {state === "correct" ? <Check className="w-4 h-4 stroke-[3]" />
-            : state === "incorrect" ? <X className="w-4 h-4 stroke-[3]" />
+      <div className="flex items-center gap-3.5">
+        <span className={`w-9 h-9 rounded-xl text-sm font-bold font-title flex items-center justify-center flex-shrink-0 transition-colors ${BADGE[state]}`}>
+          {state === "correct" ? <Check className="w-5 h-5 stroke-[3]" />
+            : state === "incorrect" ? <X className="w-5 h-5 stroke-[3]" />
             : index + 1}
         </span>
-        <span className="text-sm leading-snug">{label}</span>
+        <span className="text-base leading-snug">{label}</span>
       </div>
     </motion.button>
   );

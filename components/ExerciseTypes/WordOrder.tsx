@@ -60,7 +60,7 @@ export const WordOrder: React.FC<WordOrderProps> = ({
 
   return (
     <div className="flex flex-col gap-5 w-full select-none">
-      <h3 className="text-xl font-bold font-title text-brand-dark text-center leading-snug px-2">
+      <h3 className="text-2xl font-bold font-title text-brand-dark text-center leading-snug px-2">
         {question}
       </h3>
 

@@ -114,37 +114,52 @@ export const LessonMap: React.FC = () => {
                     key={lesson.id}
                     className={`flex flex-col items-center z-10 transition-transform ${posClass}`}
                   >
-                    <div className="relative">
-                      {/* Pulse ring for next unlocked lesson */}
+                    <div className="relative flex flex-col items-center">
+                      {/* "¡EMPIEZA!" bubble on the active lesson */}
                       {unlocked && !completed && (
-                        <span className="absolute -inset-3 rounded-full bg-brand-coral/20 animate-ping pointer-events-none" />
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1, y: [0, -4, 0] }}
+                          transition={{ y: { repeat: Infinity, duration: 1.4, ease: "easeInOut" }, default: { duration: 0.3 } }}
+                          className="absolute -top-11 bg-white text-brand-coral font-title font-bold text-[13px] px-3.5 py-1.5 rounded-2xl shadow-[0_8px_20px_rgba(42,35,66,0.2)] whitespace-nowrap z-20"
+                        >
+                          ¡EMPIEZA!
+                          <span className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-3 h-3 bg-white rotate-45 rounded-[3px]" />
+                        </motion.div>
                       )}
 
-                      {unlocked ? (
-                        <Link href={`/leccion/${lesson.id}`}>
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.93 }}
-                            className={`w-[68px] h-[68px] rounded-full flex items-center justify-center text-xl font-bold transition-all ${
-                              completed
-                                ? "bg-gradient-to-br from-brand-teal to-[#0A8576] text-white border-[3px] border-white/60 shadow-[0_6px_18px_rgba(17,181,164,0.45)]"
-                                : "bg-gradient-to-br from-brand-saffron via-brand-coral to-brand-rose text-white border-[3px] border-white/60 glow-coral"
-                            }`}
+                      <div className="relative">
+                        {/* Pulse ring for next unlocked lesson */}
+                        {unlocked && !completed && (
+                          <span className="absolute -inset-3 rounded-full bg-brand-coral/25 animate-ping pointer-events-none" />
+                        )}
+
+                        {unlocked ? (
+                          <Link href={`/leccion/${lesson.id}`}>
+                            <motion.button
+                              whileHover={{ scale: 1.08 }}
+                              whileTap={{ scale: 0.93, y: 4 }}
+                              className={`w-[78px] h-[78px] rounded-full flex items-center justify-center text-xl font-bold border-[4px] border-white/70 ${
+                                completed
+                                  ? "bg-gradient-to-br from-brand-teal to-[#0A8576] text-white shadow-[0_7px_0_#0a6e62,0_16px_26px_rgba(17,181,164,0.4)]"
+                                  : "bg-gradient-to-br from-brand-saffron via-brand-coral to-brand-rose text-white shadow-[0_7px_0_#c23a5e,0_16px_30px_rgba(255,107,107,0.5)]"
+                              }`}
+                            >
+                              {completed
+                                ? <Check className="w-8 h-8 stroke-[3]" />
+                                : <Play className="w-7 h-7 fill-white stroke-none ml-1" />
+                              }
+                            </motion.button>
+                          </Link>
+                        ) : (
+                          <button
+                            disabled
+                            className="w-[78px] h-[78px] rounded-full flex items-center justify-center bg-[#cdd3e0] border-[4px] border-white/60 text-white shadow-[0_6px_0_#b3bacb] cursor-not-allowed"
                           >
-                            {completed
-                              ? <Check className="w-7 h-7 stroke-[3]" />
-                              : <Play className="w-6 h-6 fill-white stroke-none ml-0.5" />
-                            }
-                          </motion.button>
-                        </Link>
-                      ) : (
-                        <button
-                          disabled
-                          className="w-[68px] h-[68px] rounded-full flex items-center justify-center bg-slate-200 border-[3px] border-slate-300 text-slate-400 shadow-[0_3px_0_#CBD5E1] cursor-not-allowed"
-                        >
-                          <Lock className="w-6 h-6 stroke-2" />
-                        </button>
-                      )}
+                            <Lock className="w-7 h-7 stroke-2" />
+                          </button>
+                        )}
+                      </div>
                     </div>
 
                     {/* Label */}

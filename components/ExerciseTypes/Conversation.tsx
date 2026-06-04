@@ -71,7 +71,7 @@ export const Conversation: React.FC<ConversationProps> = ({
 
   return (
     <div className="flex flex-col gap-4 w-full select-none max-w-sm mx-auto">
-      <h3 className="text-xl font-bold font-title text-brand-dark mb-2 text-center">
+      <h3 className="text-2xl font-bold font-title text-brand-dark mb-2 text-center">
         {question}
       </h3>
 

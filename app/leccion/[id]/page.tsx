@@ -402,14 +402,20 @@ export default function LeccionPage() {
           <X className="w-5 h-5 stroke-2" />
         </button>
 
-        {/* Progress bar */}
-        <div className="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden">
-          <motion.div
-            layout
-            className="h-full bg-gradient-to-r from-brand-saffron via-brand-coral to-brand-rose rounded-full shadow-[0_0_12px_rgba(255,107,107,0.55)]"
-            animate={{ width: `${progressPercent}%` }}
-            transition={{ type: "spring", stiffness: 220, damping: 26 }}
-          />
+        {/* Segmented progress bar */}
+        <div className="flex-1 flex gap-1.5">
+          {lesson.exercises.map((_: unknown, i: number) => (
+            <div
+              key={i}
+              className={`flex-1 h-2.5 rounded-full transition-colors duration-300 ${
+                i < currentIdx
+                  ? "bg-gradient-to-r from-brand-saffron via-brand-coral to-brand-rose shadow-[0_0_8px_rgba(255,107,107,0.5)]"
+                  : i === currentIdx
+                  ? "bg-brand-coral/40"
+                  : "bg-slate-200/70"
+              }`}
+            />
+          ))}
         </div>
 
         {/* Lives */}
@@ -522,7 +528,7 @@ export default function LeccionPage() {
                   : selectedAns === null || (Array.isArray(selectedAns) && selectedAns.length === 0)
               }
               onClick={() => handleCheck()}
-              className={`w-full py-4 rounded-2xl font-title text-base text-center transition-all ${
+              className={`w-full py-4.5 rounded-[20px] font-title text-lg tracking-wide text-center transition-all ${
                 (currentExercise.type === "flashcard-reveal"
                   ? isCardFlipped
                   : selectedAns !== null && (!Array.isArray(selectedAns) || selectedAns.length > 0))
@@ -530,16 +536,16 @@ export default function LeccionPage() {
                   : "bg-slate-200 text-slate-400 cursor-not-allowed border-b-0"
               }`}
             >
-              {currentExercise.type === "flashcard-reveal" ? "Girar carta 🔄" : "Comprobar"}
+              {currentExercise.type === "flashcard-reveal" ? "GIRAR CARTA 🔄" : "COMPROBAR"}
             </button>
           ) : (
             <button
               onClick={handleContinue}
-              className={`w-full py-4 rounded-2xl font-title text-base text-center ${
+              className={`w-full py-4.5 rounded-[20px] font-title text-lg tracking-wide text-center ${
                 lastAnswerCorrect ? "btn-3d-mint" : "btn-3d-primary"
               }`}
             >
-              {attempts === 2 && !lastAnswerCorrect ? "Intentar de nuevo 💪" : "Continuar →"}
+              {attempts === 2 && !lastAnswerCorrect ? "INTENTAR DE NUEVO 💪" : "CONTINUAR →"}
             </button>
           )}
         </div>

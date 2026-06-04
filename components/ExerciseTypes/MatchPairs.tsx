@@ -88,7 +88,7 @@ export const MatchPairs: React.FC<MatchPairsProps> = ({
 
   return (
     <div className="flex flex-col gap-6 w-full select-none">
-      <h3 className="text-xl font-bold font-title text-brand-dark mb-2 text-center">
+      <h3 className="text-2xl font-bold font-title text-brand-dark mb-2 text-center">
         {question}
       </h3>
 

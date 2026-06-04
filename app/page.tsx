@@ -3,12 +3,10 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Header } from "../components/Header";
 import { BottomNav } from "../components/BottomNav";
-import { Meshi } from "../components/Suki";
 import { LessonMap } from "../components/LessonMap";
 import { useStore, getLevelInfo } from "../lib/store";
-import { getRandomMessage } from "../data/meshi-messages";
 import { useContent } from "../lib/content";
-import { Flame, Star, Trophy, Zap, Target, ChevronRight, AlertTriangle } from "lucide-react";
+import { Zap, Target, ChevronRight, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
@@ -18,12 +16,10 @@ export default function Home() {
     todayXP, todayXPDate, dailyGoal, lastActiveDate, completedLessons, unlockedUnits,
   } = useStore();
   const [mounted, setMounted] = useState(false);
-  const [meshiMsg, setMeshiMsg] = useState({ text: "", emoji: "😺" });
   const unitsData = useContent((s) => s.units);
 
   useEffect(() => {
     setMounted(true);
-    setMeshiMsg(getRandomMessage("greetings"));
   }, []);
 
   // Find next lesson to continue
@@ -59,6 +55,8 @@ export default function Home() {
   const todayXPDisplay = todayXPDate === today ? todayXP : 0;
   const dailyGoalMet = todayXPDisplay >= dailyGoal;
   const dailyProgressPercent = Math.min(100, (todayXPDisplay / dailyGoal) * 100);
+  const ringDeg = Math.round((progressPercent / 100) * 360);
+  const xpToNext = levelInfo.level < 5 ? levelInfo.max - xp : 0;
 
   return (
     <div className="min-h-screen pb-20 flex flex-col max-w-md mx-auto relative overflow-hidden">
@@ -95,19 +93,50 @@ export default function Home() {
           )}
         </AnimatePresence>
 
-        {/* Meshi welcome card */}
+        {/* HERO — level ring + XP */}
         <motion.section
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="glass rounded-3xl px-4 pt-3 pb-4 flex items-center mt-1"
+          className="relative overflow-hidden rounded-[28px] p-5 sheen glow-coral mt-1"
+          style={{ background: "linear-gradient(135deg, #5B5FEF 0%, #FF6B6B 52%, #FF9E2C 110%)" }}
         >
-          <Meshi
-            mood="normal"
-            size={100}
-            showBubble={true}
-            bubbleText={`¡Hola Sara! 🐱 ${meshiMsg.text}`}
-          />
+          <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full pointer-events-none" />
+          <div className="absolute -left-6 -top-6 w-24 h-24 bg-white/10 rounded-full pointer-events-none" />
+
+          <div className="relative flex items-center gap-4">
+            {/* Progress ring */}
+            <div
+              className="w-[86px] h-[86px] rounded-full grid place-items-center flex-shrink-0"
+              style={{ background: `conic-gradient(#FFE08A 0deg ${ringDeg}deg, rgba(255,255,255,0.22) ${ringDeg}deg 360deg)` }}
+            >
+              <div className="w-[68px] h-[68px] rounded-full bg-black/15 backdrop-blur-sm grid place-items-center text-white text-center">
+                <div>
+                  <div className="text-lg font-bold font-title leading-none">{Math.round(progressPercent)}%</div>
+                  <div className="text-[8px] font-bold tracking-[1.5px] opacity-85 mt-0.5">NIVEL {levelInfo.level}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <span className="inline-block text-[10px] bg-white/25 px-2.5 py-1 rounded-full uppercase font-bold tracking-wider text-white">
+                {levelInfo.name}
+              </span>
+              <h2 className="text-2xl font-bold font-title text-white mt-1.5 leading-none">{xp} XP</h2>
+              <p className="text-xs font-bold text-white/90 mt-1.5">
+                {levelInfo.level < 5 ? `${xpToNext} XP para Nivel ${levelInfo.level + 1}` : "¡Nivel máximo! 👑"}
+                <span className="opacity-90"> · 🔥 {streak} {streak === 1 ? "día" : "días"}</span>
+              </p>
+              <div className="h-2.5 bg-white/28 rounded-full mt-2 overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progressPercent}%` }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                  className="h-full bg-[#FFE08A] rounded-full shadow-[0_0_12px_rgba(255,224,138,0.8)]"
+                />
+              </div>
+            </div>
+          </div>
         </motion.section>
 
         {/* Continue lesson button */}
@@ -161,65 +190,6 @@ export default function Home() {
               transition={{ duration: 0.8, ease: "easeOut" }}
               className={`h-full rounded-full ${dailyGoalMet ? "bg-gradient-to-r from-emerald-400 to-emerald-500" : "bg-gradient-to-r from-brand-coral to-brand-pink"}`}
             />
-          </div>
-        </motion.section>
-
-        {/* Level / XP card */}
-        <motion.section
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.15 }}
-          className="relative overflow-hidden rounded-3xl p-5 sheen glow-coral"
-          style={{ background: "linear-gradient(135deg, #5B5FEF 0%, #FF6B6B 52%, #FF9E2C 110%)" }}
-        >
-          {/* Decorative circles */}
-          <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full pointer-events-none" />
-          <div className="absolute -left-6 -top-6 w-24 h-24 bg-white/10 rounded-full pointer-events-none" />
-          <div className="absolute right-16 -top-4 w-16 h-16 bg-white/5 rounded-full pointer-events-none" />
-
-          <div className="relative flex justify-between items-start mb-3">
-            <div>
-              <span className="text-[10px] bg-white/25 px-2.5 py-1 rounded-full uppercase font-bold tracking-wider text-white">
-                Nivel {levelInfo.level}
-              </span>
-              <h3 className="text-2xl font-bold font-title text-white mt-1.5 leading-none">
-                {levelInfo.name}
-              </h3>
-            </div>
-            <div className="bg-white/20 p-2.5 rounded-2xl">
-              <Trophy className="w-6 h-6 text-yellow-300 fill-yellow-300" />
-            </div>
-          </div>
-
-          {/* XP bar */}
-          <div className="relative flex flex-col gap-1.5">
-            <div className="flex justify-between text-xs font-semibold text-white/90">
-              <span>{xp} XP</span>
-              {levelInfo.level < 5
-                ? <span>{levelInfo.max - xp} XP para nivel {levelInfo.level + 1}</span>
-                : <span>¡Nivel máximo! 👑</span>
-              }
-            </div>
-            <div className="w-full h-3 bg-white/25 rounded-full overflow-hidden">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${progressPercent}%` }}
-                transition={{ duration: 1.1, ease: "easeOut" }}
-                className="h-full bg-yellow-300 rounded-full shadow-sm"
-              />
-            </div>
-          </div>
-
-          {/* Micro stats */}
-          <div className="relative flex gap-2 mt-3">
-            <div className="flex-1 flex items-center gap-1.5 bg-white/15 rounded-xl px-2.5 py-1.5">
-              <Flame className="w-3.5 h-3.5 text-yellow-300 fill-yellow-300 flex-shrink-0" />
-              <span className="text-[11px] font-bold text-white">{streak} {streak === 1 ? "día" : "días"}</span>
-            </div>
-            <div className="flex-1 flex items-center gap-1.5 bg-white/15 rounded-xl px-2.5 py-1.5">
-              <Star className="w-3.5 h-3.5 text-yellow-300 fill-yellow-200 flex-shrink-0" />
-              <span className="text-[11px] font-bold text-white truncate">{xp} XP totales</span>
-            </div>
           </div>
         </motion.section>
 

@@ -47,7 +47,7 @@ export const TrueFalse: React.FC<TrueFalseProps> = ({
   return (
     <div className="flex flex-col gap-8 w-full select-none">
       <motion.h3 initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-        className="text-xl font-bold font-title text-brand-dark text-center leading-snug px-2">
+        className="text-2xl font-bold font-title text-brand-dark text-center leading-snug px-2">
         {question}
       </motion.h3>
 

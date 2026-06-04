@@ -36,7 +36,7 @@ export const ListeningSelect: React.FC<ListeningSelectProps> = ({
   return (
     <div className="flex flex-col gap-6 w-full select-none">
       <motion.h3 initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-        className="text-xl font-bold font-title text-brand-dark text-center">
+        className="text-2xl font-bold font-title text-brand-dark text-center">
         {question}
       </motion.h3>
 

@@ -33,7 +33,7 @@ export const FillBlank: React.FC<FillBlankProps> = ({
   return (
     <div className="flex flex-col gap-7 w-full select-none">
       <motion.h3 initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-        className="text-xl font-bold font-title text-brand-dark text-center leading-snug px-2">
+        className="text-2xl font-bold font-title text-brand-dark text-center leading-snug px-2">
         {question}
       </motion.h3>
 
@@ -41,7 +41,7 @@ export const FillBlank: React.FC<FillBlankProps> = ({
         initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }}
         className="glass rounded-3xl p-5 flex items-center justify-center min-h-[88px]"
       >
-        <div className="text-xl font-bold font-title text-brand-dark flex items-center justify-center gap-2 flex-wrap leading-loose">
+        <div className="text-2xl font-bold font-title text-brand-dark flex items-center justify-center gap-2 flex-wrap leading-loose">
           <span>{parts[0]}</span>
           <span className={blankClass}>{selectedAnswer || "___"}</span>
           {parts[1] && <span>{parts[1]}</span>}

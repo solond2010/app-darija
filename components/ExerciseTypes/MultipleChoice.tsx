@@ -28,7 +28,7 @@ export const MultipleChoice: React.FC<MultipleChoiceProps> = ({
       <motion.h3
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-xl font-bold font-title text-brand-dark text-center px-2 leading-snug"
+        className="text-2xl font-bold font-title text-brand-dark text-center px-2 leading-snug"
       >
         {question}
       </motion.h3>
