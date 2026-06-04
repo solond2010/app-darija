@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Check, X } from "lucide-react";
+import { haptics } from "../../utils/haptics";
 
 export type OptionState = "idle" | "selected" | "correct" | "incorrect" | "dimmed";
 
@@ -53,7 +54,7 @@ export const OptionButton: React.FC<OptionButtonProps> = ({
       transition={{ delay, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
       whileTap={disabled ? undefined : { scale: 0.97 }}
       disabled={disabled}
-      onClick={onClick}
+      onClick={() => { if (!disabled) { haptics.tap(); onClick?.(); } }}
       className={`w-full py-3.5 px-4 text-left font-semibold rounded-2xl border-2 border-b-[4px] backdrop-blur-md shadow-sm transition-colors ${SHELL[state]}`}
     >
       <div className="flex items-center gap-3">

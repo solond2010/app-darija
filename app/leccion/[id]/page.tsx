@@ -11,6 +11,7 @@ import { getRandomMessage } from "../../../data/meshi-messages";
 import { Meshi, MeshiMood } from "../../../components/Suki";
 import { ExerciseRenderer } from "../../../components/ExerciseTypes/ExerciseRenderer";
 import { sound } from "../../../utils/sound";
+import { haptics } from "../../../utils/haptics";
 import { Heart, X, Sparkles, Star, Flame, Trophy, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
@@ -117,11 +118,13 @@ export default function LeccionPage() {
 
     if (correct) {
       if (soundsEnabled) sound.playCorrect();
+      haptics.success();
       setTotalXPEarned((p) => p + (attempts === 1 ? 10 : 5));
       setMeshiMood("celebrating");
       setMeshiSpeech(getRandomMessage("correct").text);
     } else {
       if (soundsEnabled) sound.playIncorrect();
+      haptics.error();
       decrementLive();
       setLocalLives((p) => Math.max(0, p - 1));
       setErrorsCount((p) => p + 1);
@@ -134,6 +137,7 @@ export default function LeccionPage() {
   };
 
   const handleContinue = () => {
+    haptics.light();
     if (meshiMood === "sad" && attempts === 2 && isAnswerChecked) {
       if (localLives <= 0) { setIsLessonFinished(true); return; }
       setIsAnswerChecked(false);
@@ -159,6 +163,7 @@ export default function LeccionPage() {
 
   const handleLessonCompletion = () => {
     setIsLessonFinished(true);
+    haptics.celebrate();
     const gotPerfect = errorsCount === 0;
     const { achievementsUnlocked } = completeLesson(lessonId, gotPerfect, unitsData);
     setUnlockedBadges(achievementsUnlocked);
@@ -454,18 +459,34 @@ export default function LeccionPage() {
         <AnimatePresence>
           {isAnswerChecked && lastAnswerCorrect !== null && (
             <motion.div
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ type: "spring", stiffness: 420, damping: 26 }}
               className="px-5 pt-4 pb-1"
             >
               {lastAnswerCorrect ? (
-                <div className="flex items-center gap-2.5">
-                  <CheckCircle2 className="w-6 h-6 text-emerald-500 fill-emerald-100 flex-shrink-0" />
+                <div className="flex items-center gap-2.5 relative">
+                  <motion.div
+                    initial={{ scale: 0, rotate: -30 }}
+                    animate={{ scale: [0, 1.35, 1], rotate: 0 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 14 }}
+                    className="flex-shrink-0"
+                  >
+                    <CheckCircle2 className="w-7 h-7 text-emerald-500 fill-emerald-100" />
+                  </motion.div>
                   <div>
                     <p className="font-bold font-title text-emerald-700 text-base leading-tight">¡Correcto!</p>
-                    <p className="text-xs text-emerald-600 mt-0.5">+{attempts === 1 ? 10 : 5} XP · ¡Sigue así!</p>
+                    <p className="text-xs text-emerald-600 mt-0.5">¡Sigue así!</p>
                   </div>
+                  <motion.span
+                    initial={{ opacity: 0, y: 0, scale: 0.6 }}
+                    animate={{ opacity: [0, 1, 1, 0], y: -28, scale: 1.1 }}
+                    transition={{ duration: 1.1, ease: "easeOut" }}
+                    className="absolute right-2 top-0 font-extrabold font-title text-emerald-500 text-lg"
+                  >
+                    +{attempts === 1 ? 10 : 5} XP
+                  </motion.span>
                 </div>
               ) : (
                 <div className="flex items-start gap-2.5">

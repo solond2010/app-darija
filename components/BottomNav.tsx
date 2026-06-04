@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, RefreshCw, BookOpen, User } from "lucide-react";
+import { haptics } from "../utils/haptics";
 
 export const BottomNav: React.FC = () => {
   const pathname = usePathname();
@@ -27,6 +28,7 @@ export const BottomNav: React.FC = () => {
           <Link
             key={item.path}
             href={item.path}
+            onClick={() => haptics.tap()}
             className="flex flex-col items-center justify-center w-full h-full gap-0.5 transition-all active:scale-90"
           >
             <div

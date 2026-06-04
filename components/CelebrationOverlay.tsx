@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { Trophy, Sparkles, Flame } from "lucide-react";
 import { useCelebration } from "../lib/celebration";
+import { haptics } from "../utils/haptics";
 
 const WARM = ["#FF9E2C", "#FFC247", "#FF6B6B", "#FF4D8D", "#5B5FEF", "#11B5A4"];
 const FIRE = ["#FF9E2C", "#FFC247", "#FF6B6B", "#E2725B", "#FF4D00"];
@@ -15,6 +16,7 @@ export const CelebrationOverlay: React.FC = () => {
 
   useEffect(() => {
     if (!current) return;
+    haptics.levelUp();
     const colors = current.kind === "streak" ? FIRE : WARM;
     confetti({ particleCount: 140, spread: 100, origin: { y: 0.45 }, colors });
     const end = Date.now() + 1400;
