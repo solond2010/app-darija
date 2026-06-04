@@ -61,6 +61,7 @@ export const unitsData: Unit[] = [
         id: "1.1",
         title: "Saludos y Despedidas",
         description: "Aprende a decir hola, adiós y dar las gracias en el norte de Marruecos",
+        teaser: "Mañana: aprende a decir 'yo', 'tú' y 'ella' para hablar de cualquiera 👤",
         exercises: [
           {
             id: "1.1.1",
@@ -164,6 +165,7 @@ export const unitsData: Unit[] = [
         id: "1.2",
         title: "Los Pronombres",
         description: "Aprende a decir Yo, Tú, Él, Ella y Nosotros en el dialecto del norte",
+        teaser: "Mañana ya sabrás decir tu nombre y de dónde eres 🙋‍♀️",
         exercises: [
           {
             id: "1.2.1",
@@ -252,6 +254,7 @@ export const unitsData: Unit[] = [
         id: "1.3",
         title: "Presentarse",
         description: "Aprende a decir tu nombre, de dónde eres y a entablar una conversación básica",
+        teaser: "Mañana: cómo decir si estás cansada, contenta o enferma 💛",
         exercises: [
           {
             id: "1.3.1",
@@ -362,6 +365,7 @@ export const unitsData: Unit[] = [
         id: "2.1",
         title: "Estados y Adjetivos",
         description: "Adjetivos básicos para describir estados físicos y de ánimo en femenino y masculino",
+        teaser: "Mañana: di cuánto te sientes así, con 'mucho' y 'un poco' ⚖️",
         exercises: [
           {
             id: "2.1.1",
@@ -449,6 +453,7 @@ export const unitsData: Unit[] = [
         id: "2.2",
         title: "Expresar Estados",
         description: "Combina pronombres y adverbios como 'mucho' o 'un poco' para decir cómo te sientes",
+        teaser: "Mañana: las palabras mágicas para preguntar — ¿qué? ¿dónde? ¿por qué? ❓",
         exercises: [
           {
             id: "2.2.1",
@@ -557,6 +562,7 @@ export const unitsData: Unit[] = [
         id: "3.1",
         title: "Palabras Interrogativas",
         description: "Consigue preguntar información básica sobre el entorno, personas y tiempo",
+        teaser: "Mañana: los nombres de toda la familia — papá, mamá, hermanos… 👨‍👩‍👧",
         exercises: [
           {
             id: "3.1.1",
@@ -668,6 +674,7 @@ export const unitsData: Unit[] = [
         id: "4.1",
         title: "Miembros de la Familia",
         description: "Vocabulario básico sobre los parientes directos y tíos maternos/paternos",
+        teaser: "Mañana: presenta a tu familia y cuenta qué está haciendo cada uno 🏡",
         exercises: [
           {
             id: "4.1.1",
@@ -760,6 +767,7 @@ export const unitsData: Unit[] = [
         id: "4.2",
         title: "Hablar de la Familia",
         description: "Aprende a presentar a tus parientes y describir situaciones cotidianas",
+        teaser: "Mañana: el vocabulario de la casa — puerta, cocina, salón… 🏠",
         exercises: [
           {
             id: "4.2.1",
@@ -875,6 +883,7 @@ export const unitsData: Unit[] = [
         id: "5.1",
         title: "Vocabulario de la Casa",
         description: "Puertas, sillas, mesas y cómo decir amigo/a",
+        teaser: "Mañana: di 'nuestra casa', 'papá está en casa' y más frases del hogar 🛋️",
         exercises: [
           {
             id: "5.1.1",
@@ -955,6 +964,7 @@ export const unitsData: Unit[] = [
         id: "5.2",
         title: "Frases en Casa",
         description: "Di 'Papá está en casa', 'Nuestra casa' y más frases del hogar",
+        teaser: "Mañana: ¡a la mesa! Pan, agua, té, carne y pescado 🍵",
         exercises: [
           {
             id: "5.2.1",
@@ -1050,6 +1060,7 @@ export const unitsData: Unit[] = [
         id: "6.1",
         title: "En la Mesa",
         description: "Agua, pan, té, carne, pollo y más vocabulario esencial",
+        teaser: "Mañana: di que algo está riquísimo y pide té con cortesía 😋",
         exercises: [
           {
             id: "6.1.1",
@@ -1131,6 +1142,7 @@ export const unitsData: Unit[] = [
         id: "6.2",
         title: "Sabores y Conversación",
         description: "Di que algo está rico, pide té y practica frases de mesa",
+        teaser: "Mañana: los verbos del día a día — como, bebo, duermo, voy ⚡",
         exercises: [
           {
             id: "6.2.1",
@@ -1226,6 +1238,7 @@ export const unitsData: Unit[] = [
         id: "7.1",
         title: "Acciones Básicas",
         description: "Como, bebo, duermo, trabajo, voy... los verbos más usados",
+        teaser: "Mañana: di lo que quieres, lo que te gusta y lo que puedes hacer 💪",
         exercises: [
           {
             id: "7.1.1",
@@ -1307,6 +1320,7 @@ export const unitsData: Unit[] = [
         id: "7.2",
         title: "Querer, Gustar y Poder",
         description: "Di lo que quieres, lo que te gusta y lo que puedes hacer",
+        teaser: "Mañana: ¡a todo color! Blanco, negro, rojo, verde… 🎨",
         exercises: [
           {
             id: "7.2.1",
@@ -1411,6 +1425,7 @@ export const unitsData: Unit[] = [
         id: "8.1",
         title: "Los Colores",
         description: "Blanco, negro, rojo, verde, azul y gris en Darija",
+        teaser: "Mañana: la ropa — jilaba, camisa, zapatos y más 👗",
         exercises: [
           {
             id: "8.1.1",
@@ -1483,6 +1498,7 @@ export const unitsData: Unit[] = [
         id: "8.2",
         title: "La Ropa",
         description: "Jilaba, camisa, pantalón, zapatos y más prendas esenciales",
+        teaser: "Mañana: aprende a contar del 1 al 10 en darija 🔢",
         exercises: [
           {
             id: "8.2.1",
@@ -1575,6 +1591,7 @@ export const unitsData: Unit[] = [
         id: "9.1",
         title: "Del 1 al 10",
         description: "Los diez primeros números en Darija",
+        teaser: "Mañana: sigue contando, del 11 al 20 🔢",
         exercises: [
           {
             id: "9.1.1",
@@ -1656,6 +1673,7 @@ export const unitsData: Unit[] = [
         id: "9.2",
         title: "Del 11 al 20",
         description: "Los números del once al veinte en Darija",
+        teaser: "Mañana: muévete por la ciudad — el zoco, la farmacia, el hospital 🕌",
         exercises: [
           {
             id: "9.2.1",
@@ -1739,6 +1757,7 @@ export const unitsData: Unit[] = [
         id: "10.1",
         title: "Lugares Importantes",
         description: "El mercado, el hospital, la farmacia, la escuela y más",
+        teaser: "Mañana: pide un taxi y pregunta por las calles 🚕",
         exercises: [
           {
             id: "10.1.1",
@@ -1820,6 +1839,7 @@ export const unitsData: Unit[] = [
         id: "10.2",
         title: "Por la Ciudad",
         description: "Pide taxis, busca calles y muévete con confianza",
+        teaser: "Mañana: habla del futuro con 'ghan' — 'voy a hacer…' 🚀",
         exercises: [
           {
             id: "10.2.1",
@@ -1915,6 +1935,7 @@ export const unitsData: Unit[] = [
         id: "11.1",
         title: "El Futuro con Ghan",
         description: "Di 'Voy a comer', 'Voy a venir' y planifica con Meshi",
+        teaser: "Mañana: expresiones clave — 'no pasa nada', 'vale', 'todo bien' ✨",
         exercises: [
           {
             id: "11.1.1",
@@ -2006,6 +2027,7 @@ export const unitsData: Unit[] = [
         id: "11.2",
         title: "Saludos Completos y Expresiones Útiles",
         description: "Maxi mushkil, Wakha, Kulshi mzian y más expresiones del día a día",
+        teaser: "Mañana: ¡vas de visita! Lo que te dice la familia al recibirte 🫖",
         exercises: [
           {
             id: "11.2.1",
