@@ -25,6 +25,7 @@ export default function LeccionPage() {
   const { lives, decrementLive, refillLives, addXP, completeLesson, addLearnedWords, soundsEnabled } = useStore();
   const unitsData = useContent((s) => s.units);
   const lessonVocabulary = useContent((s) => s.vocabulary);
+  const contentLoaded = useContent((s) => s.loaded);
 
   const [lesson, setLesson] = useState<any>(null);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -44,22 +45,30 @@ export default function LeccionPage() {
   const [isLessonFinished, setIsLessonFinished] = useState(false);
   const [unlockedBadges, setUnlockedBadges] = useState<string[]>([]);
   const startTimeRef = useRef<number>(Date.now());
+  const startedRef = useRef(false);
 
   useEffect(() => {
-    setLocalLives(useStore.getState().lives);
     let found: any = null;
     unitsData.forEach((u) => {
       const m = u.lessons.find((l) => l.id === lessonId);
       if (m) found = m;
     });
     if (found) {
-      setLesson(found);
-      startTimeRef.current = Date.now();
-      setMeshiSpeech(`¡Yallah Sara! Vamos a empezar la lección ${lessonId}. 🐱`);
-    } else {
+      // Set the lesson only once. An async content refresh (Supabase) must never
+      // swap the lesson object out from under an in-progress lesson — that would
+      // reset the exercise and block "Continuar".
+      setLesson((prev: any) => prev ?? found);
+      if (!startedRef.current) {
+        startedRef.current = true;
+        setLocalLives(useStore.getState().lives);
+        startTimeRef.current = Date.now();
+        setMeshiSpeech(`¡Yallah Sara! Vamos a empezar la lección ${lessonId}. 🐱`);
+      }
+    } else if (contentLoaded) {
+      // Content has finished loading and the lesson genuinely doesn't exist.
       router.push("/");
     }
-  }, [lessonId, router, unitsData]);
+  }, [lessonId, router, unitsData, contentLoaded]);
 
   useEffect(() => {
     setIsCardFlipped(false);
@@ -75,7 +84,6 @@ export default function LeccionPage() {
   }
 
   const currentExercise = lesson.exercises[currentIdx];
-  const progressPercent = (currentIdx / lesson.exercises.length) * 100;
 
   const getCorrectAnswerText = (): string | null => {
     if (!currentExercise) return null;
@@ -521,7 +529,7 @@ export default function LeccionPage() {
           )}
         </AnimatePresence>
 
-        <div className="p-4">
+        <div className="px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
           {currentExercise.type === "flashcard-reveal" && isCardFlipped && !isAnswerChecked ? (
             <div className="flex gap-3">
               <button onClick={() => handleCheck(false)} className="flex-1 py-4 rounded-2xl font-title text-sm btn-3d-gray">
