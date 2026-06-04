@@ -291,6 +291,11 @@ export default function PerfilPage() {
             bubbleText="¡Sara, eres toda una campeona! Mira todo lo que has conseguido ya. 🐱💪"
           />
         </section>
+
+        {/* Build marker — lets us confirm which version is installed. */}
+        <p className="text-center text-[10px] text-slate-300 font-title tracking-wide pb-1">
+          Meshi v{(process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || "dev").slice(0, 7)}
+        </p>
       </main>
 
       <BottomNav />

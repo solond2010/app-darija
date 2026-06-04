@@ -99,28 +99,32 @@ export function AppInit() {
       else stopSync();
     });
 
-    // PWA daily auto-refresh: pull the latest deployed version once per day,
-    // even when launched from the iPhone home screen — no need to remove the
-    // shortcut and re-add it. Reloads at most once per calendar day, only when
-    // the app is (re)opened, never mid-use.
-    const dailyRefresh = () => {
+    // PWA auto-update: every time the app (re)opens, ask the server which version
+    // is deployed and compare it to the version baked into THIS bundle. If a newer
+    // one exists, reload to pick it up — even when launched from the iPhone home
+    // screen, with no need to remove and re-add the shortcut. Never reloads
+    // mid-use (only when becoming visible), and at most once per detected version
+    // per session, so it can't loop.
+    const BUILT_VERSION = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || "dev";
+    const checkForUpdate = async () => {
       try {
         if (document.visibilityState !== "visible") return;
-        const today = new Date().toLocaleDateString("en-CA");
-        const last = localStorage.getItem("meshi-last-refresh");
-        if (last === today) return;
-        const firstEver = last === null;
-        localStorage.setItem("meshi-last-refresh", today);
-        if (!firstEver) {
-          navigator.serviceWorker?.getRegistration().then((r) => r?.update()).catch(() => {});
-          window.location.reload();
-        }
+        const res = await fetch("/api/version", { cache: "no-store" });
+        if (!res.ok) return;
+        const { version } = await res.json();
+        if (!version || version === "dev" || version === BUILT_VERSION) return;
+        // A newer deployment is live. Guard against reload loops: only attempt
+        // once per server version per session.
+        if (sessionStorage.getItem("meshi-update-attempt") === version) return;
+        sessionStorage.setItem("meshi-update-attempt", version);
+        await navigator.serviceWorker?.getRegistration().then((r) => r?.update()).catch(() => {});
+        window.location.reload();
       } catch {
-        /* ignore */
+        /* offline or transient — ignore, try again next time */
       }
     };
-    dailyRefresh();
-    const onVisible = () => dailyRefresh();
+    checkForUpdate();
+    const onVisible = () => checkForUpdate();
     document.addEventListener("visibilitychange", onVisible);
 
     return () => {

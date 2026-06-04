@@ -148,7 +148,13 @@ export default function LeccionPage() {
 
   const handleContinue = () => {
     haptics.light();
-    if (meshiMood === "sad" && attempts === 2 && isAnswerChecked) {
+    // The "retry" path must match the button's "INTENTAR DE NUEVO" condition
+    // EXACTLY (attempts === 2 && !lastAnswerCorrect), so the label and the action
+    // can never disagree. Previously this keyed off meshiMood, a presentational
+    // value, which risked the button saying "Continuar" while the handler did a
+    // retry (the lesson appearing not to advance).
+    const isRetry = isAnswerChecked && attempts === 2 && !lastAnswerCorrect;
+    if (isRetry) {
       if (localLives <= 0) { setIsLessonFinished(true); return; }
       setIsAnswerChecked(false);
       setLastAnswerCorrect(null);
@@ -157,6 +163,7 @@ export default function LeccionPage() {
       setMeshiSpeech("¡Tú puedes Sara! Vamos a intentarlo otra vez. 💪");
       return;
     }
+    // Advance to the next exercise, or finish the lesson on the last one.
     setAttempts(1);
     setIsAnswerChecked(false);
     setLastAnswerCorrect(null);
@@ -164,7 +171,8 @@ export default function LeccionPage() {
     setMeshiMood("normal");
     setMeshiSpeech(getRandomMessage("greetings").text);
 
-    if (currentIdx < lesson.exercises.length - 1) {
+    const total = lesson?.exercises?.length ?? 0;
+    if (currentIdx < total - 1) {
       setCurrentIdx((p) => p + 1);
     } else {
       handleLessonCompletion();
