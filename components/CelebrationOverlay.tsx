@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
-import { Trophy, Sparkles, Flame } from "lucide-react";
+import { Trophy, Sparkles, Flame, LockOpen } from "lucide-react";
 import { useCelebration } from "../lib/celebration";
 import { haptics } from "../utils/haptics";
 
@@ -52,6 +52,7 @@ export const CelebrationOverlay: React.FC = () => {
             {current.kind === "level" && <LevelContent level={current.level} name={current.name} />}
             {current.kind === "achievement" && <AchievementContent emoji={current.emoji} title={current.title} message={current.message} />}
             {current.kind === "streak" && <StreakContent days={current.days} />}
+            {current.kind === "unit" && <UnitContent title={current.title} emoji={current.emoji} />}
 
             <button onClick={dismiss} className="btn-3d-primary w-full py-3 text-sm font-bold mt-1">
               ¡Yallah, a por más!
@@ -104,6 +105,33 @@ function AchievementContent({ emoji, title, message }: { emoji: string; title: s
       </div>
       <h2 className="text-2xl font-extrabold font-title text-gradient leading-tight">{title}</h2>
       <p className="text-sm text-slate-500 italic leading-relaxed">&quot;{message}&quot;</p>
+    </>
+  );
+}
+
+function UnitContent({ title, emoji }: { title: string; emoji: string }) {
+  return (
+    <>
+      <Badge gradient="bg-gradient-to-br from-brand-teal via-brand-majorelle to-brand-rose">
+        <motion.div
+          initial={{ rotate: 0 }}
+          animate={{ rotate: [0, -12, 0] }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <LockOpen className="w-11 h-11 text-white" />
+        </motion.div>
+      </Badge>
+      <div className="flex items-center gap-1.5 text-brand-teal">
+        <Sparkles className="w-4 h-4" />
+        <span className="text-xs font-bold uppercase tracking-[0.2em]">¡Nueva unidad!</span>
+        <Sparkles className="w-4 h-4" />
+      </div>
+      <h2 className="text-2xl font-extrabold font-title text-gradient-cool leading-tight">
+        {emoji} {title}
+      </h2>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        ¡Has desbloqueado una unidad nueva! Sigue así, Sara. 🐱✨
+      </p>
     </>
   );
 }

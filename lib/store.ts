@@ -44,7 +44,7 @@ export interface AppState {
   decrementLive: () => void;
   refillLives: () => void;
   checkAndRefillLives: () => void;
-  completeLesson: (lessonId: string, gotPerfect: boolean, units: Unit[]) => { achievementsUnlocked: string[] };
+  completeLesson: (lessonId: string, gotPerfect: boolean, units: Unit[]) => { achievementsUnlocked: string[]; unlockedUnit: { title: string; emoji: string } | null };
   addLearnedWords: (words: LearnedWord[]) => void;
   toggleSounds: () => void;
   resetProgress: () => void;
@@ -235,9 +235,13 @@ export const useStore = create<AppState>()(
           : false;
 
         // Unlock the NEXT unit when the current one is fully completed.
+        let unlockedUnit: { title: string; emoji: string } | null = null;
         if (unit && unitFullyDone) {
           const next = safeUnits[unitIndex + 1];
-          if (next && !updatedUnlockedUnits.includes(next.id)) updatedUnlockedUnits.push(next.id);
+          if (next && !updatedUnlockedUnits.includes(next.id)) {
+            updatedUnlockedUnits.push(next.id);
+            unlockedUnit = { title: next.title, emoji: next.emoji };
+          }
         }
 
         // ---- Achievements ----
@@ -271,7 +275,7 @@ export const useStore = create<AppState>()(
           unlockedAchievements: [...state.unlockedAchievements, ...newlyUnlocked],
         });
 
-        return { achievementsUnlocked: newlyUnlocked };
+        return { achievementsUnlocked: newlyUnlocked, unlockedUnit };
       },
 
       addLearnedWords: (words) => {

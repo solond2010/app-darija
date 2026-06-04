@@ -3,7 +3,8 @@ import { create } from "zustand";
 export type Celebration =
   | { kind: "level"; level: number; name: string }
   | { kind: "achievement"; emoji: string; title: string; message: string }
-  | { kind: "streak"; days: number };
+  | { kind: "streak"; days: number }
+  | { kind: "unit"; title: string; emoji: string };
 
 interface CelebrationState {
   queue: Celebration[];

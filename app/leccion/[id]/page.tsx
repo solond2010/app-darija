@@ -165,7 +165,7 @@ export default function LeccionPage() {
     setIsLessonFinished(true);
     haptics.celebrate();
     const gotPerfect = errorsCount === 0;
-    const { achievementsUnlocked } = completeLesson(lessonId, gotPerfect, unitsData);
+    const { achievementsUnlocked, unlockedUnit } = completeLesson(lessonId, gotPerfect, unitsData);
     setUnlockedBadges(achievementsUnlocked);
 
     // Detect level-up: compare level before and after adding XP.
@@ -188,6 +188,9 @@ export default function LeccionPage() {
     if (after.level > levelBefore) {
       if (soundsEnabled) sound.playFanfare();
       cels.push({ kind: "level", level: after.level, name: after.name });
+    }
+    if (unlockedUnit) {
+      cels.push({ kind: "unit", title: unlockedUnit.title, emoji: unlockedUnit.emoji });
     }
     achievementsUnlocked.forEach((id) => {
       const a = achievementsData.find((x) => x.id === id);
@@ -403,9 +406,9 @@ export default function LeccionPage() {
         <div className="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden">
           <motion.div
             layout
-            className="h-full bg-gradient-to-r from-brand-saffron via-brand-coral to-brand-rose rounded-full"
+            className="h-full bg-gradient-to-r from-brand-saffron via-brand-coral to-brand-rose rounded-full shadow-[0_0_12px_rgba(255,107,107,0.55)]"
             animate={{ width: `${progressPercent}%` }}
-            transition={{ duration: 0.35 }}
+            transition={{ type: "spring", stiffness: 220, damping: 26 }}
           />
         </div>
 

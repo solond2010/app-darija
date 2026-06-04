@@ -98,7 +98,35 @@ export function AppInit() {
       if (session) startSync(session.user.id);
       else stopSync();
     });
-    return () => authSub.subscription.unsubscribe();
+
+    // PWA daily auto-refresh: pull the latest deployed version once per day,
+    // even when launched from the iPhone home screen — no need to remove the
+    // shortcut and re-add it. Reloads at most once per calendar day, only when
+    // the app is (re)opened, never mid-use.
+    const dailyRefresh = () => {
+      try {
+        if (document.visibilityState !== "visible") return;
+        const today = new Date().toLocaleDateString("en-CA");
+        const last = localStorage.getItem("meshi-last-refresh");
+        if (last === today) return;
+        const firstEver = last === null;
+        localStorage.setItem("meshi-last-refresh", today);
+        if (!firstEver) {
+          navigator.serviceWorker?.getRegistration().then((r) => r?.update()).catch(() => {});
+          window.location.reload();
+        }
+      } catch {
+        /* ignore */
+      }
+    };
+    dailyRefresh();
+    const onVisible = () => dailyRefresh();
+    document.addEventListener("visibilitychange", onVisible);
+
+    return () => {
+      authSub.subscription.unsubscribe();
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
