@@ -233,4 +233,16 @@ export const lessonVocabulary: { [key: string]: LearnedWord[] } = {
     { darija: "Inshallah", spanish: "Si Dios quiere / Ojalá", category: "Expresiones" },
     { darija: "Bla mushkil", spanish: "Sin problema", category: "Expresiones" },
   ],
+  "12.1": [
+    { darija: "Mar7ba bik", spanish: "Bienvenida / Bienvenido", category: "Hospitalidad", example: "Mar7ba bik f-darna! (¡Bienvenida a nuestra casa!)" },
+    { darija: "Tfeddli / Tfeddel", spanish: "Pasa / Sírvete / Adelante (f / m)", category: "Hospitalidad" },
+    { darija: "Glsi / Gles", spanish: "Siéntate (f / m)", category: "Hospitalidad" },
+    { darija: "Kuli / Kul", spanish: "Come (f / m)", category: "Hospitalidad", example: "Kuli a benti! (¡Come, hija!)" },
+    { darija: "Shrbi atay", spanish: "Bebe té", category: "Hospitalidad" },
+    { darija: "Bsa7a", spanish: "¡Que aproveche! / ¡Enhorabuena!", category: "Hospitalidad" },
+    { darija: "Lah i3tik sa7a", spanish: "Gracias (respuesta a 'Bsa7a')", category: "Hospitalidad" },
+    { darija: "Shba3t", spanish: "Estoy llena / saciada", category: "Hospitalidad", example: "Shba3t, barakallahu fik (Estoy llena, gracias)" },
+    { darija: "Bezzaf 3liya", spanish: "Es demasiado (para mí)", category: "Hospitalidad" },
+    { darija: "Twa7echtek", spanish: "Te he echado de menos", category: "Cariño" },
+  ],
 };
