@@ -289,14 +289,14 @@ export default function LeccionPage() {
                 <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
               </div>
               <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">XP Ganado</span>
-              <span className="text-xl font-bold font-title text-brand-dark mt-0.5">+{totalXP}</span>
+              <span className="text-xl font-bold font-title text-brand-dark mt-0.5">+<CountUp to={totalXP} /></span>
             </div>
             <div className="glass rounded-2xl p-4 flex flex-col items-center text-center">
               <div className="w-10 h-10 rounded-xl bg-brand-pink/15 flex items-center justify-center mb-2">
                 <Trophy className="w-5 h-5 text-brand-coral" />
               </div>
               <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Precisión</span>
-              <span className="text-xl font-bold font-title text-brand-dark mt-0.5">{accuracy}%</span>
+              <span className="text-xl font-bold font-title text-brand-dark mt-0.5"><CountUp to={accuracy} />%</span>
             </div>
           </motion.div>
 
@@ -543,4 +543,24 @@ export default function LeccionPage() {
       </footer>
     </div>
   );
+}
+
+// Number that animates up from 0 — that satisfying "ticking" feel on the results screen.
+function CountUp({ to, duration = 900 }: { to: number; duration?: number }) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    if (to <= 0) { setVal(0); return; }
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - start) / duration);
+      // ease-out for a nicer finish
+      const eased = 1 - Math.pow(1 - p, 3);
+      setVal(Math.round(eased * to));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [to, duration]);
+  return <>{val}</>;
 }

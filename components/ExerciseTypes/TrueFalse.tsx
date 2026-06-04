@@ -19,8 +19,8 @@ function shell(value: boolean, selected: boolean | null, checked: boolean, corre
     if (isSelected) return "bg-gradient-to-br from-brand-saffron/15 to-brand-coral/15 border-brand-coral/70 border-b-brand-coral text-brand-coral ring-2 ring-brand-coral/25";
     return "bg-white/70 border-white/80 border-b-brand-beige text-brand-dark backdrop-blur-md hover:bg-white/90";
   }
-  if (isCorrect) return "bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-300 border-b-emerald-400 text-emerald-700 ring-2 ring-emerald-300/60";
-  if (isSelected) return "bg-gradient-to-br from-rose-50 to-pink-50 border-rose-300 border-b-rose-400 text-rose-600 ring-2 ring-rose-300/60";
+  if (isCorrect) return "bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-500/20 dark:to-teal-500/15 border-emerald-300 dark:border-emerald-400/40 border-b-emerald-400 text-emerald-700 ring-2 ring-emerald-300/60 dark:ring-emerald-400/25";
+  if (isSelected) return "bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-500/20 dark:to-pink-500/15 border-rose-300 dark:border-rose-400/40 border-b-rose-400 text-rose-600 ring-2 ring-rose-300/60 dark:ring-rose-400/25";
   return "bg-white/40 border-white/50 text-slate-300 opacity-50";
 }
 
