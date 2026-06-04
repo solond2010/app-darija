@@ -1,12 +1,22 @@
 import { supabase } from "./supabase";
-import { useStore } from "./store";
+import { useStore, progressWeight } from "./store";
+import { restoreLostProgress } from "./recovery";
 
 let currentUserId: string | null = null;
 let unsub: (() => void) | null = null;
 let timer: ReturnType<typeof setTimeout> | null = null;
 let lastJSON = "";
 
-async function pull(userId: string) {
+type PullResult = { ok: boolean; data: Record<string, unknown> | null };
+
+/**
+ * Read the cloud copy.
+ *  - ok:false  → we could NOT read it (network/RLS error). Callers MUST NOT push
+ *                in this case, or they would clobber good cloud data with whatever
+ *                this device currently holds (possibly empty).
+ *  - ok:true, data:null → genuinely no row yet (safe to push as first backup).
+ */
+async function pull(userId: string): Promise<PullResult> {
   const { data, error } = await supabase
     .from("progress")
     .select("data")
@@ -14,15 +24,26 @@ async function pull(userId: string) {
     .maybeSingle();
   if (error) {
     console.warn("progress pull:", error.message);
-    return null;
+    return { ok: false, data: null };
   }
-  return (data?.data as Record<string, unknown>) ?? null;
+  return { ok: true, data: (data?.data as Record<string, unknown>) ?? null };
 }
 
 async function push(userId: string) {
   const snap = useStore.getState().exportSnapshot();
   const json = JSON.stringify({ ...snap, savedAt: undefined });
   if (json === lastJSON) return;
+
+  // SAFETY: never overwrite a heavier cloud copy with a lighter local one.
+  // If we can't verify the cloud, do NOT write (prevents wiping good progress
+  // after a failed read). If the cloud is ahead, restore it locally instead.
+  const cloud = await pull(userId);
+  if (!cloud.ok) return;
+  if (cloud.data && progressWeight(cloud.data) > progressWeight(snap)) {
+    useStore.getState().mergeCloud(cloud.data);
+    return;
+  }
+
   const { error } = await supabase
     .from("progress")
     .upsert({ user_id: userId, data: snap, updated_at: new Date().toISOString() });
@@ -56,11 +77,22 @@ export async function startSync(userId: string) {
   currentUserId = userId;
 
   const cloud = await pull(userId);
-  if (cloud) useStore.getState().mergeCloud(cloud);
+  if (cloud.ok && cloud.data) useStore.getState().mergeCloud(cloud.data);
 
-  // Always make sure the cloud holds at least what this device has.
-  lastJSON = "";
-  await push(userId);
+  // One-time rescue for accounts whose progress was wiped by the old sync bug.
+  // Self-disabling (only applies when the account has less progress than the
+  // rescued snapshot). Runs only after a successful read so it can be backed up.
+  if (cloud.ok) {
+    const { data: u } = await supabase.auth.getUser();
+    restoreLostProgress(u.user?.email);
+  }
+
+  // Only back up to the cloud if we could actually READ it first. After a failed
+  // read we must not push, or an empty/evicted device would wipe the account.
+  if (cloud.ok) {
+    lastJSON = "";
+    await push(userId);
+  }
 
   unsub = useStore.subscribe(schedule);
   window.addEventListener("visibilitychange", onHide);
