@@ -172,7 +172,7 @@ export default function LeccionPage() {
     setLastAnswerCorrect(null);
     setSelectedAns(null);
     setMeshiMood("normal");
-    setMeshiSpeech(getRandomMessage("greetings").text);
+    setMeshiSpeech(getRandomMessage("nextExercise").text);
 
     const total = lesson?.exercises?.length ?? 0;
     if (currentIdx < total - 1) {

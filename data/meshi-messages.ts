@@ -10,6 +10,16 @@ export const meshiMessages = {
     { text: "¡Hola Sara! Te eché de menos... ¿Practicamos? 💕", emoji: "😻" },
     { text: "¡Qué alegría verte, 7bibti! Vamos a sorprender a la familia. ✨", emoji: "😺" },
   ],
+  // Short nudges shown when moving on to the NEXT exercise within a lesson.
+  // (Do NOT use "greetings" here — those are welcome-back messages and make no
+  // sense mid-lesson.)
+  nextExercise: [
+    { text: "¡A por la siguiente, Sara! 🐱", emoji: "😺" },
+    { text: "¡Vamos con la próxima! 💪", emoji: "😸" },
+    { text: "¡Sigue así, lo estás haciendo genial! ✨", emoji: "😻" },
+    { text: "¡Siguiente palabra, yallah! 🚀", emoji: "😺" },
+    { text: "¡Concentración, 7bibti! Vamos. 💛", emoji: "😸" },
+  ],
   correct: [
     { text: "¡Bravo Sara! ¡Mashallah! 🐱✨", emoji: "🎉" },
     { text: "¡Así se hace, 7bibti! 💕", emoji: "😻" },
