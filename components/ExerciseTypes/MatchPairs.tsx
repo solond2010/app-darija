@@ -11,7 +11,8 @@ interface Pair {
 interface MatchPairsProps {
   question: string;
   pairs: Pair[];
-  onSelect: (completed: boolean) => void;
+  // null = not completed yet (keeps "Comprobar" disabled); true = all matched.
+  onSelect: (completed: boolean | null) => void;
   isAnswerChecked: boolean;
 }
 
@@ -38,7 +39,7 @@ export const MatchPairs: React.FC<MatchPairsProps> = ({
     setMatchedPairs({});
     setSelectedLeft(null);
     setSelectedRight(null);
-    onSelect(false);
+    onSelect(null); // not completed yet → "Comprobar" stays disabled until all matched
   }, [pairs, onSelect]);
 
   // Evaluate matches

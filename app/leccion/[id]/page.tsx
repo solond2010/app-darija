@@ -103,7 +103,7 @@ export default function LeccionPage() {
     let correct = false;
     const t = currentExercise.type;
 
-    if (["multiple-choice", "fill-blank", "listening-select", "conversation"].includes(t)) {
+    if (["multiple-choice", "fill-blank", "listening-select"].includes(t)) {
       correct = ans === currentExercise.answer;
     } else if (t === "translation") {
       const norm = (s: string) =>
@@ -111,7 +111,10 @@ export default function LeccionPage() {
           .normalize("NFD").replace(/[̀-ͯ]/g, "")
           .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?¿¡]/g, "");
       correct = (currentExercise.answer as string[]).some((a) => norm(ans || "") === norm(a));
-    } else if (t === "match-pairs") {
+    } else if (t === "match-pairs" || t === "conversation") {
+      // Self-validating exercises: the component only reports `true` once the
+      // user has completed it correctly (matched all pairs / answered every
+      // dialogue turn). There is no separate per-answer key to compare against.
       correct = ans === true;
     } else if (t === "word-order") {
       const ordered = currentExercise.orderedAnswer || [];

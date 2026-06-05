@@ -29,7 +29,9 @@ export const CelebrationOverlay: React.FC = () => {
   }, [current]);
 
   return (
-    <AnimatePresence mode="wait">
+    // No mode="wait": a stuck exit must never leave this full-screen overlay
+    // frozen on top of the app, which would block all interaction.
+    <AnimatePresence>
       {current && (
         <motion.div
           key={JSON.stringify(current)}

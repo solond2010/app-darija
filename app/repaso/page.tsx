@@ -6,7 +6,7 @@ import { BottomNav } from "../../components/BottomNav";
 import { Meshi } from "../../components/Suki";
 import { useStore, LearnedWord } from "../../lib/store";
 import { Star, RefreshCw, ChevronRight } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
 type Difficulty = "hard" | "ok" | "easy";
@@ -239,12 +239,13 @@ export default function RepasoPage() {
               onClick={() => setIsFlipped(!isFlipped)}
               className="w-full h-56 perspective-1000 cursor-pointer flex-shrink-0"
             >
-              <AnimatePresence mode="wait">
+              {/* A plain keyed motion.div (not <AnimatePresence mode="wait">) so a
+                  stuck exit animation can never freeze the card on the old word —
+                  same deadlock that blocked the lesson exercises. */}
                 <motion.div
                   key={`${currentWord?._key}-${currentIdx}`}
                   initial={{ opacity: 0, x: direction * 30 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -direction * 30 }}
                   transition={{ duration: 0.22 }}
                   className="w-full h-full"
                 >
@@ -286,7 +287,6 @@ export default function RepasoPage() {
                     </div>
                   </div>
                 </motion.div>
-              </AnimatePresence>
             </div>
 
             {/* 3-level difficulty buttons */}
