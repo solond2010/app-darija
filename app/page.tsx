@@ -15,7 +15,7 @@ import Link from "next/link";
 
 export default function Home() {
   const {
-    xp, streak, isHydrated,
+    xp, streak, streakShields, isHydrated,
     todayXP, todayXPDate, dailyGoal, lastActiveDate, completedLessons, unlockedUnits,
   } = useStore();
   const [mounted, setMounted] = useState(false);
@@ -88,7 +88,11 @@ export default function Home() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-amber-700 font-title">¡Tu racha de {streak} días está en peligro!</p>
-                <p className="text-[11px] text-amber-600 mt-0.5">Completa una lección hoy para mantenerla 🔥</p>
+                <p className="text-[11px] text-amber-600 mt-0.5">
+                  {streakShields > 0
+                    ? `Completa una lección hoy 🔥 (o tu escudo 🛡️ la salvará si fallas un día)`
+                    : "Completa una lección hoy para mantenerla 🔥"}
+                </p>
               </div>
               {nextLesson && (
                 <Link href={`/leccion/${nextLesson.lesson.id}`}>
@@ -137,6 +141,7 @@ export default function Home() {
               <p className="text-xs font-bold text-white/90 mt-1.5">
                 {levelInfo.level < 5 ? `${xpToNext} XP para Nivel ${levelInfo.level + 1}` : "¡Nivel máximo! 👑"}
                 <span className="opacity-90"> · 🔥 {streak} {streak === 1 ? "día" : "días"}</span>
+                {streakShields > 0 && <span className="opacity-90"> · 🛡️ {streakShields}</span>}
               </p>
               <div className="h-2.5 bg-white/28 rounded-full mt-2 overflow-hidden">
                 <motion.div

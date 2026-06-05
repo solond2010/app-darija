@@ -5,6 +5,7 @@ import Script from "next/script";
 import { AppInit } from "../components/AppInit";
 import { NotificationSetup } from "../components/NotificationSetup";
 import { CelebrationOverlay } from "../components/CelebrationOverlay";
+import { Onboarding } from "../components/Onboarding";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -61,6 +62,7 @@ export default function RootLayout({
         <AppInit />
         {children}
         <CelebrationOverlay />
+        <Onboarding />
         <NotificationSetup />
       </body>
     </html>

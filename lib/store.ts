@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { achievementsData } from "../data/achievements";
 import type { Unit } from "../data/lessons";
+import { useCelebration } from "./celebration";
 
 export interface LearnedWord {
   darija: string;
@@ -15,6 +16,7 @@ export interface AppState {
   userName: string;
   xp: number;
   streak: number;
+  streakShields: number; // free "shields" that save the streak if a day is missed
   lives: number;
   lastActiveDate: string | null; // Format: YYYY-MM-DD
   soundsEnabled: boolean;
@@ -65,6 +67,7 @@ export interface ProgressSnapshot {
   userName: string;
   xp: number;
   streak: number;
+  streakShields?: number;
   lives: number;
   lastActiveDate: string | null;
   soundsEnabled: boolean;
@@ -110,6 +113,7 @@ export const useStore = create<AppState>()(
       userName: "Sara",
       xp: 0,
       streak: 0,
+      streakShields: 1,
       lives: 5,
       lastActiveDate: null,
       soundsEnabled: true,
@@ -180,8 +184,13 @@ export const useStore = create<AppState>()(
             }
           });
 
+          // Earn a streak shield at every 7-day milestone (cap 2).
+          let streakShields = state.streakShields ?? 1;
+          if (newStreak > 0 && newStreak % 7 === 0) streakShields = Math.min(2, streakShields + 1);
+
           return {
             streak: newStreak,
+            streakShields,
             lastActiveDate: today,
             unlockedAchievements: [...state.unlockedAchievements, ...newlyUnlocked],
           };
@@ -310,6 +319,7 @@ export const useStore = create<AppState>()(
         set({
           xp: 0,
           streak: 0,
+          streakShields: 1,
           lives: 5,
           lastActiveDate: null,
           todayXP: 0,
@@ -329,6 +339,7 @@ export const useStore = create<AppState>()(
           userName: s.userName,
           xp: s.xp,
           streak: s.streak,
+          streakShields: s.streakShields,
           lives: s.lives,
           lastActiveDate: s.lastActiveDate,
           soundsEnabled: s.soundsEnabled,
@@ -352,6 +363,7 @@ export const useStore = create<AppState>()(
           userName: data.userName ?? state.userName,
           xp: data.xp ?? state.xp,
           streak: data.streak ?? state.streak,
+          streakShields: data.streakShields ?? state.streakShields,
           lives: data.lives ?? state.lives,
           lastActiveDate: data.lastActiveDate ?? state.lastActiveDate,
           soundsEnabled: data.soundsEnabled ?? state.soundsEnabled,
@@ -393,7 +405,18 @@ export const useStore = create<AppState>()(
         const todayLocal = new Date(ty, tm - 1, td);
         const diffDays = Math.round((todayLocal.getTime() - lastLocal.getTime()) / 86400000);
 
-        if (diffDays > 1) {
+        const shields = state.streakShields ?? 0;
+        if (diffDays === 2 && state.streak > 0 && shields > 0) {
+          // Missed exactly one day → a shield saves the streak. Pretend yesterday
+          // was active so the chain continues if she plays today.
+          const y = new Date(todayLocal);
+          y.setDate(todayLocal.getDate() - 1);
+          const yStr = `${y.getFullYear()}-${String(y.getMonth() + 1).padStart(2, "0")}-${String(y.getDate()).padStart(2, "0")}`;
+          set({ streakShields: shields - 1, lastActiveDate: yStr });
+          setTimeout(() => {
+            useCelebration.getState().push([{ kind: "shield", streak: state.streak }]);
+          }, 800);
+        } else if (diffDays > 1) {
           set({ streak: 0 });
         }
       },

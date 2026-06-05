@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
-import { Trophy, Sparkles, Flame, LockOpen, Target } from "lucide-react";
+import { Trophy, Sparkles, Flame, LockOpen, Target, Shield } from "lucide-react";
 import { useCelebration } from "../lib/celebration";
 import { haptics } from "../utils/haptics";
 import { sound } from "../utils/sound";
@@ -60,6 +60,7 @@ export const CelebrationOverlay: React.FC = () => {
             {current.kind === "streak" && <StreakContent days={current.days} />}
             {current.kind === "unit" && <UnitContent title={current.title} emoji={current.emoji} />}
             {current.kind === "daily" && <DailyContent goal={current.goal} />}
+            {current.kind === "shield" && <ShieldContent streak={current.streak} />}
 
             <button onClick={dismiss} className="btn-3d-primary w-full py-3 text-sm font-bold mt-1">
               ¡Yallah, a por más!
@@ -157,6 +158,25 @@ function DailyContent({ goal }: { goal: number }) {
       <h2 className="text-3xl font-extrabold font-title text-gradient-cool leading-none">{goal} XP hoy ✅</h2>
       <p className="text-sm text-slate-500 leading-relaxed">
         ¡Meta de hoy cumplida, Sara! A Amin le hace mucha ilusión verte aquí cada día. 🐱🤍
+      </p>
+    </>
+  );
+}
+
+function ShieldContent({ streak }: { streak: number }) {
+  return (
+    <>
+      <Badge gradient="bg-gradient-to-br from-brand-teal via-brand-majorelle to-[#5B5FEF]">
+        <Shield className="w-12 h-12 text-white fill-white/20" />
+      </Badge>
+      <div className="flex items-center gap-1.5 text-brand-teal">
+        <Sparkles className="w-4 h-4" />
+        <span className="text-xs font-bold uppercase tracking-[0.2em]">¡Escudo de racha!</span>
+        <Sparkles className="w-4 h-4" />
+      </div>
+      <h2 className="text-3xl font-extrabold font-title text-gradient-cool leading-none">Racha a salvo 🛡️</h2>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        Ayer no practicaste, pero tu escudo ha salvado tu racha de {streak} {streak === 1 ? "día" : "días"}. ¡Sigue así, Sara! 🐱
       </p>
     </>
   );
