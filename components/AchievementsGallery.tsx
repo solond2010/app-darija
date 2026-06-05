@@ -106,7 +106,7 @@ export const AchievementsGallery: React.FC = () => {
                     />
                   </div>
                   <span className="text-[9px] font-semibold text-slate-400 mt-0.5 inline-flex items-center gap-0.5">
-                    <Lock className="w-2.5 h-2.5" /> {label}
+                    <Lock className="w-2.5 h-2.5" /> {label || "Pendiente"}
                   </span>
                 </div>
               )}
