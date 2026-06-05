@@ -200,18 +200,6 @@ export const lessonVocabulary: { [key: string]: LearnedWord[] } = {
     { darija: "Bijama", spanish: "Pijama", category: "Ropa" },
   ],
   "9.1": [
-    { darija: "Wahd", spanish: "Uno (1)", category: "Números" },
-    { darija: "Juj", spanish: "Dos (2)", category: "Números" },
-    { darija: "Tlata", spanish: "Tres (3)", category: "Números" },
-    { darija: "Rb3a", spanish: "Cuatro (4)", category: "Números" },
-    { darija: "Khmsa", spanish: "Cinco (5)", category: "Números" },
-    { darija: "Sitta", spanish: "Seis (6)", category: "Números" },
-    { darija: "Sb3a", spanish: "Siete (7)", category: "Números" },
-    { darija: "Tmnya", spanish: "Ocho (8)", category: "Números" },
-    { darija: "Ts3a", spanish: "Nueve (9)", category: "Números" },
-    { darija: "3ashra", spanish: "Diez (10)", category: "Números" },
-  ],
-  "9.2": [
     { darija: "7dash", spanish: "Once (11)", category: "Números" },
     { darija: "Tnash", spanish: "Doce (12)", category: "Números" },
     { darija: "Tlettash", spanish: "Trece (13)", category: "Números" },

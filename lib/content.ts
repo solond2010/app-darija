@@ -57,27 +57,6 @@ function mergeUnits(base: Unit[], cloud: Unit[]): Unit[] {
   return merged;
 }
 
-/**
- * Code-authoritative merge: the bundled code curriculum wins for existing units
- * and lessons (so curriculum improvements ship), while any lessons/units the admin
- * ADDED via the editor (present only in the cloud) are still kept.
- */
-function mergeCodeWins(base: Unit[], cloud: Unit[]): Unit[] {
-  const cloudById = new Map(cloud.map((u) => [u.id, u]));
-  const baseIds = new Set(base.map((u) => u.id));
-  const result: Unit[] = base.map((bu) => {
-    const cu = cloudById.get(bu.id);
-    if (!cu) return bu;
-    const baseLessonIds = new Set(bu.lessons.map((l) => l.id));
-    const adminAdded = (cu.lessons || []).filter((cl) => !baseLessonIds.has(cl.id));
-    return adminAdded.length ? { ...bu, lessons: [...bu.lessons, ...adminAdded] } : bu;
-  });
-  cloud.forEach((cu) => {
-    if (!baseIds.has(cu.id)) result.push(cu);
-  });
-  return result;
-}
-
 /** Fetch admin-edited content from Supabase (if any) and merge it with defaults. */
 export async function loadContent() {
   try {
@@ -94,13 +73,19 @@ export async function loadContent() {
       const codeWins = codeAt > savedAt;
       const cloudUnits = data.units as Unit[];
       const cloudVocab = (data.vocabulary as Vocabulary) ?? {};
-      const mergedUnits = codeWins
-        ? mergeCodeWins(defaultUnits, cloudUnits)
-        : mergeUnits(defaultUnits, cloudUnits);
-      const mergedVocab: Vocabulary = codeWins
-        ? { ...cloudVocab, ...defaultVocab } // code vocab wins
-        : { ...defaultVocab, ...cloudVocab }; // cloud vocab wins
-      useContent.getState().setContent(mergedUnits, mergedVocab);
+      if (codeWins) {
+        // Code is the single source of truth: use the bundled curriculum exactly,
+        // so Amin can freely add/remove/restructure lessons without the stale cloud
+        // snapshot re-introducing old or duplicate lessons.
+        useContent.getState().setContent(defaultUnits, defaultVocab);
+      } else {
+        // The admin edited more recently via the no-code editor → their copy wins,
+        // with any brand-new code lessons still merged in.
+        useContent.getState().setContent(
+          mergeUnits(defaultUnits, cloudUnits),
+          { ...defaultVocab, ...cloudVocab }
+        );
+      }
     }
   } catch {
     /* non-critical: keep defaults */
