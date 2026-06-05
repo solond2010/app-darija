@@ -92,7 +92,7 @@ export function getLevelInfo(xp: number) {
   } else if (xp < 1500) {
     return { level: 2, name: "Visitante 🗺️", min: 500, max: 1500 };
   } else if (xp < 3000) {
-    return { level: 3, name: "Amiga de la familia 💛", min: 1500, max: 3000 };
+    return { level: 3, name: "Amiga de la familia 🤍", min: 1500, max: 3000 };
   } else if (xp < 5000) {
     return { level: 4, name: "Tetouaniya 🇲🇦", min: 3000, max: 5000 };
   } else {

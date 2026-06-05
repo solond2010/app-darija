@@ -32,7 +32,7 @@ export const NewLessonsBanner: React.FC = () => {
         </span>
       </div>
       <p className="relative text-[11px] text-white/85 mb-3 -mt-1 leading-relaxed">
-        {CREATOR_NAME} ha añadido {newOnes.length === 1 ? "una lección nueva" : `${newOnes.length} lecciones nuevas`} para ti, Sara 💛
+        {CREATOR_NAME} ha añadido {newOnes.length === 1 ? "una lección nueva" : `${newOnes.length} lecciones nuevas`} para ti, Sara 🤍
       </p>
 
       <div className="relative flex flex-col gap-2">

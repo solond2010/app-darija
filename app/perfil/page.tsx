@@ -322,7 +322,7 @@ export default function PerfilPage() {
         {/* Personal touch + build marker. */}
         <div className="text-center pb-1">
           <p className="text-[11px] text-brand-coral font-title font-bold">
-            Hecho con 💛 por Amin, para Sara
+            Hecho con 🤍 por Amin, para Sara
           </p>
           <p className="text-[10px] text-slate-300 font-title tracking-wide mt-0.5">
             Meshi v{(process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || "dev").slice(0, 7)}

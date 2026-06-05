@@ -39,6 +39,7 @@ export interface Lesson {
   description: string;
   exercises: Exercise[];
   teaser?: string; // Hook shown on completion to entice coming back tomorrow
+  addedAt?: string; // ISO date a lesson was added — drives the "NUEVO" badge (48h)
 }
 
 export interface Unit {
@@ -262,7 +263,7 @@ export const unitsData: Unit[] = [
         id: "1.3",
         title: "Presentarse",
         description: "Aprende a decir tu nombre, de dónde eres y a entablar una conversación básica",
-        teaser: "Mañana: cómo decir si estás cansada, contenta o enferma 💛",
+        teaser: "Mañana: cómo decir si estás cansada, contenta o enferma 🤍",
         exercises: [
           {
             id: "1.3.1",
@@ -365,6 +366,7 @@ export const unitsData: Unit[] = [
         title: "Escucha y Escribe 🎧",
         description: "Entrena el oído: escucha la palabra en Darija y escríbela. ¡Lo más parecido a hablar con la familia!",
         teaser: "Mañana: pon a prueba tu oído con frases más largas 👂✨",
+        addedAt: "2026-06-05T00:00:00Z",
         exercises: [
           {
             id: "1.4.1",
@@ -436,7 +438,8 @@ export const unitsData: Unit[] = [
         id: "1.5",
         title: "Los Números (1-10) 🔢",
         description: "Cuenta del 1 al 10 en Darija — esencial para la edad, los precios y el día a día",
-        teaser: "Mañana: di cómo te sientes, contenta o cansada 💛",
+        teaser: "Mañana: di cómo te sientes, contenta o cansada 🤍",
+        addedAt: "2026-06-05T00:00:00Z",
         exercises: [
           {
             id: "1.5.1",
@@ -520,6 +523,7 @@ export const unitsData: Unit[] = [
         title: "Verbos Esenciales 💬",
         description: "Los verbos del día a día (quiero, tengo, voy, como...) para empezar a formar tus propias frases",
         teaser: "Mañana: combina verbos con lo que sabes para hablar de tu día 🗣️",
+        addedAt: "2026-06-05T00:00:00Z",
         exercises: [
           {
             id: "1.6.1",
@@ -604,7 +608,7 @@ export const unitsData: Unit[] = [
     id: "unidad-2",
     number: 2,
     title: "Sentimientos y Estados",
-    emoji: "💛",
+    emoji: "🤍",
     description: "Aprende a expresar cómo te sientes (cansada, contenta, ocupada...)",
     lessons: [
       {

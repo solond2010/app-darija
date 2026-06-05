@@ -7,7 +7,7 @@ export const meshiMessages = {
   greetings: [
     { text: "¡Marhaba Sara! ¿Lista para aprender un poco de Darija? 🐱", emoji: "😺" },
     { text: "¡Yallah Sara, vamos a por ello! 💪", emoji: "😸" },
-    { text: "¡Hola Sara! Te eché de menos... ¿Practicamos? 💕", emoji: "😻" },
+    { text: "¡Hola Sara! Te eché de menos... ¿Practicamos? 🤍", emoji: "😻" },
     { text: "¡Qué alegría verte, 7bibti! Vamos a sorprender a la familia. ✨", emoji: "😺" },
   ],
   // Short nudges shown when moving on to the NEXT exercise within a lesson.
@@ -18,23 +18,23 @@ export const meshiMessages = {
     { text: "¡Vamos con la próxima! 💪", emoji: "😸" },
     { text: "¡Sigue así, lo estás haciendo genial! ✨", emoji: "😻" },
     { text: "¡Siguiente palabra, yallah! 🚀", emoji: "😺" },
-    { text: "¡Concentración, 7bibti! Vamos. 💛", emoji: "😸" },
+    { text: "¡Concentración, 7bibti! Vamos. 🤍", emoji: "😸" },
   ],
   correct: [
     { text: "¡Bravo Sara! ¡Mashallah! 🐱✨", emoji: "🎉" },
-    { text: "¡Así se hace, 7bibti! 💕", emoji: "😻" },
+    { text: "¡Así se hace, 7bibti! 🤍", emoji: "😻" },
     { text: "¡Tu familia va a flipar! 🎉", emoji: "😸" },
     { text: "¡Espectacular, Sara! ¡Vas volando! 🚀", emoji: "😺" },
     { text: "¡Correcto! ¡Qué buena pronunciación! 🌟", emoji: "😻" },
     { text: "¡Eso es! ¡Lo tienes dominado! 👍", emoji: "😸" },
-    { text: "¡A Amin le va a encantar lo bien que lo haces! 💛", emoji: "😻" },
-    { text: "¡Correcto! Amin estaría súper orgulloso de ti 🥹💛", emoji: "🎉" },
+    { text: "¡A Amin le va a encantar lo bien que lo haces! 🤍", emoji: "😻" },
+    { text: "¡Correcto! Amin estaría súper orgulloso de ti 🥹🤍", emoji: "🎉" },
   ],
   incorrect: [
     { text: "¡Casi casi! Prueba otra vez 🐱", emoji: "🤔" },
     { text: "No pasa nada Sara, así se aprende 💪", emoji: "😸" },
     { text: "¡Mmmm no era esa! ¿Lo intentamos de nuevo? 🤔", emoji: "🤔" },
-    { text: "¡Ay, casi! Respira y concéntrate, 7bibti. 💛", emoji: "😿" },
+    { text: "¡Ay, casi! Respira y concéntrate, 7bibti. 🤍", emoji: "😿" },
     { text: "¡Meshi sabe que puedes hacerlo! ¡Dale otra oportunidad! 💪", emoji: "😺" },
   ],
   streak: [

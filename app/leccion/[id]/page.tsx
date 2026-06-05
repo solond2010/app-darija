@@ -64,7 +64,7 @@ export default function LeccionPage() {
         startedRef.current = true;
         setLocalLives(useStore.getState().lives);
         startTimeRef.current = Date.now();
-        setMeshiSpeech(`¡Yallah Sara! Amin preparó la lección ${lessonId} para ti. 🐱💛`);
+        setMeshiSpeech(`¡Yallah Sara! Amin preparó la lección ${lessonId} para ti. 🐱🤍`);
       }
     } else if (contentLoaded) {
       // Content has finished loading and the lesson genuinely doesn't exist.
@@ -264,7 +264,7 @@ export default function LeccionPage() {
         </p>
         <div className="flex flex-col gap-3 w-full mt-2">
           <button onClick={() => { refillLives(); router.push("/"); }} className="w-full py-4 btn-3d-primary font-title text-base">
-            Recuperar vidas (+5 💖)
+            Recuperar vidas (+5 🤍)
           </button>
           <button onClick={() => router.push("/")} className="w-full py-4 btn-3d-secondary font-title text-base">
             Volver al Inicio
