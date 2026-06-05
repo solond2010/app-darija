@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { X, RotateCw } from "lucide-react";
+import { X } from "lucide-react";
 import { LearnedWord } from "../lib/store";
 import { SpeakButton } from "./SpeakButton";
 import { haptics } from "../utils/haptics";
@@ -77,41 +77,40 @@ export const LessonIntro: React.FC<LessonIntroProps> = ({ words, onStart, onExit
         </p>
       </div>
 
-      {/* Flip card */}
+      {/* Flip card — the same card design that already exists in the app. */}
       <main className="flex-1 min-h-0 px-5 py-3 flex flex-col items-center justify-center gap-4">
-        <div onClick={flip} className="w-full max-w-xs h-64 perspective-1000 cursor-pointer">
-          <motion.div
-            animate={{ rotateY: flipped ? 180 : 0 }}
-            transition={{ duration: 0.5 }}
-            className="w-full h-full transform-style-3d relative rounded-[28px] shadow-[0_10px_36px_rgba(42,35,66,0.14)]"
+        <div onClick={flip} className="w-full max-w-sm h-56 perspective-1000 cursor-pointer">
+          <div
+            className={`w-full h-full duration-500 transform-style-3d relative rounded-3xl shadow-md bg-white border-2 border-brand-beige border-b-[5px] border-b-[#E0D5C0] ${
+              flipped ? "rotate-y-180" : ""
+            }`}
           >
-            {/* Front — Darija */}
-            <div className="absolute inset-0 backface-hidden flex flex-col items-center justify-center p-6 text-center rounded-[28px] bg-white border-2 border-brand-beige border-b-[6px] border-b-[#E0D5C0]">
+            {/* Front */}
+            <div className="absolute inset-0 backface-hidden flex flex-col items-center justify-center p-6 text-center rounded-3xl">
               <span className="text-[10px] uppercase font-bold tracking-wider text-brand-coral bg-brand-pink/20 px-3 py-1 rounded-full mb-4">
                 Darija (Chat)
               </span>
-              <h2 className="text-4xl font-extrabold font-title text-brand-dark">{word?.darija}</h2>
-              <div className="mt-3">
-                <SpeakButton text={word?.darija || ""} size={26} className="p-3 bg-brand-pink/15" />
+              <div className="flex items-center gap-2">
+                <h2 className="text-3xl font-bold font-title text-brand-dark">{word?.darija}</h2>
+                <SpeakButton text={word?.darija || ""} size={22} className="p-1.5 bg-brand-pink/15" />
               </div>
-              <p className="text-[11px] text-slate-400 mt-4 flex items-center gap-1 animate-pulse">
-                <RotateCw className="w-3 h-3" /> Toca para ver qué significa
-              </p>
+              <p className="text-[10px] text-slate-400 mt-5 animate-pulse">Haz clic para ver la traducción 🔄</p>
             </div>
 
-            {/* Back — Spanish */}
-            <div className="absolute inset-0 backface-hidden rotate-y-180 flex flex-col items-center justify-center p-6 text-center rounded-[28px] bg-brand-mint/15 border-2 border-brand-mint/40 border-b-[6px] border-b-brand-mint/50">
+            {/* Back */}
+            <div className="absolute inset-0 backface-hidden rotate-y-180 flex flex-col items-center justify-center p-6 text-center bg-brand-mint/10 rounded-3xl">
               <span className="text-[10px] uppercase font-bold tracking-wider text-[#1A5C4A] bg-brand-mint/30 px-3 py-1 rounded-full mb-4">
-                Significa
+                Traducción Español
               </span>
-              <h2 className="text-3xl font-bold font-title text-brand-dark">{word?.spanish}</h2>
+              <h2 className="text-2xl font-bold text-brand-dark">{word?.spanish}</h2>
               {word?.example && (
-                <p className="text-xs text-slate-500 italic mt-4 bg-white/60 px-3 py-2 rounded-xl max-w-[90%] leading-relaxed">
+                <p className="text-[11px] text-slate-500 italic mt-3 bg-white/60 px-3 py-1.5 rounded-xl max-w-[90%] leading-relaxed">
                   {word.example}
                 </p>
               )}
+              <p className="text-[10px] text-slate-400 mt-4">Haz clic para volver 🔄</p>
             </div>
-          </motion.div>
+          </div>
         </div>
       </main>
 
