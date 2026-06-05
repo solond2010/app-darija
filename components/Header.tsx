@@ -1,8 +1,24 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useStore } from "../lib/store";
 import { Flame, Star, Heart, HelpCircle, Volume2, VolumeX, Timer } from "lucide-react";
+
+// Pops with a spring whenever its numeric value changes (key change → remount).
+function PopNumber({ value }: { value: number }) {
+  return (
+    <motion.span
+      key={value}
+      initial={{ scale: 1.45 }}
+      animate={{ scale: 1 }}
+      transition={{ type: "spring", stiffness: 520, damping: 14 }}
+      className="inline-block"
+    >
+      {value}
+    </motion.span>
+  );
+}
 import { NumberGuide } from "./NumberGuide";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -78,7 +94,7 @@ export const Header: React.FC = () => {
             streak > 0 ? "bg-orange-50 text-orange-500" : "bg-slate-50 text-slate-400"
           }`}>
             <Flame className={`w-3.5 h-3.5 ${streak > 0 ? "fill-orange-400 text-orange-400" : ""}`} />
-            {streak}
+            <PopNumber value={streak} />
           </div>
 
           {/* XP */}
@@ -86,7 +102,7 @@ export const Header: React.FC = () => {
             xp > 0 ? "bg-amber-50 text-amber-500" : "bg-slate-50 text-slate-400"
           }`}>
             <Star className={`w-3.5 h-3.5 ${xp > 0 ? "fill-amber-400 text-amber-400" : ""}`} />
-            {xp}
+            <PopNumber value={xp} />
           </div>
 
           {/* Lives + timer */}

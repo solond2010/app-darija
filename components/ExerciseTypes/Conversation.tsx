@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { SpeakButton } from "../SpeakButton";
 
 interface DialogueTurn {
   speaker: "Meshi" | "Sara";
@@ -101,13 +102,14 @@ export const Conversation: React.FC<ConversationProps> = ({
                 {isMeshi ? "🐱" : "👧"}
               </div>
               <div
-                className={`max-w-[75%] p-3 rounded-2xl text-xs leading-relaxed ${
+                className={`max-w-[75%] p-3 rounded-2xl text-xs leading-relaxed flex items-center gap-1.5 ${
                   isMeshi
                     ? "bg-white text-brand-dark rounded-tl-none border border-brand-beige"
                     : "bg-brand-coral text-white rounded-tr-none font-medium"
                 }`}
               >
-                {msg.text}
+                <span>{msg.text}</span>
+                <SpeakButton text={msg.text} size={13} className={`p-0.5 flex-shrink-0 ${isMeshi ? "text-brand-coral/70" : "text-white/80"}`} />
               </div>
             </motion.div>
           );

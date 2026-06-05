@@ -10,6 +10,7 @@ import { achievementsData } from "../../../data/achievements";
 import { getRandomMessage } from "../../../data/meshi-messages";
 import { Meshi, MeshiMood } from "../../../components/Suki";
 import { ExerciseRenderer } from "../../../components/ExerciseTypes/ExerciseRenderer";
+import { SpeakButton } from "../../../components/SpeakButton";
 import { sound } from "../../../utils/sound";
 import { haptics } from "../../../utils/haptics";
 import { Heart, X, Sparkles, Star, Flame, Trophy, CheckCircle2, Zap } from "lucide-react";
@@ -372,9 +373,10 @@ export default function LeccionPage() {
             </h4>
             <div className="flex flex-wrap gap-2 max-h-44 overflow-y-auto no-scrollbar">
               {lessonVocabulary[lessonId]?.map((v, i) => (
-                <div key={i} className="bg-brand-saffron/12 border border-brand-saffron/25 rounded-xl px-2.5 py-1.5 text-xs font-bold">
+                <div key={i} className="bg-brand-saffron/12 border border-brand-saffron/25 rounded-xl pl-2.5 pr-1.5 py-1.5 text-xs font-bold flex items-center gap-1">
                   <span className="text-brand-coral">{v.darija}</span>
-                  <span className="text-slate-400 font-semibold"> · {v.spanish}</span>
+                  <span className="text-slate-400 font-semibold">· {v.spanish}</span>
+                  <SpeakButton text={v.darija} size={14} className="p-1 text-brand-coral/70" />
                 </div>
               ))}
             </div>
