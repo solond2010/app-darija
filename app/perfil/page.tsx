@@ -5,7 +5,6 @@ import { Header } from "../../components/Header";
 import { BottomNav } from "../../components/BottomNav";
 import { Meshi } from "../../components/Suki";
 import { useStore, getLevelInfo } from "../../lib/store";
-import { achievementsData } from "../../data/achievements";
 import { Flame, Star, BookOpen, CheckCircle, Trash2, Volume2, VolumeX, ShieldAlert, Trophy, Moon, Sun, Target } from "lucide-react";
 import { motion } from "framer-motion";
 import { ProgressBackup } from "../../components/ProgressBackup";
@@ -16,6 +15,8 @@ import { AuthCard } from "../../components/AuthCard";
 import { useAccount } from "../../lib/useAccount";
 import { Pencil } from "lucide-react";
 import { WeekStreak } from "../../components/WeekStreak";
+import { AchievementsGallery } from "../../components/AchievementsGallery";
+import { StatsSection } from "../../components/StatsSection";
 
 export default function PerfilPage() {
   const {
@@ -142,49 +143,23 @@ export default function PerfilPage() {
 
         {/* Achievements (ocultos para la cuenta admin, que no es alumno) */}
         {!isAdmin && (
-        <motion.section
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.14 }}
-          className="flex flex-col gap-2.5"
-        >
-          <h4 className="text-[10px] font-bold font-title text-slate-400 uppercase tracking-[0.15em] pl-1">
-            Insignias y Logros
-          </h4>
+          <motion.section
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.14 }}
+          >
+            <AchievementsGallery />
+          </motion.section>
+        )}
 
-          {achievementsData.map((badge, i) => {
-            const unlocked = unlockedAchievements.includes(badge.id);
-            return (
-              <motion.div
-                key={badge.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.14 + i * 0.04 }}
-                className={`glass rounded-2xl p-4 flex items-start gap-3 relative overflow-hidden ${
-                  unlocked ? "" : "opacity-55"
-                }`}
-              >
-                {unlocked && (
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-brand-lavender/15 rounded-bl-3xl pointer-events-none" />
-                )}
-                <div className={`w-12 h-12 rounded-2xl text-2xl flex items-center justify-center flex-shrink-0 shadow-sm ${
-                  unlocked ? "bg-brand-lavender/30" : "bg-slate-100"
-                }`}>
-                  {unlocked ? badge.emoji : "🔒"}
-                </div>
-                <div className="flex-1 min-w-0 relative">
-                  <h5 className="font-bold text-sm text-brand-dark font-title">{badge.title}</h5>
-                  <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">{badge.description}</p>
-                  {unlocked && (
-                    <p className="text-[10px] text-brand-coral font-semibold mt-1.5 italic leading-relaxed">
-                      &quot;{badge.unlockedMessage}&quot;
-                    </p>
-                  )}
-                </div>
-              </motion.div>
-            );
-          })}
-        </motion.section>
+        {!isAdmin && (
+          <motion.section
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.18 }}
+          >
+            <StatsSection />
+          </motion.section>
         )}
 
         {/* Settings */}

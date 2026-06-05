@@ -24,6 +24,9 @@ export interface AppState {
   todayXPDate: string | null; // Format: YYYY-MM-DD
   dailyGoal: number; // Default: 20 XP
 
+  // XP earned per calendar day (YYYY-MM-DD → xp), for the stats graph
+  xpHistory: Record<string, number>;
+
   // Lives refill timer
   lastLifeLostAt: string | null; // ISO timestamp
 
@@ -69,6 +72,7 @@ export interface ProgressSnapshot {
   todayXPDate: string | null;
   dailyGoal: number;
   lastLifeLostAt: string | null;
+  xpHistory?: Record<string, number>;
   completedLessons: string[];
   unlockedUnits: string[];
   learnedWords: LearnedWord[];
@@ -113,6 +117,7 @@ export const useStore = create<AppState>()(
       todayXPDate: null,
       dailyGoal: 20,
       lastLifeLostAt: null,
+      xpHistory: {},
       completedLessons: [],
       unlockedUnits: ["unidad-1"],
       learnedWords: [],
@@ -127,6 +132,10 @@ export const useStore = create<AppState>()(
           const todayXP =
             state.todayXPDate === today ? state.todayXP + amount : amount;
           const newXP = state.xp + amount;
+          const xpHistory = {
+            ...state.xpHistory,
+            [today]: (state.xpHistory?.[today] ?? 0) + amount,
+          };
 
           // Check for XP-based achievements
           const newlyUnlocked: string[] = [];
@@ -145,6 +154,7 @@ export const useStore = create<AppState>()(
             xp: newXP,
             todayXP,
             todayXPDate: today,
+            xpHistory,
             unlockedAchievements: [...state.unlockedAchievements, ...newlyUnlocked],
           };
         });
@@ -305,6 +315,7 @@ export const useStore = create<AppState>()(
           todayXP: 0,
           todayXPDate: null,
           lastLifeLostAt: null,
+          xpHistory: {},
           completedLessons: [],
           unlockedUnits: ["unidad-1"],
           learnedWords: [],
@@ -325,6 +336,7 @@ export const useStore = create<AppState>()(
           todayXPDate: s.todayXPDate,
           dailyGoal: s.dailyGoal,
           lastLifeLostAt: s.lastLifeLostAt,
+          xpHistory: s.xpHistory ?? {},
           completedLessons: s.completedLessons,
           unlockedUnits: s.unlockedUnits,
           learnedWords: s.learnedWords,
@@ -347,6 +359,7 @@ export const useStore = create<AppState>()(
           todayXPDate: data.todayXPDate ?? state.todayXPDate,
           dailyGoal: data.dailyGoal ?? state.dailyGoal,
           lastLifeLostAt: data.lastLifeLostAt ?? state.lastLifeLostAt,
+          xpHistory: data.xpHistory ?? state.xpHistory,
           completedLessons: data.completedLessons ?? state.completedLessons,
           unlockedUnits: data.unlockedUnits ?? state.unlockedUnits,
           learnedWords: data.learnedWords ?? state.learnedWords,
