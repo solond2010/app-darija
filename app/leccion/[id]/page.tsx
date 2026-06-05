@@ -10,8 +10,30 @@ import { achievementsData } from "../../../data/achievements";
 import { getRandomMessage } from "../../../data/meshi-messages";
 import { Meshi, MeshiMood } from "../../../components/Suki";
 import { ExerciseRenderer } from "../../../components/ExerciseTypes/ExerciseRenderer";
+import { LessonIntro } from "../../../components/LessonIntro";
 import { SpeakButton } from "../../../components/SpeakButton";
 import { normalizeDarija } from "../../../utils/speech";
+
+// Difficulty ranking so every lesson ramps from recognition (easy) to
+// production (hard) — Duolingo-style.
+const EX_RANK: Record<string, number> = {
+  "flashcard-reveal": 0,
+  "match-pairs": 1,
+  "multiple-choice": 2,
+  "true-false": 3,
+  "listening-select": 4,
+  "fill-blank": 5,
+  "word-order": 6,
+  "conversation": 7,
+  "translation": 8,
+  "listen-type": 9,
+};
+function orderExercises<T extends { type: string }>(exercises: T[]): T[] {
+  return [...exercises]
+    .map((e, i) => ({ e, i }))
+    .sort((a, b) => (EX_RANK[a.e.type] ?? 5) - (EX_RANK[b.e.type] ?? 5) || a.i - b.i)
+    .map(({ e }) => e);
+}
 import { sound } from "../../../utils/sound";
 import { haptics } from "../../../utils/haptics";
 import { X, Sparkles, Star, Flame, Trophy, CheckCircle2, Zap } from "lucide-react";
@@ -47,6 +69,7 @@ export default function LeccionPage() {
 
   const [isLessonFinished, setIsLessonFinished] = useState(false);
   const [unlockedBadges, setUnlockedBadges] = useState<string[]>([]);
+  const [showIntro, setShowIntro] = useState(true);
   const startTimeRef = useRef<number>(Date.now());
   const startedRef = useRef(false);
 
@@ -57,10 +80,10 @@ export default function LeccionPage() {
       if (m) found = m;
     });
     if (found) {
-      // Set the lesson only once. An async content refresh (Supabase) must never
-      // swap the lesson object out from under an in-progress lesson — that would
-      // reset the exercise and block "Continuar".
-      setLesson((prev: any) => prev ?? found);
+      // Order exercises easy→hard once, then set the lesson only once. An async
+      // content refresh (Supabase) must never swap the lesson object mid-play.
+      const ordered = { ...found, exercises: orderExercises(found.exercises) };
+      setLesson((prev: any) => prev ?? ordered);
       if (!startedRef.current) {
         startedRef.current = true;
         startTimeRef.current = Date.now();
@@ -420,6 +443,21 @@ export default function LeccionPage() {
           </button>
         </div>
       </div>
+    );
+  }
+
+  // "Learn these words" intro — teach before testing.
+  const introWords = lessonVocabulary[lessonId] || [];
+  if (showIntro && introWords.length > 0) {
+    return (
+      <LessonIntro
+        words={introWords}
+        onExit={() => router.push("/")}
+        onStart={() => {
+          setShowIntro(false);
+          startTimeRef.current = Date.now(); // don't count intro time
+        }}
+      />
     );
   }
 
