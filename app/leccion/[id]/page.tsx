@@ -14,7 +14,7 @@ import { SpeakButton } from "../../../components/SpeakButton";
 import { normalizeDarija } from "../../../utils/speech";
 import { sound } from "../../../utils/sound";
 import { haptics } from "../../../utils/haptics";
-import { Heart, X, Sparkles, Star, Flame, Trophy, CheckCircle2, Zap } from "lucide-react";
+import { X, Sparkles, Star, Flame, Trophy, CheckCircle2, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { lessonVocabulary } from "../../../data/vocabulary";
@@ -24,7 +24,7 @@ export default function LeccionPage() {
   const params = useParams();
   const lessonId = params.id as string;
 
-  const { lives, decrementLive, refillLives, addXP, completeLesson, addLearnedWords, soundsEnabled } = useStore();
+  const { addXP, completeLesson, addLearnedWords, soundsEnabled } = useStore();
   const unitsData = useContent((s) => s.units);
   const lessonVocabulary = useContent((s) => s.vocabulary);
   const contentLoaded = useContent((s) => s.loaded);
@@ -39,7 +39,6 @@ export default function LeccionPage() {
   const [attempts, setAttempts] = useState(1);
   const [errorsCount, setErrorsCount] = useState(0);
   const [totalXPEarned, setTotalXPEarned] = useState(0);
-  const [localLives, setLocalLives] = useState(5);
 
   const [meshiMood, setMeshiMood] = useState<MeshiMood>("normal");
   const [meshiSpeech, setMeshiSpeech] = useState("");
@@ -62,7 +61,6 @@ export default function LeccionPage() {
       setLesson((prev: any) => prev ?? found);
       if (!startedRef.current) {
         startedRef.current = true;
-        setLocalLives(useStore.getState().lives);
         startTimeRef.current = Date.now();
         setMeshiSpeech(`¡Yallah Sara! Amin preparó la lección ${lessonId} para ti. 🐱🤍`);
       }
@@ -143,8 +141,6 @@ export default function LeccionPage() {
     } else {
       if (soundsEnabled) sound.playIncorrect();
       haptics.error();
-      decrementLive();
-      setLocalLives((p) => Math.max(0, p - 1));
       setErrorsCount((p) => p + 1);
       setMeshiMood("sad");
       setMeshiSpeech(getRandomMessage("incorrect").text);
@@ -163,7 +159,6 @@ export default function LeccionPage() {
     // retry (the lesson appearing not to advance).
     const isRetry = isAnswerChecked && attempts === 2 && !lastAnswerCorrect;
     if (isRetry) {
-      if (localLives <= 0) { setIsLessonFinished(true); return; }
       setIsAnswerChecked(false);
       setLastAnswerCorrect(null);
       setSelectedAns(null);
@@ -252,27 +247,6 @@ export default function LeccionPage() {
       router.push("/");
     }
   };
-
-  // Out of lives
-  if (localLives <= 0 && !isLessonFinished) {
-    return (
-      <div className="h-dvh flex flex-col items-center justify-center max-w-md mx-auto px-6 text-center gap-5">
-        <Meshi mood="sleeping" size={180} showBubble={true} bubbleText="¡Oh no Sara, te has quedado sin corazones! 😿" />
-        <h2 className="text-2xl font-bold font-title text-brand-dark">¡Sin vidas!</h2>
-        <p className="text-sm text-slate-400 max-w-xs leading-relaxed">
-          Has agotado todos tus corazones. Ve a Repaso para practicar sin perder vidas, o recupéralas ahora.
-        </p>
-        <div className="flex flex-col gap-3 w-full mt-2">
-          <button onClick={() => { refillLives(); router.push("/"); }} className="w-full py-4 btn-3d-primary font-title text-base">
-            Recuperar vidas (+5 🤍)
-          </button>
-          <button onClick={() => router.push("/")} className="w-full py-4 btn-3d-secondary font-title text-base">
-            Volver al Inicio
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   // Lesson complete — use same h-dvh flex layout as lesson itself to prevent size jump
   if (isLessonFinished) {
@@ -463,13 +437,6 @@ export default function LeccionPage() {
           ))}
         </div>
 
-        {/* Lives */}
-        <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold font-title flex-shrink-0 ${
-          localLives > 2 ? "bg-rose-50 text-rose-400" : "bg-red-100 text-red-500 animate-pulse"
-        }`}>
-          <Heart className={`w-3.5 h-3.5 ${localLives > 0 ? "fill-current" : ""}`} />
-          {localLives}
-        </div>
       </header>
 
       {/* Meshi strip */}

@@ -64,12 +64,11 @@ async function syncStatus() {
 /**
  * Runs once on every page mount (via layout.tsx).
  * - Resets streak if missed > 1 day
- * - Refills lives based on time elapsed
  * - Registers service worker & re-syncs push subscription
  * - Syncs Sara's play status to server for cron notifications
  */
 export function AppInit() {
-  const { updateStreakDaily, checkAndRefillLives, setHydrated } = useStore();
+  const { updateStreakDaily, setHydrated } = useStore();
   const initialized = useRef(false);
 
   useEffect(() => {
@@ -78,7 +77,6 @@ export function AppInit() {
 
     setHydrated(true);
     updateStreakDaily();
-    checkAndRefillLives();
 
     // Service worker + push subscription (non-blocking)
     registerAndSubscribe();
