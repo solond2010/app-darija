@@ -54,6 +54,18 @@ export const lessonVocabulary: { [key: string]: LearnedWord[] } = {
     { darija: "Ts3a", spanish: "Nueve (9)", category: "Números" },
     { darija: "3ashra", spanish: "Diez (10)", category: "Números" },
   ],
+  "1.6": [
+    { darija: "Bghit", spanish: "Quiero", category: "Verbos", example: "Bghit atay (Quiero té)" },
+    { darija: "Bghiti?", spanish: "¿Quieres?", category: "Verbos" },
+    { darija: "3ndi", spanish: "Tengo", category: "Verbos", example: "3ndi juj khutat (Tengo dos hermanas)" },
+    { darija: "Kanakul", spanish: "Como", category: "Verbos" },
+    { darija: "Kanshrab", spanish: "Bebo", category: "Verbos", example: "Kanshrab atay (Bebo té)" },
+    { darija: "Kanmshi", spanish: "Voy / me voy", category: "Verbos", example: "Kanmshi l-so9 (Voy al zoco)" },
+    { darija: "Kanji", spanish: "Vengo", category: "Verbos" },
+    { darija: "Kandir", spanish: "Hago", category: "Verbos", example: "Ash kadiri? (¿Qué haces?)" },
+    { darija: "Kan3ref", spanish: "Sé / conozco", category: "Verbos", example: "Ma kan3refsh (No sé)" },
+    { darija: "Kanhder", spanish: "Hablo", category: "Verbos", example: "Kanhder shwiya darija (Hablo un poco de darija)" },
+  ],
   "2.1": [
     { darija: "3ayana / 3ayan", spanish: "Cansada / Cansado", category: "Sentimientos" },
     { darija: "Fer7ana / Fer7an", spanish: "Contenta / Contento", category: "Sentimientos" },
