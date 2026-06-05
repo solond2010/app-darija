@@ -4,6 +4,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Header } from "../../components/Header";
 import { BottomNav } from "../../components/BottomNav";
 import { Meshi } from "../../components/Suki";
+import { SpeakButton } from "../../components/SpeakButton";
+import { speak } from "../../utils/speech";
 import { useStore, LearnedWord } from "../../lib/store";
 import { Star, RefreshCw, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
@@ -54,6 +56,15 @@ export default function RepasoPage() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isHydrated, learnedWords]);
+
+  // Auto-pronounce each card's Darija word when it appears (front side).
+  useEffect(() => {
+    const w = reviewStack[currentIdx];
+    if (!reviewFinished && w?.darija) {
+      const t = setTimeout(() => speak(w.darija), 250);
+      return () => clearTimeout(t);
+    }
+  }, [currentIdx, reviewStack, reviewFinished]);
 
   const startReview = (category: string) => {
     setSelectedCategory(category);
@@ -259,9 +270,14 @@ export default function RepasoPage() {
                       <span className="text-[10px] uppercase font-bold tracking-wider text-brand-coral bg-brand-pink/20 px-3 py-1 rounded-full mb-4">
                         Darija · ¿Cuál es la traducción?
                       </span>
-                      <h2 className="text-3xl font-bold font-title text-brand-dark">
-                        {currentWord?.darija}
-                      </h2>
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-3xl font-bold font-title text-brand-dark">
+                          {currentWord?.darija}
+                        </h2>
+                        {currentWord?.darija && (
+                          <SpeakButton text={currentWord.darija} size={22} className="p-1.5 bg-brand-pink/15" />
+                        )}
+                      </div>
                       {currentWord?.category && (
                         <span className="text-[10px] bg-slate-100 text-slate-500 px-2.5 py-0.5 rounded-full mt-3">
                           {currentWord.category}

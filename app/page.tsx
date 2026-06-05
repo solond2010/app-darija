@@ -5,6 +5,7 @@ import { Header } from "../components/Header";
 import { BottomNav } from "../components/BottomNav";
 import { LessonMap } from "../components/LessonMap";
 import { WeekStreak } from "../components/WeekStreak";
+import { WordOfDay } from "../components/WordOfDay";
 import { useStore, getLevelInfo } from "../lib/store";
 import { useContent } from "../lib/content";
 import { Zap, Target, ChevronRight, AlertTriangle } from "lucide-react";
@@ -142,6 +143,9 @@ export default function Home() {
 
         {/* Weekly streak strip */}
         <WeekStreak />
+
+        {/* Word of the day (rotates daily, from the lesson vocabulary) */}
+        <WordOfDay />
 
         {/* Continue lesson button */}
         {nextLesson && (
