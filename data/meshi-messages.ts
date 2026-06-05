@@ -27,6 +27,8 @@ export const meshiMessages = {
     { text: "¡Espectacular, Sara! ¡Vas volando! 🚀", emoji: "😺" },
     { text: "¡Correcto! ¡Qué buena pronunciación! 🌟", emoji: "😻" },
     { text: "¡Eso es! ¡Lo tienes dominado! 👍", emoji: "😸" },
+    { text: "¡A Amin le va a encantar lo bien que lo haces! 💛", emoji: "😻" },
+    { text: "¡Correcto! Amin estaría súper orgulloso de ti 🥹💛", emoji: "🎉" },
   ],
   incorrect: [
     { text: "¡Casi casi! Prueba otra vez 🐱", emoji: "🤔" },

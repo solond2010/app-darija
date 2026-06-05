@@ -7,11 +7,14 @@ import { Lock, Check, Play, Star } from "lucide-react";
 import { useStore } from "../lib/store";
 import { Lesson, Unit } from "../data/lessons";
 import { useContent } from "../lib/content";
+import { newLessonIds } from "../lib/newLessons";
 
 export const LessonMap: React.FC = () => {
   const { completedLessons, unlockedUnits, isHydrated, setHydrated } = useStore();
   const unitsData = useContent((s) => s.units);
   const [mounted, setMounted] = useState(false);
+
+  const newIds = newLessonIds(unitsData, completedLessons, unlockedUnits);
 
   useEffect(() => {
     setHydrated(true);
@@ -29,6 +32,8 @@ export const LessonMap: React.FC = () => {
 
   const isLessonUnlocked = (lessonId: string, unitId: string) => {
     if (!unlockedUnits.includes(unitId)) return false;
+    // Newly-added lessons (behind her progress) are always tappable.
+    if (newIds.has(lessonId)) return true;
 
     const allLessons: { id: string; unitId: string }[] = [];
     unitsData.forEach((u) => u.lessons.forEach((l) => allLessons.push({ id: l.id, unitId: u.id })));
@@ -107,6 +112,7 @@ export const LessonMap: React.FC = () => {
               {unit.lessons.map((lesson, index) => {
                 const unlocked = isLessonUnlocked(lesson.id, unit.id);
                 const completed = completedLessons.includes(lesson.id);
+                const isNew = newIds.has(lesson.id);
                 const posClass = offsetPattern[index % 4];
 
                 return (
@@ -115,8 +121,8 @@ export const LessonMap: React.FC = () => {
                     className={`flex flex-col items-center z-10 transition-transform ${posClass}`}
                   >
                     <div className="relative flex flex-col items-center">
-                      {/* "¡EMPIEZA!" bubble on the active lesson */}
-                      {unlocked && !completed && (
+                      {/* "¡EMPIEZA!" bubble on the active frontier lesson (not the new ones) */}
+                      {unlocked && !completed && !isNew && (
                         <motion.div
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1, y: [0, -4, 0] }}
@@ -125,6 +131,18 @@ export const LessonMap: React.FC = () => {
                         >
                           ¡EMPIEZA!
                           <span className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-3 h-3 bg-white rotate-45 rounded-[3px]" />
+                        </motion.div>
+                      )}
+
+                      {/* "NUEVO" badge on lessons Amin just added */}
+                      {isNew && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.6 }}
+                          animate={{ opacity: 1, scale: 1, rotate: [0, -4, 4, 0] }}
+                          transition={{ rotate: { repeat: Infinity, duration: 1.6, ease: "easeInOut" }, default: { duration: 0.3 } }}
+                          className="absolute -top-3 -right-3 z-30 bg-gradient-to-br from-brand-majorelle to-brand-coral text-white font-title font-extrabold text-[10px] px-2 py-0.5 rounded-full shadow-[0_4px_10px_rgba(124,111,255,0.5)] border-2 border-white"
+                        >
+                          NUEVO
                         </motion.div>
                       )}
 

@@ -90,7 +90,7 @@ function LevelContent({ level, name }: { level: number; name: string }) {
       </div>
       <h2 className="text-4xl font-extrabold font-title text-gradient leading-none">Nivel {level}</h2>
       <p className="text-lg font-bold font-title text-brand-dark -mt-1">{name}</p>
-      <p className="text-sm text-slate-500 leading-relaxed">¡Mashallah Sara! Cada día hablas mejor Darija. 🐱💜</p>
+      <p className="text-sm text-slate-500 leading-relaxed">¡Mashallah Sara! Amin está súper orgulloso de ti. 🐱💛</p>
     </>
   );
 }
@@ -152,7 +152,7 @@ function DailyContent({ goal }: { goal: number }) {
       </div>
       <h2 className="text-3xl font-extrabold font-title text-gradient-cool leading-none">{goal} XP hoy ✅</h2>
       <p className="text-sm text-slate-500 leading-relaxed">
-        ¡Has cumplido tu objetivo de hoy, Sara! Vuelve mañana para mantener el ritmo. 🐱🔥
+        ¡Meta de hoy cumplida, Sara! A Amin le hace mucha ilusión verte aquí cada día. 🐱💛
       </p>
     </>
   );

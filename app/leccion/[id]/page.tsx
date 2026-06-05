@@ -64,7 +64,7 @@ export default function LeccionPage() {
         startedRef.current = true;
         setLocalLives(useStore.getState().lives);
         startTimeRef.current = Date.now();
-        setMeshiSpeech(`¡Yallah Sara! Vamos a empezar la lección ${lessonId}. 🐱`);
+        setMeshiSpeech(`¡Yallah Sara! Amin preparó la lección ${lessonId} para ti. 🐱💛`);
       }
     } else if (contentLoaded) {
       // Content has finished loading and the lesson genuinely doesn't exist.

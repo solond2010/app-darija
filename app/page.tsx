@@ -6,6 +6,7 @@ import { BottomNav } from "../components/BottomNav";
 import { LessonMap } from "../components/LessonMap";
 import { WeekStreak } from "../components/WeekStreak";
 import { WordOfDay } from "../components/WordOfDay";
+import { NewLessonsBanner } from "../components/NewLessonsBanner";
 import { useStore, getLevelInfo } from "../lib/store";
 import { useContent } from "../lib/content";
 import { Zap, Target, ChevronRight, AlertTriangle } from "lucide-react";
@@ -94,6 +95,9 @@ export default function Home() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* New lessons Amin added behind Sara's progress */}
+        <NewLessonsBanner />
 
         {/* HERO — level ring + XP */}
         <motion.section
