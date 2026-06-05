@@ -96,8 +96,8 @@ export const LessonMap: React.FC = () => {
                   Unidad {unit.number}
                 </span>
               </div>
-              <h2 className="relative text-lg font-bold font-title">{unit.title}</h2>
-              <p className={`relative text-xs mt-0.5 ${isUnitUnlocked ? "text-white/75" : "text-slate-400"}`}>
+              <h2 className="relative text-lg font-bold font-title drop-shadow-sm">{unit.title}</h2>
+              <p className={`relative text-xs mt-0.5 font-medium ${isUnitUnlocked ? "text-white/90" : "text-slate-400"}`}>
                 {unit.description}
               </p>
             </div>
