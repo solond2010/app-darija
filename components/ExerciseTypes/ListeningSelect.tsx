@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { Volume2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { OptionButton, OptionState } from "./OptionButton";
+import { speak } from "../../utils/speech";
+import { haptics } from "../../utils/haptics";
 
 interface ListeningSelectProps {
   question: string;
@@ -21,10 +23,17 @@ export const ListeningSelect: React.FC<ListeningSelectProps> = ({
   const [isPlaying, setIsPlaying] = useState(false);
 
   const handlePlayAudio = () => {
-    if (isPlaying) return;
+    haptics.tap();
+    speak(audioText); // actually pronounce the word now
     setIsPlaying(true);
     setTimeout(() => setIsPlaying(false), 1200);
   };
+
+  // Auto-play once when the exercise appears, so it feels like a real listening task.
+  React.useEffect(() => {
+    const t = setTimeout(() => speak(audioText), 350);
+    return () => clearTimeout(t);
+  }, [audioText]);
 
   const stateFor = (option: string): OptionState => {
     if (!isAnswerChecked) return selectedAnswer === option ? "selected" : "idle";

@@ -5,6 +5,7 @@ import { useContent } from "../../lib/content";
 import { Header } from "../../components/Header";
 import { BottomNav } from "../../components/BottomNav";
 import { Meshi } from "../../components/Suki";
+import { SpeakButton } from "../../components/SpeakButton";
 import { useStore, LearnedWord } from "../../lib/store";
 import { Search, Check, Info, BookOpen, AlertCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -168,6 +169,7 @@ export default function DiccionarioPage() {
                   <div className={`px-4 pt-3.5 pb-3 flex items-center gap-3 ${
                     learned ? "border-l-[3px] border-l-brand-mint" : ""
                   }`}>
+                    <SpeakButton text={word.darija} size={20} className="p-2 bg-brand-pink/15 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <h4 className="text-base font-bold font-title text-brand-dark truncate">
                         {word.darija}

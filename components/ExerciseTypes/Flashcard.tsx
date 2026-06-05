@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { HelpCircle } from "lucide-react";
+import { SpeakButton } from "../SpeakButton";
 
 interface FlashcardProps {
   question: string;
@@ -60,7 +61,10 @@ export const Flashcard: React.FC<FlashcardProps> = ({
             <span className="text-[10px] uppercase font-bold tracking-wider text-brand-coral bg-brand-pink/20 px-3 py-1 rounded-full mb-4">
               Darija (Chat)
             </span>
-            <h2 className="text-3xl font-bold font-title text-brand-dark">{front}</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-3xl font-bold font-title text-brand-dark">{front}</h2>
+              <SpeakButton text={front} size={22} className="p-1.5 bg-brand-pink/15" />
+            </div>
             {hint && (
               <div className="flex items-center gap-1.5 text-[10px] text-slate-400 mt-4 bg-slate-50 px-3 py-1.5 rounded-full">
                 <HelpCircle className="w-3 h-3" />
