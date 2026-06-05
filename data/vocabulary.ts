@@ -42,6 +42,18 @@ export const lessonVocabulary: { [key: string]: LearnedWord[] } = {
     { darija: "Labas", spanish: "¿Estás bien? / Bien", category: "Saludos" },
     { darija: "Bikhir", spanish: "Bien", category: "Presentación" },
   ],
+  "1.5": [
+    { darija: "Wahd", spanish: "Uno (1)", category: "Números" },
+    { darija: "Juj", spanish: "Dos (2)", category: "Números" },
+    { darija: "Tlata", spanish: "Tres (3)", category: "Números" },
+    { darija: "Rb3a", spanish: "Cuatro (4)", category: "Números" },
+    { darija: "Khmsa", spanish: "Cinco (5)", category: "Números" },
+    { darija: "Sitta", spanish: "Seis (6)", category: "Números" },
+    { darija: "Sb3a", spanish: "Siete (7)", category: "Números" },
+    { darija: "Tmnya", spanish: "Ocho (8)", category: "Números" },
+    { darija: "Ts3a", spanish: "Nueve (9)", category: "Números" },
+    { darija: "3ashra", spanish: "Diez (10)", category: "Números" },
+  ],
   "2.1": [
     { darija: "3ayana / 3ayan", spanish: "Cansada / Cansado", category: "Sentimientos" },
     { darija: "Fer7ana / Fer7an", spanish: "Contenta / Contento", category: "Sentimientos" },

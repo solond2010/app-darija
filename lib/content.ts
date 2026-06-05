@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { unitsData as defaultUnits, Unit } from "../data/lessons";
+import { unitsData as defaultUnits, Unit, CONTENT_DATE } from "../data/lessons";
 import { lessonVocabulary as defaultVocab } from "../data/vocabulary";
 import { LearnedWord } from "./store";
 import { supabase } from "./supabase";
@@ -57,18 +57,49 @@ function mergeUnits(base: Unit[], cloud: Unit[]): Unit[] {
   return merged;
 }
 
-/** Fetch admin-edited content from Supabase (if any) and merge it over defaults. */
+/**
+ * Code-authoritative merge: the bundled code curriculum wins for existing units
+ * and lessons (so curriculum improvements ship), while any lessons/units the admin
+ * ADDED via the editor (present only in the cloud) are still kept.
+ */
+function mergeCodeWins(base: Unit[], cloud: Unit[]): Unit[] {
+  const cloudById = new Map(cloud.map((u) => [u.id, u]));
+  const baseIds = new Set(base.map((u) => u.id));
+  const result: Unit[] = base.map((bu) => {
+    const cu = cloudById.get(bu.id);
+    if (!cu) return bu;
+    const baseLessonIds = new Set(bu.lessons.map((l) => l.id));
+    const adminAdded = (cu.lessons || []).filter((cl) => !baseLessonIds.has(cl.id));
+    return adminAdded.length ? { ...bu, lessons: [...bu.lessons, ...adminAdded] } : bu;
+  });
+  cloud.forEach((cu) => {
+    if (!baseIds.has(cu.id)) result.push(cu);
+  });
+  return result;
+}
+
+/** Fetch admin-edited content from Supabase (if any) and merge it with defaults. */
 export async function loadContent() {
   try {
     const { data, error } = await supabase
       .from("app_content")
-      .select("units,vocabulary")
+      .select("units,vocabulary,updated_at")
       .eq("id", "main")
       .maybeSingle();
     if (!error && data && Array.isArray(data.units) && data.units.length > 0) {
-      const mergedUnits = mergeUnits(defaultUnits, data.units as Unit[]);
-      // Vocabulary: base keys preserved, cloud overrides/extends them.
-      const mergedVocab: Vocabulary = { ...defaultVocab, ...((data.vocabulary as Vocabulary) ?? {}) };
+      const savedAt = data.updated_at ? Date.parse(data.updated_at as string) : 0;
+      const codeAt = Date.parse(CONTENT_DATE);
+      // Newest wins: if the code curriculum was updated more recently than the last
+      // cloud save, the code wins; otherwise the admin's saved edits win.
+      const codeWins = codeAt > savedAt;
+      const cloudUnits = data.units as Unit[];
+      const cloudVocab = (data.vocabulary as Vocabulary) ?? {};
+      const mergedUnits = codeWins
+        ? mergeCodeWins(defaultUnits, cloudUnits)
+        : mergeUnits(defaultUnits, cloudUnits);
+      const mergedVocab: Vocabulary = codeWins
+        ? { ...cloudVocab, ...defaultVocab } // code vocab wins
+        : { ...defaultVocab, ...cloudVocab }; // cloud vocab wins
       useContent.getState().setContent(mergedUnits, mergedVocab);
     }
   } catch {

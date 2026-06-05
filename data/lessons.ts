@@ -50,6 +50,13 @@ export interface Unit {
   lessons: Lesson[];
 }
 
+// When the curriculum below is changed in CODE, bump this date to "now". The app
+// uses it to decide who wins when merging with the admin-edited copy in Supabase:
+// if the code is newer than the last cloud save, the code curriculum wins (so
+// these improvements ship); if the admin edits later via the editor, their save
+// is newer and wins. See lib/content.ts.
+export const CONTENT_DATE = "2026-06-05T22:30:00Z";
+
 export const unitsData: Unit[] = [
   {
     id: "unidad-1",
@@ -422,6 +429,89 @@ export const unitsData: Unit[] = [
             audioText: "Bikhir",
             answer: ["Bikhir", "bikher", "bi khir"],
             hint: "Bien (Ana bikhir = Estoy bien)",
+          },
+        ],
+      },
+      {
+        id: "1.5",
+        title: "Los Números (1-10) 🔢",
+        description: "Cuenta del 1 al 10 en Darija — esencial para la edad, los precios y el día a día",
+        teaser: "Mañana: di cómo te sientes, contenta o cansada 💛",
+        exercises: [
+          {
+            id: "1.5.1",
+            type: "multiple-choice",
+            question: "¿Cómo se dice 'Uno' en Darija?",
+            options: ["Juj", "Wahd", "Tlata", "Khmsa"],
+            answer: "Wahd",
+            hint: "'Wahd' = uno. También significa 'solo/a'.",
+          },
+          {
+            id: "1.5.2",
+            type: "listen-type",
+            question: "Escucha y escribe el número 'dos':",
+            audioText: "Juj",
+            answer: ["Juj", "juzh", "joj"],
+            hint: "Dos (2)",
+          },
+          {
+            id: "1.5.3",
+            type: "match-pairs",
+            question: "Une cada número con su cifra:",
+            pairs: [
+              { left: "Wahd", right: "1" },
+              { left: "Juj", right: "2" },
+              { left: "Tlata", right: "3" },
+              { left: "Rb3a", right: "4" },
+            ],
+          },
+          {
+            id: "1.5.4",
+            type: "true-false",
+            question: "¿'Khmsa' significa 'Cinco'?",
+            answer: true,
+            hint: "Sí, Khmsa = 5. Es la mano abierta (la mano de Fátima) en la cultura marroquí.",
+          },
+          {
+            id: "1.5.5",
+            type: "listen-type",
+            question: "Escucha y escribe el número 'tres':",
+            audioText: "Tlata",
+            answer: ["Tlata", "tleta"],
+            hint: "Tres (3)",
+          },
+          {
+            id: "1.5.6",
+            type: "fill-blank",
+            question: "Completa la cuenta: 'Wahd, ___, Tlata'",
+            sentenceWithBlank: "Wahd, ___, Tlata.",
+            options: ["Juj", "Rb3a", "Khmsa", "Sitta"],
+            answer: "Juj",
+            hint: "Uno, dos, tres... ¿qué falta?",
+          },
+          {
+            id: "1.5.7",
+            type: "flashcard-reveal",
+            question: "Recuerda este número:",
+            front: "3ashra",
+            back: "Diez (10)",
+            hint: "El '3' es la letra árabe 'ayn'. 3ashra = 10.",
+          },
+          {
+            id: "1.5.8",
+            type: "listening-select",
+            question: "Identifica el número que oyes:",
+            audioText: "Sb3a",
+            options: ["Siete", "Cinco", "Tres", "Diez"],
+            answer: "Siete",
+          },
+          {
+            id: "1.5.9",
+            type: "multiple-choice",
+            question: "¿Cómo se dice 'Ocho'?",
+            options: ["Sitta", "Tmnya", "Ts3a", "Sb3a"],
+            answer: "Tmnya",
+            hint: "6=Sitta, 7=Sb3a, 8=Tmnya, 9=Ts3a, 10=3ashra.",
           },
         ],
       },
