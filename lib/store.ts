@@ -47,6 +47,7 @@ export interface AppState {
   completeLesson: (lessonId: string, gotPerfect: boolean, units: Unit[]) => { achievementsUnlocked: string[]; unlockedUnit: { title: string; emoji: string } | null };
   addLearnedWords: (words: LearnedWord[]) => void;
   toggleSounds: () => void;
+  setDailyGoal: (goal: number) => void;
   resetProgress: () => void;
   updateStreakDaily: () => void;
 
@@ -292,6 +293,8 @@ export const useStore = create<AppState>()(
       },
 
       toggleSounds: () => set((state) => ({ soundsEnabled: !state.soundsEnabled })),
+
+      setDailyGoal: (goal) => set({ dailyGoal: Math.max(5, Math.min(100, Math.round(goal))) }),
 
       resetProgress: () => {
         set({

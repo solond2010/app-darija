@@ -6,7 +6,7 @@ import { BottomNav } from "../../components/BottomNav";
 import { Meshi } from "../../components/Suki";
 import { useStore, getLevelInfo } from "../../lib/store";
 import { achievementsData } from "../../data/achievements";
-import { Flame, Star, BookOpen, CheckCircle, Trash2, Volume2, VolumeX, ShieldAlert, Trophy, Moon, Sun } from "lucide-react";
+import { Flame, Star, BookOpen, CheckCircle, Trash2, Volume2, VolumeX, ShieldAlert, Trophy, Moon, Sun, Target } from "lucide-react";
 import { motion } from "framer-motion";
 import { ProgressBackup } from "../../components/ProgressBackup";
 import { getStoredTheme, toggleTheme, type Theme } from "../../lib/theme";
@@ -21,6 +21,7 @@ export default function PerfilPage() {
   const {
     xp, streak, completedLessons, learnedWords, unlockedAchievements,
     soundsEnabled, toggleSounds, resetProgress, isHydrated, setHydrated,
+    dailyGoal, setDailyGoal,
   } = useStore();
   const [mounted, setMounted] = useState(false);
   const [theme, setTheme] = useState<Theme>("light");
@@ -230,6 +231,32 @@ export default function PerfilPage() {
               >
                 <div className={`w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-200 ${theme === "dark" ? "translate-x-5" : "translate-x-0"}`} />
               </button>
+            </div>
+
+            {/* Daily goal picker */}
+            <div className="pt-3 border-t-2 border-brand-cream flex flex-col gap-2.5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5 text-sm font-semibold text-slate-700">
+                  <Target className="w-4.5 h-4.5 text-brand-teal" />
+                  <span>Meta diaria</span>
+                </div>
+                <span className="text-xs font-bold text-slate-400">{dailyGoal} XP/día</span>
+              </div>
+              <div className="grid grid-cols-4 gap-2">
+                {[10, 20, 30, 50].map((g) => (
+                  <button
+                    key={g}
+                    onClick={() => setDailyGoal(g)}
+                    className={`py-2 rounded-xl text-xs font-bold font-title transition-all border-2 ${
+                      dailyGoal === g
+                        ? "bg-gradient-to-br from-brand-teal to-brand-majorelle text-white border-transparent shadow-sm"
+                        : "bg-white/60 border-brand-beige text-slate-500 hover:bg-white"
+                    }`}
+                  >
+                    {g}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Editor de lecciones (solo admin) */}

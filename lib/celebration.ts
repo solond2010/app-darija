@@ -4,7 +4,8 @@ export type Celebration =
   | { kind: "level"; level: number; name: string }
   | { kind: "achievement"; emoji: string; title: string; message: string }
   | { kind: "streak"; days: number }
-  | { kind: "unit"; title: string; emoji: string };
+  | { kind: "unit"; title: string; emoji: string }
+  | { kind: "daily"; goal: number };
 
 interface CelebrationState {
   queue: Celebration[];

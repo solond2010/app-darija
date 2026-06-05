@@ -189,10 +189,16 @@ export default function LeccionPage() {
     const { achievementsUnlocked, unlockedUnit } = completeLesson(lessonId, gotPerfect, unitsData);
     setUnlockedBadges(achievementsUnlocked);
 
-    // Detect level-up: compare level before and after adding XP.
-    const levelBefore = getLevelInfo(useStore.getState().xp).level;
+    // Detect level-up + daily-goal crossing: snapshot before/after adding XP.
+    const todayStr = new Date().toLocaleDateString("en-CA");
+    const sBefore = useStore.getState();
+    const levelBefore = getLevelInfo(sBefore.xp).level;
+    const dailyGoal = sBefore.dailyGoal;
+    const todayXPBefore = sBefore.todayXPDate === todayStr ? sBefore.todayXP : 0;
     addXP(gotPerfect ? 150 + totalXPEarned : 50 + totalXPEarned);
     const after = getLevelInfo(useStore.getState().xp);
+    const todayXPAfter = useStore.getState().todayXP;
+    const crossedDailyGoal = todayXPBefore < dailyGoal && todayXPAfter >= dailyGoal;
 
     const words = lessonVocabulary[lessonId];
     if (words) addLearnedWords(words);
@@ -212,6 +218,9 @@ export default function LeccionPage() {
     }
     if (unlockedUnit) {
       cels.push({ kind: "unit", title: unlockedUnit.title, emoji: unlockedUnit.emoji });
+    }
+    if (crossedDailyGoal) {
+      cels.push({ kind: "daily", goal: dailyGoal });
     }
     achievementsUnlocked.forEach((id) => {
       const a = achievementsData.find((x) => x.id === id);
