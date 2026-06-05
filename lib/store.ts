@@ -36,6 +36,9 @@ export interface AppState {
   completedLessons: string[]; // List of lesson IDs, e.g. ["1.1", "1.2"]
   unlockedUnits: string[]; // List of unit IDs, e.g. ["unidad-1", "unidad-2"]
   learnedWords: LearnedWord[];
+  // Spaced-repetition memory per word (key = darija lowercased): which Leitner box
+  // it's in and when it's next due for review.
+  wordMemory: Record<string, { box: number; due: number }>;
   unlockedAchievements: string[]; // List of achievement IDs
 
   // Hydration helper
@@ -51,6 +54,7 @@ export interface AppState {
   checkAndRefillLives: () => void;
   completeLesson: (lessonId: string, gotPerfect: boolean, units: Unit[]) => { achievementsUnlocked: string[]; unlockedUnit: { title: string; emoji: string } | null };
   addLearnedWords: (words: LearnedWord[]) => void;
+  reviewWord: (darija: string, rating: "hard" | "ok" | "easy") => void;
   toggleSounds: () => void;
   setDailyGoal: (goal: number) => void;
   resetProgress: () => void;
@@ -79,6 +83,7 @@ export interface ProgressSnapshot {
   completedLessons: string[];
   unlockedUnits: string[];
   learnedWords: LearnedWord[];
+  wordMemory?: Record<string, { box: number; due: number }>;
   unlockedAchievements: string[];
   savedAt: string;
 }
@@ -125,6 +130,7 @@ export const useStore = create<AppState>()(
       completedLessons: [],
       unlockedUnits: ["unidad-1"],
       learnedWords: [],
+      wordMemory: {},
       unlockedAchievements: [],
       isHydrated: false,
 
@@ -301,13 +307,34 @@ export const useStore = create<AppState>()(
       addLearnedWords: (words) => {
         set((state) => {
           const currentWords = [...state.learnedWords];
+          const wordMemory = { ...state.wordMemory };
           words.forEach((newWord) => {
+            const key = newWord.darija.toLowerCase().trim();
             const exists = currentWords.some(
               (w) => w.darija.toLowerCase() === newWord.darija.toLowerCase()
             );
             if (!exists) currentWords.push(newWord);
+            // New words start in box 0, due now (will appear in the next review).
+            if (!wordMemory[key]) wordMemory[key] = { box: 0, due: Date.now() };
           });
-          return { learnedWords: currentWords };
+          return { learnedWords: currentWords, wordMemory };
+        });
+      },
+
+      // Spaced repetition (Leitner): a correct-easy answer pushes the word into a
+      // higher box (longer interval); a "hard" answer drops it back to box 0.
+      reviewWord: (darija, rating) => {
+        set((state) => {
+          const DAY = 24 * 60 * 60 * 1000;
+          const INTERVALS = [0, 1 * DAY, 3 * DAY, 7 * DAY, 14 * DAY, 30 * DAY];
+          const key = darija.toLowerCase().trim();
+          const cur = state.wordMemory[key] || { box: 0, due: 0 };
+          let box = cur.box;
+          if (rating === "hard") box = 0;
+          else if (rating === "ok") box = Math.min(5, box + 1);
+          else box = Math.min(5, box + 2); // easy
+          const due = Date.now() + INTERVALS[box];
+          return { wordMemory: { ...state.wordMemory, [key]: { box, due } } };
         });
       },
 
@@ -329,6 +356,7 @@ export const useStore = create<AppState>()(
           completedLessons: [],
           unlockedUnits: ["unidad-1"],
           learnedWords: [],
+          wordMemory: {},
           unlockedAchievements: [],
         });
       },
@@ -351,6 +379,7 @@ export const useStore = create<AppState>()(
           completedLessons: s.completedLessons,
           unlockedUnits: s.unlockedUnits,
           learnedWords: s.learnedWords,
+          wordMemory: s.wordMemory ?? {},
           unlockedAchievements: s.unlockedAchievements,
           savedAt: new Date().toISOString(),
         };
@@ -375,6 +404,7 @@ export const useStore = create<AppState>()(
           completedLessons: data.completedLessons ?? state.completedLessons,
           unlockedUnits: data.unlockedUnits ?? state.unlockedUnits,
           learnedWords: data.learnedWords ?? state.learnedWords,
+          wordMemory: data.wordMemory ?? state.wordMemory,
           unlockedAchievements: data.unlockedAchievements ?? state.unlockedAchievements,
         }));
       },

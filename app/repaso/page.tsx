@@ -19,7 +19,7 @@ interface ReviewCard extends LearnedWord {
 
 export default function RepasoPage() {
   const router = useRouter();
-  const { learnedWords, addXP, isHydrated, setHydrated } = useStore();
+  const { learnedWords, wordMemory, reviewWord, addXP, isHydrated, setHydrated } = useStore();
   const [mounted, setMounted] = useState(false);
 
   const [selectedCategory, setSelectedCategory] = useState("Todos");
@@ -42,12 +42,29 @@ export default function RepasoPage() {
     return ["Todos", ...cats];
   }, [learnedWords]);
 
+  // Smart (spaced-repetition) stack: words that are DUE come first, weakest box
+  // and most overdue first. New words (no memory) count as due now. If everything
+  // is up to date, fall back to a free shuffled practice.
+  const dueCount = useMemo(() => {
+    const now = Date.now();
+    return learnedWords.filter((w) => {
+      const m = wordMemory?.[w.darija.toLowerCase().trim()];
+      return !m || m.due <= now;
+    }).length;
+  }, [learnedWords, wordMemory]);
+
   const buildStack = (category: string) => {
+    const now = Date.now();
     const filtered = category === "Todos"
       ? learnedWords
       : learnedWords.filter((w) => w.category === category);
-    const shuffled = [...filtered].sort(() => Math.random() - 0.5).slice(0, 12);
-    return shuffled.map((w, i) => ({ ...w, _key: i }));
+    const withMem = filtered.map((w) => {
+      const m = wordMemory?.[w.darija.toLowerCase().trim()];
+      return { w, box: m?.box ?? 0, due: m?.due ?? 0 };
+    });
+    const due = withMem.filter((x) => x.due <= now).sort((a, b) => a.box - b.box || a.due - b.due);
+    const pool = due.length > 0 ? due : [...withMem].sort(() => Math.random() - 0.5);
+    return pool.slice(0, 15).map((x, i) => ({ ...x.w, _key: i }));
   };
 
   useEffect(() => {
@@ -77,6 +94,10 @@ export default function RepasoPage() {
   };
 
   const handleDifficulty = (difficulty: Difficulty) => {
+    // Update the spaced-repetition schedule for this word.
+    const reviewed = reviewStack[currentIdx];
+    if (reviewed) reviewWord(reviewed.darija, difficulty);
+
     const xpMap: Record<Difficulty, number> = { hard: 0, ok: 1, easy: 3 };
     const gained = xpMap[difficulty];
     if (gained > 0) {
@@ -212,6 +233,18 @@ export default function RepasoPage() {
         ) : (
           /* ---- Active review ---- */
           <div className="flex-1 flex flex-col gap-3 py-1">
+
+            {/* Spaced-repetition status */}
+            <div className="glass rounded-2xl px-3.5 py-2.5 flex items-center gap-2.5">
+              <div className="p-1.5 rounded-lg bg-brand-coral/15 flex-shrink-0">
+                <RefreshCw className="w-3.5 h-3.5 text-brand-coral" />
+              </div>
+              <p className="text-xs font-semibold text-slate-600 leading-snug">
+                {dueCount > 0
+                  ? <>Tienes <b className="text-brand-coral font-title">{dueCount}</b> {dueCount === 1 ? "palabra" : "palabras"} para repasar hoy 🧠</>
+                  : <>¡Todo al día! 🎉 Repasa libremente las que quieras.</>}
+              </p>
+            </div>
 
             {/* Category filter */}
             <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
