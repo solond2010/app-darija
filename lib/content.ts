@@ -25,7 +25,39 @@ export const useContent = create<ContentState>((set) => ({
   setContent: (units, vocabulary) => set({ units, vocabulary, loaded: true }),
 }));
 
-/** Fetch admin-edited content from Supabase (if any) and apply it. */
+/**
+ * Merge cloud (admin-edited) content over the bundled code defaults.
+ *  - Admin edits to EXISTING units/lessons win (so the no-code editor keeps working).
+ *  - NEW lessons/units shipped in code (e.g. a new exercise type) are always
+ *    included, even if the saved cloud snapshot predates them.
+ *  - Admin-ADDED units/lessons (only in the cloud) are kept too.
+ */
+function mergeUnits(base: Unit[], cloud: Unit[]): Unit[] {
+  const cloudById = new Map(cloud.map((u) => [u.id, u]));
+  const baseIds = new Set(base.map((u) => u.id));
+
+  const merged: Unit[] = base.map((bu) => {
+    const cu = cloudById.get(bu.id);
+    if (!cu) return bu; // brand-new unit from code
+    const cloudLessonById = new Map((cu.lessons || []).map((l) => [l.id, l]));
+    const baseLessonIds = new Set(bu.lessons.map((l) => l.id));
+    // base order + cloud overrides for existing lessons + new code lessons
+    const lessons = bu.lessons.map((bl) => cloudLessonById.get(bl.id) ?? bl);
+    // keep any admin-added lessons that don't exist in code
+    (cu.lessons || []).forEach((cl) => {
+      if (!baseLessonIds.has(cl.id)) lessons.push(cl);
+    });
+    return { ...cu, lessons }; // cloud unit meta wins, lessons merged
+  });
+
+  // append any admin-added units not present in code
+  cloud.forEach((cu) => {
+    if (!baseIds.has(cu.id)) merged.push(cu);
+  });
+  return merged;
+}
+
+/** Fetch admin-edited content from Supabase (if any) and merge it over defaults. */
 export async function loadContent() {
   try {
     const { data, error } = await supabase
@@ -34,7 +66,10 @@ export async function loadContent() {
       .eq("id", "main")
       .maybeSingle();
     if (!error && data && Array.isArray(data.units) && data.units.length > 0) {
-      useContent.getState().setContent(data.units as Unit[], (data.vocabulary as Vocabulary) ?? {});
+      const mergedUnits = mergeUnits(defaultUnits, data.units as Unit[]);
+      // Vocabulary: base keys preserved, cloud overrides/extends them.
+      const mergedVocab: Vocabulary = { ...defaultVocab, ...((data.vocabulary as Vocabulary) ?? {}) };
+      useContent.getState().setContent(mergedUnits, mergedVocab);
     }
   } catch {
     /* non-critical: keep defaults */

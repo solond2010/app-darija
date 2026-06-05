@@ -11,6 +11,7 @@ import { TrueFalse } from "./TrueFalse";
 import { Flashcard } from "./Flashcard";
 import { Conversation } from "./Conversation";
 import { ListeningSelect } from "./ListeningSelect";
+import { ListenType } from "./ListenType";
 
 interface ExerciseRendererProps {
   exercise: Exercise;
@@ -133,6 +134,19 @@ export const ExerciseRenderer: React.FC<ExerciseRendererProps> = ({
           onSelect={onSelect}
           isAnswerChecked={isAnswerChecked}
           correctAnswer={exercise.answer as string}
+        />
+      );
+
+    case "listen-type":
+      return (
+        <ListenType
+          question={exercise.question || "Escucha y escribe lo que oíste:"}
+          audioText={exercise.audioText || ""}
+          hint={exercise.hint}
+          selectedAnswer={(selectedAnswer as string) || ""}
+          onSelect={onSelect}
+          isAnswerChecked={isAnswerChecked}
+          correctAnswers={(exercise.answer as string[]) || []}
         />
       );
 

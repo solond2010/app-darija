@@ -11,6 +11,7 @@ import { getRandomMessage } from "../../../data/meshi-messages";
 import { Meshi, MeshiMood } from "../../../components/Suki";
 import { ExerciseRenderer } from "../../../components/ExerciseTypes/ExerciseRenderer";
 import { SpeakButton } from "../../../components/SpeakButton";
+import { normalizeDarija } from "../../../utils/speech";
 import { sound } from "../../../utils/sound";
 import { haptics } from "../../../utils/haptics";
 import { Heart, X, Sparkles, Star, Flame, Trophy, CheckCircle2, Zap } from "lucide-react";
@@ -91,7 +92,7 @@ export default function LeccionPage() {
     const t = currentExercise.type;
     if (["multiple-choice", "fill-blank", "listening-select", "conversation"].includes(t))
       return currentExercise.answer as string;
-    if (t === "translation") return (currentExercise.answer as string[])[0];
+    if (t === "translation" || t === "listen-type") return (currentExercise.answer as string[])[0];
     if (t === "word-order") return currentExercise.orderedAnswer?.join(" ") ?? null;
     if (t === "true-false") return (currentExercise.answer as boolean) ? "Verdadero ✓" : "Falso ✗";
     return null;
@@ -112,6 +113,9 @@ export default function LeccionPage() {
           .normalize("NFD").replace(/[̀-ͯ]/g, "")
           .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?¿¡]/g, "");
       correct = (currentExercise.answer as string[]).some((a) => norm(ans || "") === norm(a));
+    } else if (t === "listen-type") {
+      const accepted = (currentExercise.answer as string[]) || [];
+      correct = accepted.some((a) => normalizeDarija(ans || "") === normalizeDarija(a));
     } else if (t === "match-pairs" || t === "conversation") {
       // Self-validating exercises: the component only reports `true` once the
       // user has completed it correctly (matched all pairs / answered every

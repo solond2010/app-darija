@@ -9,7 +9,8 @@ export interface Exercise {
     | "listening-select"
     | "true-false"
     | "flashcard-reveal"
-    | "conversation";
+    | "conversation"
+    | "listen-type";
   question?: string;
   options?: string[]; // Used in multiple-choice, fill-blank, listening-select
   answer?: string | string[] | boolean; // Answer can be string, list of strings, or boolean
@@ -349,6 +350,78 @@ export const unitsData: Unit[] = [
                 answer: "Ana mn Sbanya",
               },
             ],
+          },
+        ],
+      },
+      {
+        id: "1.4",
+        title: "Escucha y Escribe 🎧",
+        description: "Entrena el oído: escucha la palabra en Darija y escríbela. ¡Lo más parecido a hablar con la familia!",
+        teaser: "Mañana: pon a prueba tu oído con frases más largas 👂✨",
+        exercises: [
+          {
+            id: "1.4.1",
+            type: "listen-type",
+            question: "Escucha y escribe el saludo:",
+            audioText: "Salam",
+            answer: ["Salam", "salaam"],
+            hint: "Hola",
+          },
+          {
+            id: "1.4.2",
+            type: "listen-type",
+            question: "Escucha y escribe:",
+            audioText: "Shukran",
+            answer: ["Shukran", "chukran"],
+            hint: "Gracias",
+          },
+          {
+            id: "1.4.3",
+            type: "listen-type",
+            question: "Escucha y escribe la despedida:",
+            audioText: "Bslama",
+            answer: ["Bslama", "beslama"],
+            hint: "Adiós",
+          },
+          {
+            id: "1.4.4",
+            type: "listen-type",
+            question: "Escucha y escribe la palabra de cortesía:",
+            audioText: "3afak",
+            answer: ["3afak", "afak", "aafak"],
+            hint: "Por favor",
+          },
+          {
+            id: "1.4.5",
+            type: "listen-type",
+            question: "Escucha y escribe:",
+            audioText: "Labas",
+            answer: ["Labas", "labass"],
+            hint: "¿Estás bien? / Bien",
+          },
+          {
+            id: "1.4.6",
+            type: "listen-type",
+            question: "Escucha y escribe 'mi nombre':",
+            audioText: "Smiti",
+            answer: ["Smiti", "smity"],
+            hint: "Mi nombre (Smiti Sara = Me llamo Sara)",
+          },
+          {
+            id: "1.4.7",
+            type: "listen-type",
+            question: "Escucha y escribe el saludo de la mañana:",
+            audioText: "Sba7 l-5ir",
+            answer: ["Sba7 l-5ir", "Sbah lkhir", "sba7 l5ir", "sbah l khir"],
+            hint: "Buenos días",
+          },
+          {
+            id: "1.4.8",
+            type: "listen-type",
+            question: "Escucha y escribe 'estoy bien':",
+            audioText: "Bikhir",
+            answer: ["Bikhir", "bikher", "bi khir"],
+            hint: "Bien (Ana bikhir = Estoy bien)",
           },
         ],
       },

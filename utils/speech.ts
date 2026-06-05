@@ -70,3 +70,35 @@ export function speak(text: string, opts?: { rate?: number }) {
 export function canSpeak(): boolean {
   return typeof window !== "undefined" && !!window.speechSynthesis;
 }
+
+/**
+ * Tolerant comparison key for typed Darija (chat-script). Folds away the many
+ * valid spellings so "Sba7 l-5ir", "sbah lkhir" and "Sbah l5ir" all match. Used
+ * by the "listen & type" exercise so users aren't punished for spelling choices.
+ */
+export function normalizeDarija(input: string): string {
+  let s = (input || "").toLowerCase().trim();
+  s = s.normalize("NFD").replace(/[̀-ͯ]/g, ""); // strip accents
+  // Chat numerals → letters (or drop the soundless ones).
+  s = s
+    .replace(/7/g, "h")
+    .replace(/5/g, "k") // خ
+    .replace(/9/g, "q")
+    .replace(/8/g, "g")
+    .replace(/6/g, "t")
+    .replace(/3/g, "")
+    .replace(/2/g, "")
+    .replace(/4/g, "");
+  // Fold equivalent digraphs to a single canonical letter.
+  s = s
+    .replace(/kh/g, "k")
+    .replace(/gh/g, "g")
+    .replace(/sh/g, "s")
+    .replace(/ch/g, "s")
+    .replace(/th/g, "t")
+    .replace(/ou/g, "u")
+    .replace(/q/g, "k");
+  // Keep only letters.
+  s = s.replace(/[^a-z]/g, "");
+  return s;
+}

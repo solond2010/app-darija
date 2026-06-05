@@ -34,6 +34,14 @@ export const lessonVocabulary: { [key: string]: LearnedWord[] } = {
     { darija: "Ki dayr / dayra?", spanish: "¿Cómo estás? (masc/fem)", category: "Presentación" },
     { darija: "Ana bikhir", spanish: "Estoy bien", category: "Presentación" },
   ],
+  "1.4": [
+    { darija: "Salam", spanish: "Hola", category: "Saludos" },
+    { darija: "Shukran", spanish: "Gracias", category: "Saludos" },
+    { darija: "Bslama", spanish: "Adiós", category: "Saludos" },
+    { darija: "3afak", spanish: "Por favor", category: "Saludos" },
+    { darija: "Labas", spanish: "¿Estás bien? / Bien", category: "Saludos" },
+    { darija: "Bikhir", spanish: "Bien", category: "Presentación" },
+  ],
   "2.1": [
     { darija: "3ayana / 3ayan", spanish: "Cansada / Cansado", category: "Sentimientos" },
     { darija: "Fer7ana / Fer7an", spanish: "Contenta / Contento", category: "Sentimientos" },
