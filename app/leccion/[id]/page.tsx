@@ -526,7 +526,7 @@ export default function LeccionPage() {
                 <div className="flex items-center gap-2.5 relative">
                   <motion.div
                     initial={{ scale: 0, rotate: -30 }}
-                    animate={{ scale: [0, 1.35, 1], rotate: 0 }}
+                    animate={{ scale: 1, rotate: 0 }}
                     transition={{ type: "spring", stiffness: 500, damping: 14 }}
                     className="flex-shrink-0"
                   >
