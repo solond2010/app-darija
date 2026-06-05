@@ -10,7 +10,7 @@ import { NewLessonsBanner } from "../components/NewLessonsBanner";
 import { useStore, getLevelInfo } from "../lib/store";
 import { useContent } from "../lib/content";
 import { Zap, Target, ChevronRight, AlertTriangle } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 
 export default function Home() {
@@ -20,6 +20,11 @@ export default function Home() {
   } = useStore();
   const [mounted, setMounted] = useState(false);
   const unitsData = useContent((s) => s.units);
+
+  // Subtle scroll parallax for the hero's decorative blobs.
+  const { scrollY } = useScroll();
+  const blobY = useTransform(scrollY, [0, 500], [0, -55]);
+  const blobY2 = useTransform(scrollY, [0, 500], [0, 35]);
 
   useEffect(() => {
     setMounted(true);
@@ -107,8 +112,8 @@ export default function Home() {
           className="relative overflow-hidden rounded-[28px] p-5 sheen glow-coral mt-1"
           style={{ background: "linear-gradient(135deg, #5B5FEF 0%, #FF6B6B 52%, #FF9E2C 110%)" }}
         >
-          <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full pointer-events-none" />
-          <div className="absolute -left-6 -top-6 w-24 h-24 bg-white/10 rounded-full pointer-events-none" />
+          <motion.div style={{ y: blobY }} className="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full pointer-events-none" />
+          <motion.div style={{ y: blobY2 }} className="absolute -left-6 -top-6 w-24 h-24 bg-white/10 rounded-full pointer-events-none" />
 
           <div className="relative flex items-center gap-4">
             {/* Progress ring */}

@@ -140,6 +140,10 @@ export default function LeccionPage() {
       // Base XP + combo bonus: chaining correct answers without a miss pays more.
       const newCombo = combo + 1;
       setCombo(newCombo);
+      if (newCombo >= 2) {
+        if (soundsEnabled) sound.playCombo(newCombo);
+        haptics.medium();
+      }
       const base = attempts === 1 ? 10 : 5;
       const comboBonus = newCombo >= 2 ? Math.min((newCombo - 1) * 2, 10) : 0;
       const gain = base + comboBonus;
