@@ -39,6 +39,8 @@ export default function LeccionPage() {
   const [attempts, setAttempts] = useState(1);
   const [errorsCount, setErrorsCount] = useState(0);
   const [totalXPEarned, setTotalXPEarned] = useState(0);
+  const [combo, setCombo] = useState(0); // consecutive correct answers in this lesson
+  const [lastXpGain, setLastXpGain] = useState(10);
 
   const [meshiMood, setMeshiMood] = useState<MeshiMood>("normal");
   const [meshiSpeech, setMeshiSpeech] = useState("");
@@ -135,12 +137,20 @@ export default function LeccionPage() {
     if (correct) {
       if (soundsEnabled) sound.playCorrect();
       haptics.success();
-      setTotalXPEarned((p) => p + (attempts === 1 ? 10 : 5));
+      // Base XP + combo bonus: chaining correct answers without a miss pays more.
+      const newCombo = combo + 1;
+      setCombo(newCombo);
+      const base = attempts === 1 ? 10 : 5;
+      const comboBonus = newCombo >= 2 ? Math.min((newCombo - 1) * 2, 10) : 0;
+      const gain = base + comboBonus;
+      setLastXpGain(gain);
+      setTotalXPEarned((p) => p + gain);
       setMeshiMood("celebrating");
       setMeshiSpeech(getRandomMessage("correct").text);
     } else {
       if (soundsEnabled) sound.playIncorrect();
       haptics.error();
+      setCombo(0); // a miss breaks the combo
       setErrorsCount((p) => p + 1);
       setMeshiMood("sad");
       setMeshiSpeech(getRandomMessage("incorrect").text);
@@ -437,6 +447,30 @@ export default function LeccionPage() {
           ))}
         </div>
 
+        {/* Combo counter (replaces the old lives slot) */}
+        <AnimatePresence>
+          {combo >= 2 && (
+            <motion.div
+              key="combo"
+              initial={{ scale: 0.5, opacity: 0, x: 8 }}
+              animate={{ scale: 1, opacity: 1, x: 0 }}
+              exit={{ scale: 0.5, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 480, damping: 16 }}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-extrabold font-title text-white flex-shrink-0 shadow-[0_3px_10px_rgba(255,107,107,0.45)]"
+              style={{ background: "linear-gradient(135deg, #FF9E2C, #FF6B6B)" }}
+            >
+              <motion.span
+                key={combo}
+                initial={{ scale: 1.6 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 500, damping: 12 }}
+                className="inline-flex items-center gap-0.5"
+              >
+                🔥 x{combo}
+              </motion.span>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Meshi strip */}
@@ -501,7 +535,9 @@ export default function LeccionPage() {
                   </motion.div>
                   <div>
                     <p className="font-bold font-title text-emerald-700 text-base leading-tight">¡Correcto!</p>
-                    <p className="text-xs text-emerald-600 mt-0.5">¡Sigue así!</p>
+                    <p className="text-xs text-emerald-600 mt-0.5">
+                      {combo >= 2 ? `¡Combo x${combo}! 🔥` : "¡Sigue así!"}
+                    </p>
                   </div>
                   <motion.span
                     initial={{ opacity: 0, y: 0, scale: 0.6 }}
@@ -509,7 +545,7 @@ export default function LeccionPage() {
                     transition={{ duration: 1.1, ease: "easeOut" }}
                     className="absolute right-2 top-0 font-extrabold font-title text-emerald-500 text-lg"
                   >
-                    +{attempts === 1 ? 10 : 5} XP
+                    +{lastXpGain} XP
                   </motion.span>
                 </div>
               ) : (
