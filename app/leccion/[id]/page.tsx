@@ -376,7 +376,8 @@ export default function LeccionPage() {
             </motion.div>
           )}
 
-          {/* Vocabulary list */}
+          {/* Vocabulary list (skip on review lessons — they have no new words) */}
+          {vocabCount > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -396,6 +397,7 @@ export default function LeccionPage() {
               ))}
             </div>
           </motion.div>
+          )}
 
           {/* Engagement: reward + tomorrow teaser + streak nudge */}
           <motion.div
@@ -407,7 +409,9 @@ export default function LeccionPage() {
             <div className="flex items-center gap-2.5">
               <span className="text-xl">🎉</span>
               <p className="text-sm font-bold font-title text-brand-dark">
-                ¡Has aprendido {vocabCount} {vocabCount === 1 ? "frase nueva" : "frases nuevas"}!
+                {vocabCount > 0
+                  ? `¡Has aprendido ${vocabCount} ${vocabCount === 1 ? "frase nueva" : "frases nuevas"}!`
+                  : "¡Repaso completado! Tu memoria está más fuerte. 🧠"}
               </p>
             </div>
             {teaserText && (

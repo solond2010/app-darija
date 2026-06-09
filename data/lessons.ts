@@ -40,6 +40,7 @@ export interface Lesson {
   exercises: Exercise[];
   teaser?: string; // Hook shown on completion to entice coming back tomorrow
   addedAt?: string; // ISO date a lesson was added — drives the "NUEVO" badge (48h)
+  isReview?: boolean; // auto-generated end-of-unit review lesson
 }
 
 export interface Unit {

@@ -256,8 +256,10 @@ export const useStore = create<AppState>()(
         const safeUnits = Array.isArray(units) ? units : [];
         const unitIndex = safeUnits.findIndex((u) => u.lessons.some((l) => l.id === lessonId));
         const unit = unitIndex >= 0 ? safeUnits[unitIndex] : null;
+        // The auto-generated review lesson is a bonus — it doesn't gate unit
+        // completion or unlocking the next unit.
         const unitFullyDone = unit
-          ? unit.lessons.every((l) => updatedCompleted.includes(l.id))
+          ? unit.lessons.filter((l) => !l.isReview).every((l) => updatedCompleted.includes(l.id))
           : false;
 
         // Unlock the NEXT unit when the current one is fully completed.

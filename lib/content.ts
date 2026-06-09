@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { unitsData as defaultUnits, Unit, CONTENT_DATE } from "../data/lessons";
 import { lessonVocabulary as defaultVocab } from "../data/vocabulary";
 import { LearnedWord } from "./store";
+import { withUnitReviews } from "./unitReview";
 import { supabase } from "./supabase";
 
 export type Vocabulary = Record<string, LearnedWord[]>;
@@ -19,10 +20,12 @@ interface ContentState {
  * Supabase once it loads.
  */
 export const useContent = create<ContentState>((set) => ({
-  units: defaultUnits,
+  units: withUnitReviews(defaultUnits, defaultVocab),
   vocabulary: defaultVocab,
   loaded: false,
-  setContent: (units, vocabulary) => set({ units, vocabulary, loaded: true }),
+  // Every time content is set, append the auto-generated end-of-unit review lessons.
+  setContent: (units, vocabulary) =>
+    set({ units: withUnitReviews(units, vocabulary), vocabulary, loaded: true }),
 }));
 
 /**

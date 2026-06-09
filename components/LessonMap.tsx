@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Lock, Check, Play, Star } from "lucide-react";
+import { Lock, Check, Play, Star, RefreshCw } from "lucide-react";
 import { useStore } from "../lib/store";
 import { Lesson, Unit } from "../data/lessons";
 import { useContent } from "../lib/content";
@@ -34,6 +34,15 @@ export const LessonMap: React.FC = () => {
     if (!unlockedUnits.includes(unitId)) return false;
     // Newly-added lessons (behind her progress) are always tappable.
     if (newIds.has(lessonId)) return true;
+
+    // The unit-review lesson unlocks once all the unit's normal lessons are done.
+    const unit = unitsData.find((u) => u.id === unitId);
+    const thisLesson = unit?.lessons.find((l) => l.id === lessonId);
+    if (thisLesson?.isReview) {
+      return (unit?.lessons || [])
+        .filter((l) => !l.isReview)
+        .every((l) => completedLessons.includes(l.id));
+    }
 
     const allLessons: { id: string; unitId: string }[] = [];
     unitsData.forEach((u) => u.lessons.forEach((l) => allLessons.push({ id: l.id, unitId: u.id })));
@@ -113,6 +122,7 @@ export const LessonMap: React.FC = () => {
                 const unlocked = isLessonUnlocked(lesson.id, unit.id);
                 const completed = completedLessons.includes(lesson.id);
                 const isNew = newIds.has(lesson.id);
+                const isReview = !!lesson.isReview;
                 const posClass = offsetPattern[index % 4];
 
                 return (
@@ -160,11 +170,15 @@ export const LessonMap: React.FC = () => {
                               className={`w-[78px] h-[78px] rounded-full flex items-center justify-center text-xl font-bold border-[4px] border-white/70 ${
                                 completed
                                   ? "bg-gradient-to-br from-brand-teal to-[#0A8576] text-white shadow-[0_7px_0_#0a6e62,0_16px_26px_rgba(17,181,164,0.4)]"
+                                  : isReview
+                                  ? "bg-gradient-to-br from-brand-majorelle to-brand-teal text-white shadow-[0_7px_0_#3d3a8a,0_16px_28px_rgba(124,111,255,0.45)]"
                                   : "bg-gradient-to-br from-brand-saffron via-brand-coral to-brand-rose text-white shadow-[0_7px_0_#c23a5e,0_16px_30px_rgba(255,107,107,0.5)]"
                               }`}
                             >
                               {completed
                                 ? <Check className="w-8 h-8 stroke-[3]" />
+                                : isReview
+                                ? <RefreshCw className="w-7 h-7 stroke-[2.5]" />
                                 : <Play className="w-7 h-7 fill-white stroke-none ml-1" />
                               }
                             </motion.button>
@@ -182,8 +196,8 @@ export const LessonMap: React.FC = () => {
 
                     {/* Label */}
                     <div className="mt-2.5 text-center max-w-[120px]">
-                      <p className={`text-[11px] font-bold font-title ${unlocked ? "text-brand-dark" : "text-slate-400"}`}>
-                        Lección {lesson.id}
+                      <p className={`text-[11px] font-bold font-title ${unlocked ? (isReview ? "text-brand-majorelle" : "text-brand-dark") : "text-slate-400"}`}>
+                        {isReview ? "🔁 Repaso" : `Lección ${lesson.id}`}
                       </p>
                       <p className={`text-[10px] leading-snug mt-0.5 line-clamp-2 ${unlocked ? "text-slate-500 font-medium" : "text-slate-400"}`}>
                         {lesson.title}
