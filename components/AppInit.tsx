@@ -122,7 +122,13 @@ export function AppInit() {
       }
     };
     checkForUpdate();
-    const onVisible = () => checkForUpdate();
+    const onVisible = () => {
+      checkForUpdate();
+      // Re-fetch lesson content from the cloud each time the app becomes visible,
+      // so edits made in the editor (or on another device) show up on reopen —
+      // even when the PWA stays open in the background and React doesn't remount.
+      if (document.visibilityState === "visible") loadContent();
+    };
     document.addEventListener("visibilitychange", onVisible);
 
     return () => {
