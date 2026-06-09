@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { unitsData as defaultUnits, Unit, CONTENT_DATE } from "../data/lessons";
 import { lessonVocabulary as defaultVocab } from "../data/vocabulary";
 import { LearnedWord } from "./store";
-import { withUnitReviews } from "./unitReview";
+import { withUnitReviews, withRecycling } from "./unitReview";
 import { supabase } from "./supabase";
 
 export type Vocabulary = Record<string, LearnedWord[]>;
@@ -19,13 +19,18 @@ interface ContentState {
  * instantly and offline), then overwritten with the admin-edited content from
  * Supabase once it loads.
  */
+// Process raw units: recycle words from previous lessons into each lesson, then
+// append the auto-generated end-of-unit review lessons.
+function processUnits(units: Unit[], vocab: Vocabulary): Unit[] {
+  return withUnitReviews(withRecycling(units, vocab), vocab);
+}
+
 export const useContent = create<ContentState>((set) => ({
-  units: withUnitReviews(defaultUnits, defaultVocab),
+  units: processUnits(defaultUnits, defaultVocab),
   vocabulary: defaultVocab,
   loaded: false,
-  // Every time content is set, append the auto-generated end-of-unit review lessons.
   setContent: (units, vocabulary) =>
-    set({ units: withUnitReviews(units, vocabulary), vocabulary, loaded: true }),
+    set({ units: processUnits(units, vocabulary), vocabulary, loaded: true }),
 }));
 
 /**

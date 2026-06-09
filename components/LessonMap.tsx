@@ -8,10 +8,12 @@ import { useStore } from "../lib/store";
 import { Lesson, Unit } from "../data/lessons";
 import { useContent } from "../lib/content";
 import { newLessonIds } from "../lib/newLessons";
+import { useAccount } from "../lib/useAccount";
 
 export const LessonMap: React.FC = () => {
   const { completedLessons, unlockedUnits, isHydrated, setHydrated } = useStore();
   const unitsData = useContent((s) => s.units);
+  const { isAdmin } = useAccount();
   const [mounted, setMounted] = useState(false);
 
   const newIds = newLessonIds(unitsData, completedLessons, unlockedUnits);
@@ -31,6 +33,7 @@ export const LessonMap: React.FC = () => {
   }
 
   const isLessonUnlocked = (lessonId: string, unitId: string) => {
+    if (isAdmin) return true; // admin: full access to every lesson, no blocks
     if (!unlockedUnits.includes(unitId)) return false;
     // Newly-added lessons (behind her progress) are always tappable.
     if (newIds.has(lessonId)) return true;
@@ -68,7 +71,7 @@ export const LessonMap: React.FC = () => {
   return (
     <div className="relative w-full max-w-md mx-auto pb-24 px-4">
       {unitsData.map((unit, unitIdx) => {
-        const isUnitUnlocked = unlockedUnits.includes(unit.id);
+        const isUnitUnlocked = unlockedUnits.includes(unit.id) || isAdmin;
         const gradClass = unitGradients[unitIdx % unitGradients.length];
 
         return (

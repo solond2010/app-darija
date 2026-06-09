@@ -134,6 +134,64 @@ export function buildUnitReview(unit: Unit, words: LearnedWord[]): Lesson | null
   };
 }
 
+// One or two "recycle" exercises that re-test words from the previous lesson(s),
+// so each new word keeps coming back in the next lessons with different exercises.
+function buildRecycleExercises(lessonId: string, sources: LearnedWord[][]): Exercise[] {
+  const pool = sources.flat();
+  if (pool.length < 2) return [];
+  const out: Exercise[] = [];
+  sources.slice(0, 2).forEach((words, k) => {
+    if (!words || words.length === 0) return;
+    const w = shuffle(words)[0];
+    const opts = shuffle([w.spanish, ...distractors(pool, w, 3, "spanish")]);
+    if (opts.length < 2) return;
+    if (k % 2 === 0) {
+      out.push({
+        id: `${lessonId}.rc${k + 1}`,
+        type: "multiple-choice",
+        question: `🔁 ¿Qué significa '${w.darija}'?`,
+        options: opts,
+        answer: w.spanish,
+      });
+    } else {
+      out.push({
+        id: `${lessonId}.rc${k + 1}`,
+        type: "listening-select",
+        question: "🔁 Escucha y elige el significado:",
+        audioText: w.darija,
+        options: opts,
+        answer: w.spanish,
+      });
+    }
+  });
+  return out;
+}
+
+/**
+ * Append a couple of recycling exercises to each lesson, drawn from the previous
+ * 1-2 lessons' vocabulary — so words learned keep reappearing. Idempotent.
+ */
+export function withRecycling(units: Unit[], vocab: Vocab): Unit[] {
+  const flat: string[] = [];
+  units.forEach((u) => u.lessons.forEach((l) => { if (!l.isReview) flat.push(l.id); }));
+  const idxOf = new Map(flat.map((id, i) => [id, i]));
+
+  return units.map((u) => ({
+    ...u,
+    lessons: u.lessons.map((l) => {
+      if (l.isReview) return l;
+      if (l.exercises.some((e) => e.id.includes(".rc"))) return l; // already recycled
+      const i = idxOf.get(l.id) ?? 0;
+      if (i < 1) return l; // very first lesson — nothing earlier to recycle
+      const sources: LearnedWord[][] = [];
+      if (flat[i - 1]) sources.push(vocab[flat[i - 1]] || []);
+      if (flat[i - 2]) sources.push(vocab[flat[i - 2]] || []);
+      const recycled = buildRecycleExercises(l.id, sources);
+      return recycled.length ? { ...l, exercises: [...l.exercises, ...recycled] } : l;
+    }),
+  }));
+}
+
 /** Append an auto-generated review lesson to the end of every unit. Idempotent. */
 export function withUnitReviews(units: Unit[], vocab: Vocab): Unit[] {
   return units.map((u) => {
