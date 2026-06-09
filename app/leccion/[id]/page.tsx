@@ -602,6 +602,9 @@ export default function LeccionPage() {
                   <div>
                     <p className="font-bold font-title text-rose-700 text-sm leading-tight">Respuesta correcta:</p>
                     <p className="text-sm font-semibold text-rose-800 mt-0.5">{getCorrectAnswerText() ?? "—"}</p>
+                    {currentExercise.hint && (
+                      <p className="text-xs text-rose-600/90 mt-1 leading-relaxed">💡 {currentExercise.hint}</p>
+                    )}
                   </div>
                 </div>
               )}

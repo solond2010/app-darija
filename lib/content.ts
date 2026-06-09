@@ -19,10 +19,23 @@ interface ContentState {
  * instantly and offline), then overwritten with the admin-edited content from
  * Supabase once it loads.
  */
-// Process raw units: recycle words from previous lessons into each lesson, then
-// append the auto-generated end-of-unit review lessons.
+// Drop "listen & type" exercises (writing what a TTS voice says) — the audio is
+// not reliable enough for them to be fair. Lessons left empty are removed.
+function stripListenType(units: Unit[]): Unit[] {
+  return units
+    .map((u) => ({
+      ...u,
+      lessons: u.lessons
+        .map((l) => ({ ...l, exercises: (l.exercises || []).filter((e) => e.type !== "listen-type") }))
+        .filter((l) => l.isReview || (l.exercises && l.exercises.length > 0)),
+    }))
+    .filter((u) => u.lessons.length > 0);
+}
+
+// Process raw units: drop listen-type, recycle words from previous lessons into
+// each lesson, then append the auto-generated end-of-unit review lessons.
 function processUnits(units: Unit[], vocab: Vocabulary): Unit[] {
-  return withUnitReviews(withRecycling(units, vocab), vocab);
+  return withUnitReviews(withRecycling(stripListenType(units), vocab), vocab);
 }
 
 export const useContent = create<ContentState>((set) => ({
