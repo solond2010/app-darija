@@ -21,7 +21,8 @@ export const Translation: React.FC<TranslationProps> = ({
   const normalize = (str: string) =>
     str.toLowerCase().trim()
       .normalize("NFD").replace(/[̀-ͯ]/g, "")
-      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?¿¡]/g, "");
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?¿¡]/g, "")
+      .replace(/\s/g, "");
 
   const isCorrect = correctAnswers.some((a) => normalize(selectedAnswer) === normalize(a));
 

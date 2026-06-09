@@ -20,7 +20,6 @@ interface LessonIntroProps {
 export const LessonIntro: React.FC<LessonIntroProps> = ({ words, onStart, onExit }) => {
   const [idx, setIdx] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const [seen, setSeen] = useState(false); // has the card been flipped at least once
 
   const word = words[idx];
   const isLast = idx === words.length - 1;
@@ -29,13 +28,11 @@ export const LessonIntro: React.FC<LessonIntroProps> = ({ words, onStart, onExit
   // speaker button) — not auto-played, since the TTS quality varies per word.
   useEffect(() => {
     setFlipped(false);
-    setSeen(false);
   }, [idx]);
 
   const flip = () => {
     haptics.tap();
     setFlipped((f) => !f);
-    setSeen(true);
   };
 
   const next = () => {
@@ -114,16 +111,16 @@ export const LessonIntro: React.FC<LessonIntroProps> = ({ words, onStart, onExit
         </div>
       </main>
 
-      {/* Footer button */}
+      {/* Footer button: flips the card when it's on the front, advances when flipped. */}
       <footer className="flex-shrink-0 px-5 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] glass border-t border-white/40">
         <motion.button
           whileTap={{ scale: 0.97 }}
-          onClick={next}
+          onClick={() => { if (!flipped) flip(); else next(); }}
           className={`w-full py-4.5 rounded-[20px] font-title text-lg tracking-wide transition-all ${
-            seen ? "btn-3d-primary" : "btn-3d-mint"
+            flipped ? "btn-3d-primary" : "btn-3d-mint"
           }`}
         >
-          {isLast ? "¡EMPEZAR! 🚀" : seen ? "SIGUIENTE →" : "GIRAR LA TARJETA 🔄"}
+          {!flipped ? "GIRAR LA TARJETA 🔄" : isLast ? "¡EMPEZAR! 🚀" : "SIGUIENTE →"}
         </motion.button>
       </footer>
     </div>

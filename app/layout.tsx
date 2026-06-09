@@ -6,6 +6,7 @@ import { AppInit } from "../components/AppInit";
 import { NotificationSetup } from "../components/NotificationSetup";
 import { CelebrationOverlay } from "../components/CelebrationOverlay";
 import { Onboarding } from "../components/Onboarding";
+import { TapFeedback } from "../components/TapFeedback";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -63,6 +64,7 @@ export default function RootLayout({
         {children}
         <CelebrationOverlay />
         <Onboarding />
+        <TapFeedback />
         <NotificationSetup />
       </body>
     </html>

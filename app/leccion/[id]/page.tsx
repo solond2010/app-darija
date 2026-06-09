@@ -131,10 +131,12 @@ export default function LeccionPage() {
     if (["multiple-choice", "fill-blank", "listening-select"].includes(t)) {
       correct = ans === currentExercise.answer;
     } else if (t === "translation") {
+      // Forgiving: ignore case, accents, punctuation, hyphens AND spaces.
       const norm = (s: string) =>
         s.toLowerCase().trim()
           .normalize("NFD").replace(/[̀-ͯ]/g, "")
-          .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?¿¡]/g, "");
+          .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?¿¡]/g, "")
+          .replace(/\s/g, "");
       correct = (currentExercise.answer as string[]).some((a) => norm(ans || "") === norm(a));
     } else if (t === "listen-type") {
       const accepted = (currentExercise.answer as string[]) || [];
