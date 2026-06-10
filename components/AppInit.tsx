@@ -78,6 +78,15 @@ export function AppInit() {
     setHydrated(true);
     updateStreakDaily();
 
+    // Sounds default ON: one-time migration for devices that had them off from
+    // older versions. The user can still turn them off in Perfil afterwards.
+    try {
+      if (!localStorage.getItem("meshi-sounds-on-v1")) {
+        localStorage.setItem("meshi-sounds-on-v1", "1");
+        if (!useStore.getState().soundsEnabled) useStore.getState().toggleSounds();
+      }
+    } catch { /* ignore */ }
+
     // Service worker + push subscription (non-blocking)
     registerAndSubscribe();
 

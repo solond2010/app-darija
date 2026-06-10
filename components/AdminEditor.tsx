@@ -81,14 +81,23 @@ export const AdminEditor: React.FC = () => {
   const [saved, setSaved] = useState(false);
   const [initialized, setInitialized] = useState(false);
 
-  // Seed the editable copy once content is ready (DB or defaults).
+  // Seed the editable copy ONLY after the cloud content has loaded — otherwise we
+  // would edit (and later save) the stale bundled defaults, losing cloud edits.
+  // Auto-generated content (unit reviews, recycled exercises) is filtered out: the
+  // admin edits the clean curriculum and processing re-adds them on load.
   useEffect(() => {
-    if (!initialized) {
-      setUnits(structuredClone(storeUnits));
+    if (!initialized && loaded) {
+      const raw = structuredClone(storeUnits).map((u) => ({
+        ...u,
+        lessons: u.lessons
+          .filter((l) => !l.isReview)
+          .map((l) => ({ ...l, exercises: (l.exercises || []).filter((e) => !String(e.id).includes(".rc")) })),
+      }));
+      setUnits(raw);
       setVocab(structuredClone(storeVocab));
       setInitialized(true);
     }
-  }, [storeUnits, storeVocab, initialized]);
+  }, [storeUnits, storeVocab, initialized, loaded]);
 
   const mutate = (fn: (u: Unit[]) => void) => {
     const next = structuredClone(units);

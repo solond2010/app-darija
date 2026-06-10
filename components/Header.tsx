@@ -76,13 +76,13 @@ export const Header: React.FC = () => {
           <div className="flex items-center gap-2 flex-shrink-0">
             <div className="flex items-center gap-2.5 pl-2.5 pr-3 py-1.5 rounded-2xl bg-white/65 dark:bg-white/10 border border-white/80 shadow-sm backdrop-blur-md">
               {/* Streak */}
-              <span className={`flex items-center gap-1 text-[15px] font-extrabold font-title ${streak > 0 ? "text-orange-500" : "text-slate-300"}`}>
+              <span className={`flex items-center gap-1 text-[15px] font-extrabold font-title ${streak > 0 ? "text-orange-500" : "text-slate-400"}`}>
                 <Flame className={`w-4 h-4 ${streak > 0 ? "fill-orange-400 text-orange-400" : ""}`} />
                 <PopNumber value={streak} />
               </span>
               <span className="w-px h-4 bg-slate-200/80" />
               {/* XP */}
-              <span className={`flex items-center gap-1 text-[15px] font-extrabold font-title ${xp > 0 ? "text-amber-500" : "text-slate-300"}`}>
+              <span className={`flex items-center gap-1 text-[15px] font-extrabold font-title ${xp > 0 ? "text-amber-500" : "text-slate-400"}`}>
                 <Star className={`w-4 h-4 ${xp > 0 ? "fill-amber-400 text-amber-400" : ""}`} />
                 <PopNumber value={xp} />
               </span>

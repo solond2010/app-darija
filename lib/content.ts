@@ -107,9 +107,16 @@ export async function loadContent() {
           { ...defaultVocab, ...cloudVocab }
         );
       }
+    } else {
+      // No cloud row (or empty): defaults ARE the content. Mark loaded so the
+      // editor and lesson pages can proceed.
+      useContent.getState().setContent(defaultUnits, defaultVocab);
     }
   } catch {
-    /* non-critical: keep defaults */
+    // Network error: keep defaults but mark loaded so the editor isn't stuck.
+    if (!useContent.getState().loaded) {
+      useContent.getState().setContent(defaultUnits, defaultVocab);
+    }
   }
 }
 

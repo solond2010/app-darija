@@ -87,7 +87,7 @@ export const LessonMap: React.FC = () => {
               className={`rounded-3xl p-4 mb-8 text-center overflow-hidden relative shadow-sm ${
                 isUnitUnlocked
                   ? "text-white"
-                  : "bg-slate-100 border-2 border-slate-200 text-slate-400 opacity-60"
+                  : "bg-white/75 border-2 border-slate-200 text-slate-500"
               }`}
               style={isUnitUnlocked ? { background: `linear-gradient(135deg, var(--tw-gradient-stops))` } : {}}
             >
@@ -103,13 +103,13 @@ export const LessonMap: React.FC = () => {
               <div className="relative flex items-center justify-center gap-2 mb-1">
                 <span className="text-xl">{unit.emoji}</span>
                 <span className={`text-[10px] font-bold uppercase tracking-wider ${
-                  isUnitUnlocked ? "text-white/80" : "text-slate-400"
+                  isUnitUnlocked ? "text-white/80" : "text-slate-500"
                 }`}>
                   Unidad {unit.number}
                 </span>
               </div>
-              <h2 className="relative text-lg font-bold font-title drop-shadow-sm">{unit.title}</h2>
-              <p className={`relative text-xs mt-0.5 font-medium ${isUnitUnlocked ? "text-white/90" : "text-slate-400"}`}>
+              <h2 className={`relative text-lg font-bold font-title ${isUnitUnlocked ? "drop-shadow-sm" : "text-slate-600"}`}>{unit.title}</h2>
+              <p className={`relative text-xs mt-0.5 font-medium ${isUnitUnlocked ? "text-white/90" : "text-slate-500"}`}>
                 {unit.description}
               </p>
             </div>
