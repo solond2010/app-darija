@@ -57,10 +57,14 @@ export function restoreLostProgress(email: string | null | undefined): boolean {
     return true;
   }
 
-  // Partial restore: if she has real progress (XP) but lost her streak
-  // because the app bug prevented her from playing, fix just the streak
-  // without touching her lessons or XP.
-  if (state.streak === 0 && state.xp > 0) {
+  // Partial restore: if she has real progress (XP) but her streak was
+  // reset by the sync bug, fix just the streak without touching lessons/XP.
+  // Uses a localStorage flag so it only runs ONCE (won't keep overriding).
+  if (state.xp > 0 && state.streak < 4) {
+    try {
+      if (localStorage.getItem("meshi-streak-fixed-v1")) return false;
+      localStorage.setItem("meshi-streak-fixed-v1", "1");
+    } catch { /* noop */ }
     useStore.setState({ streak: 4, lastActiveDate: yesterdayStr(), streakShields: 1 });
     return true;
   }
