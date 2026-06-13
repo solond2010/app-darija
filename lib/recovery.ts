@@ -51,5 +51,6 @@ export function restoreLostProgress(email: string | null | undefined): boolean {
   y.setDate(y.getDate() - 1);
   const yesterday = `${y.getFullYear()}-${String(y.getMonth() + 1).padStart(2, "0")}-${String(y.getDate()).padStart(2, "0")}`;
 
-  return useStore.getState().mergeCloud({ ...SARA_BACKUP, lastActiveDate: yesterday });
+  useStore.getState().cloudHydrate({ ...SARA_BACKUP, lastActiveDate: yesterday });
+  return true;
 }

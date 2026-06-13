@@ -95,6 +95,7 @@ export function progressWeight(s: Partial<ProgressSnapshot>): number {
   return (
     (s.xp ?? 0) * 1000 +
     (s.completedLessons?.length ?? 0) * 100 +
+    (s.streak ?? 0) * 10 +
     (s.unlockedAchievements?.length ?? 0) * 10 +
     (s.learnedWords?.length ?? 0)
   );
