@@ -77,7 +77,21 @@ export async function startSync(userId: string) {
   currentUserId = userId;
 
   const cloud = await pull(userId);
-  if (cloud.ok && cloud.data) useStore.getState().mergeCloud(cloud.data);
+  const store = useStore.getState();
+
+  if (cloud.ok && cloud.data) {
+    const localWeight = progressWeight(store.exportSnapshot());
+    if (localWeight === 0) {
+      // Local state is empty/default (first launch or cache cleared).
+      // Cloud is the source of truth — overwrite unconditionally.
+      store.cloudHydrate(cloud.data);
+    } else {
+      // Both local and cloud have data. MergeCloud keeps the heavier copy
+      // (cloud wins when it has more progress, local wins if the user has
+      // been playing offline and hasn't synced yet).
+      store.mergeCloud(cloud.data);
+    }
+  }
 
   // Restore from the embedded backup if this account was affected by the old
   // sync bug. Runs EVEN IF the cloud read failed, so a transient network error

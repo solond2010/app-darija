@@ -64,6 +64,8 @@ export interface AppState {
   exportSnapshot: () => ProgressSnapshot;
   importSnapshot: (data: Partial<ProgressSnapshot>) => void;
   mergeCloud: (data: Partial<ProgressSnapshot>) => boolean;
+  /** Unconditionally replace the store state with cloud data (cloud = truth). */
+  cloudHydrate: (data: Partial<ProgressSnapshot>) => void;
 }
 
 // Serializable shape of a saved progress (everything except UI-only flags).
@@ -446,6 +448,33 @@ export const useStore = create<AppState>()(
         if (progressWeight(data) <= progressWeight(local)) return false;
         get().importSnapshot(data);
         return true;
+      },
+
+      // Unconditionally replace local state with cloud data.
+      // This makes Supabase the source of truth — every time the app starts,
+      // the cloud copy overwrites whatever is in localStorage. The persist
+      // middleware only serves as an offline cache / speed-up.
+      cloudHydrate: (data) => {
+        if (!data || typeof data !== "object") return;
+        set({
+          userName: data.userName ?? "Sara",
+          xp: data.xp ?? 0,
+          streak: data.streak ?? 0,
+          streakShields: data.streakShields ?? 1,
+          lives: data.lives ?? 5,
+          lastActiveDate: data.lastActiveDate ?? null,
+          soundsEnabled: data.soundsEnabled ?? true,
+          todayXP: data.todayXP ?? 0,
+          todayXPDate: data.todayXPDate ?? null,
+          dailyGoal: data.dailyGoal ?? 20,
+          lastLifeLostAt: data.lastLifeLostAt ?? null,
+          xpHistory: data.xpHistory ?? {},
+          completedLessons: data.completedLessons ?? [],
+          unlockedUnits: data.unlockedUnits ?? ["unidad-1"],
+          learnedWords: data.learnedWords ?? [],
+          wordMemory: data.wordMemory ?? {},
+          unlockedAchievements: data.unlockedAchievements ?? [],
+        });
       },
 
       updateStreakDaily: () => {
