@@ -20,7 +20,7 @@ const RECOVERY_EMAILS = new Set(["parratara60@gmail.com"]);
 const SARA_BACKUP: ProgressSnapshot = {
   userName: "sara",
   xp: 600,
-  streak: 3,
+  streak: 4,
   lives: 5,
   lastActiveDate: "2026-06-02",
   soundsEnabled: true,
@@ -35,22 +35,35 @@ const SARA_BACKUP: ProgressSnapshot = {
   savedAt: "2026-06-02T21:02:02.121Z",
 };
 
+function yesterdayStr(): string {
+  const y = new Date();
+  y.setDate(y.getDate() - 1);
+  return `${y.getFullYear()}-${String(y.getMonth() + 1).padStart(2, "0")}-${String(y.getDate()).padStart(2, "0")}`;
+}
+
 /**
  * Restore the rescued snapshot if this is an eligible account that still has less
  * progress than the backup. Returns true if progress was restored.
  */
 export function restoreLostProgress(email: string | null | undefined): boolean {
   if (!email || !RECOVERY_EMAILS.has(email.toLowerCase())) return false;
-  const local = useStore.getState().exportSnapshot();
-  if (progressWeight(SARA_BACKUP) <= progressWeight(local)) return false;
+  const state = useStore.getState();
 
-  // Normalize the backup's lastActiveDate to yesterday so the streak of 3 is
-  // not immediately invalidated by a stale date. If the user plays today the
-  // streak will correctly advance to 4.
-  const y = new Date();
-  y.setDate(y.getDate() - 1);
-  const yesterday = `${y.getFullYear()}-${String(y.getMonth() + 1).padStart(2, "0")}-${String(y.getDate()).padStart(2, "0")}`;
+  // Full restore: if the backup has more weight than current state, restore
+  // everything (lessons, XP, streak, etc.).
+  const local = state.exportSnapshot();
+  if (progressWeight(SARA_BACKUP) > progressWeight(local)) {
+    state.cloudHydrate({ ...SARA_BACKUP, lastActiveDate: yesterdayStr() });
+    return true;
+  }
 
-  useStore.getState().cloudHydrate({ ...SARA_BACKUP, lastActiveDate: yesterday });
-  return true;
+  // Partial restore: if she has real progress (XP) but lost her streak
+  // because the app bug prevented her from playing, fix just the streak
+  // without touching her lessons or XP.
+  if (state.streak === 0 && state.xp > 0) {
+    useStore.setState({ streak: 4, lastActiveDate: yesterdayStr(), streakShields: 1 });
+    return true;
+  }
+
+  return false;
 }
