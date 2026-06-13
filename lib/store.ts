@@ -175,6 +175,32 @@ export const useStore = create<AppState>()(
           const today = new Date().toLocaleDateString("en-CA");
           // Don't double-increment same day
           if (state.lastActiveDate === today) return {};
+
+          // If more than 1 day passed, reset streak instead of incrementing.
+          // This handles the case where cloud sync restored a stale streak
+          // that should have been broken by a missed day.
+          if (state.lastActiveDate) {
+            const [ly, lm, ld] = state.lastActiveDate.split("-").map(Number);
+            const lastLocal = new Date(ly, lm - 1, ld);
+            const [ty, tm, td] = today.split("-").map(Number);
+            const todayLocal = new Date(ty, tm - 1, td);
+            const diffDays = Math.round((todayLocal.getTime() - lastLocal.getTime()) / 86400000);
+            if (diffDays > 1) {
+              const shields = state.streakShields ?? 0;
+              if (diffDays === 2 && state.streak > 0 && shields > 0) {
+                // Shield saves it — pretend yesterday was active
+                const y = new Date(todayLocal);
+                y.setDate(todayLocal.getDate() - 1);
+                return {
+                  streak: state.streak,
+                  streakShields: shields - 1,
+                  lastActiveDate: `${y.getFullYear()}-${String(y.getMonth() + 1).padStart(2, "0")}-${String(y.getDate()).padStart(2, "0")}`,
+                };
+              }
+              return { streak: 1, lastActiveDate: today };
+            }
+          }
+
           const newStreak = state.streak + 1;
 
           // Check streak-based achievements
@@ -449,7 +475,8 @@ export const useStore = create<AppState>()(
             useCelebration.getState().push([{ kind: "shield", streak: state.streak }]);
           }, 800);
         } else if (diffDays > 1) {
-          set({ streak: 0 });
+          // Reset streak to 1 instead of 0: a new streak starts today.
+          set({ streak: 1, lastActiveDate: todayStr });
         }
       },
     }),

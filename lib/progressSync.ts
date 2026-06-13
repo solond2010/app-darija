@@ -79,12 +79,16 @@ export async function startSync(userId: string) {
   const cloud = await pull(userId);
   if (cloud.ok && cloud.data) useStore.getState().mergeCloud(cloud.data);
 
-  // One-time rescue for accounts whose progress was wiped by the old sync bug.
-  // Self-disabling (only applies when the account has less progress than the
-  // rescued snapshot). Runs only after a successful read so it can be backed up.
-  if (cloud.ok) {
-    const { data: u } = await supabase.auth.getUser();
-    restoreLostProgress(u.user?.email);
+  // Restore from the embedded backup if this account was affected by the old
+  // sync bug. Runs EVEN IF the cloud read failed, so a transient network error
+  // never prevents the rescue.
+  const { data: u } = await supabase.auth.getUser();
+  const recovered = restoreLostProgress(u.user?.email);
+
+  // If the backup was just restored, push it to the cloud immediately.
+  if (recovered && cloud.ok) {
+    lastJSON = "";
+    await push(userId);
   }
 
   // Only back up to the cloud if we could actually READ it first. After a failed
@@ -93,6 +97,10 @@ export async function startSync(userId: string) {
     lastJSON = "";
     await push(userId);
   }
+
+  // Re-check streak AFTER cloud data was merged (the initial check in AppInit
+  // runs before cloud sync and would miss the restored values).
+  useStore.getState().updateStreakDaily();
 
   unsub = useStore.subscribe(schedule);
   window.addEventListener("visibilitychange", onHide);

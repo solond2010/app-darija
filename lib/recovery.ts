@@ -43,5 +43,13 @@ export function restoreLostProgress(email: string | null | undefined): boolean {
   if (!email || !RECOVERY_EMAILS.has(email.toLowerCase())) return false;
   const local = useStore.getState().exportSnapshot();
   if (progressWeight(SARA_BACKUP) <= progressWeight(local)) return false;
-  return useStore.getState().mergeCloud(SARA_BACKUP);
+
+  // Normalize the backup's lastActiveDate to yesterday so the streak of 3 is
+  // not immediately invalidated by a stale date. If the user plays today the
+  // streak will correctly advance to 4.
+  const y = new Date();
+  y.setDate(y.getDate() - 1);
+  const yesterday = `${y.getFullYear()}-${String(y.getMonth() + 1).padStart(2, "0")}-${String(y.getDate()).padStart(2, "0")}`;
+
+  return useStore.getState().mergeCloud({ ...SARA_BACKUP, lastActiveDate: yesterday });
 }
