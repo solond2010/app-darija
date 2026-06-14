@@ -114,8 +114,13 @@ export default function LeccionPage() {
     if (!currentExercise) return null;
     const t = currentExercise.type;
     if (["multiple-choice", "fill-blank", "listening-select", "conversation"].includes(t))
-      return currentExercise.answer as string;
-    if (t === "translation" || t === "listen-type") return (currentExercise.answer as string[])[0];
+      return typeof currentExercise.answer === "string" ? currentExercise.answer : null;
+    if (t === "translation" || t === "listen-type") {
+      const a = currentExercise.answer;
+      if (Array.isArray(a)) return a[0];
+      if (typeof a === "string") return a;
+      return null;
+    }
     if (t === "word-order") return currentExercise.orderedAnswer?.join(" ") ?? null;
     if (t === "true-false") return (currentExercise.answer as boolean) ? "Verdadero ✓" : "Falso ✗";
     return null;
@@ -225,22 +230,22 @@ export default function LeccionPage() {
     setIsLessonFinished(true);
     haptics.celebrate();
     const gotPerfect = errorsCount === 0;
-    const { achievementsUnlocked, unlockedUnit } = completeLesson(lessonId, gotPerfect, unitsData);
-    setUnlockedBadges(achievementsUnlocked);
-
-    // Detect level-up + daily-goal crossing: snapshot before/after adding XP.
     const todayStr = new Date().toLocaleDateString("en-CA");
+
+    // Snapshot before state mutations so we can detect transitions.
     const sBefore = useStore.getState();
+    const wasFirstLessonToday = sBefore.lastLessonDate !== todayStr;
     const levelBefore = getLevelInfo(sBefore.xp).level;
     const dailyGoal = sBefore.dailyGoal;
     const todayXPBefore = sBefore.todayXPDate === todayStr ? sBefore.todayXP : 0;
+
+    const { achievementsUnlocked, unlockedUnit } = completeLesson(lessonId, gotPerfect, unitsData);
+    setUnlockedBadges(achievementsUnlocked);
+
     addXP(gotPerfect ? 150 + totalXPEarned : 50 + totalXPEarned);
     const after = getLevelInfo(useStore.getState().xp);
     const todayXPAfter = useStore.getState().todayXP;
     const crossedDailyGoal = todayXPBefore < dailyGoal && todayXPAfter >= dailyGoal;
-
-    // Check if this is the first lesson completed today
-    const wasFirstLessonToday = useStore.getState().lastLessonDate !== todayStr;
 
     const words = lessonVocabulary[lessonId];
     if (words) addLearnedWords(words);
