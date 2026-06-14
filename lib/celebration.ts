@@ -6,6 +6,7 @@ export type Celebration =
   | { kind: "streak"; days: number }
   | { kind: "unit"; title: string; emoji: string }
   | { kind: "daily"; goal: number }
+  | { kind: "daily_lesson" }
   | { kind: "shield"; streak: number };
 
 interface CelebrationState {

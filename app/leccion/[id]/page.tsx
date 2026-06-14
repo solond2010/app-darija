@@ -239,6 +239,9 @@ export default function LeccionPage() {
     const todayXPAfter = useStore.getState().todayXP;
     const crossedDailyGoal = todayXPBefore < dailyGoal && todayXPAfter >= dailyGoal;
 
+    // Check if this is the first lesson completed today
+    const wasFirstLessonToday = useStore.getState().lastLessonDate !== todayStr;
+
     const words = lessonVocabulary[lessonId];
     if (words) addLearnedWords(words);
     if (gotPerfect) {
@@ -260,6 +263,9 @@ export default function LeccionPage() {
     }
     if (crossedDailyGoal) {
       cels.push({ kind: "daily", goal: dailyGoal });
+    }
+    if (wasFirstLessonToday) {
+      cels.push({ kind: "daily_lesson" });
     }
     achievementsUnlocked.forEach((id) => {
       const a = achievementsData.find((x) => x.id === id);

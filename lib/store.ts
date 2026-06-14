@@ -25,6 +25,8 @@ export interface AppState {
   todayXP: number;
   todayXPDate: string | null; // Format: YYYY-MM-DD
   dailyGoal: number; // Default: 20 XP
+  /** Date of the last completed lesson (YYYY-MM-DD). Used for the "1 lesson/day" goal. */
+  lastLessonDate: string | null;
 
   // XP earned per calendar day (YYYY-MM-DD → xp), for the stats graph
   xpHistory: Record<string, number>;
@@ -80,6 +82,7 @@ export interface ProgressSnapshot {
   todayXP: number;
   todayXPDate: string | null;
   dailyGoal: number;
+  lastLessonDate?: string | null;
   lastLifeLostAt: string | null;
   xpHistory?: Record<string, number>;
   completedLessons: string[];
@@ -128,6 +131,7 @@ export const useStore = create<AppState>()(
       todayXP: 0,
       todayXPDate: null,
       dailyGoal: 20,
+      lastLessonDate: null,
       lastLifeLostAt: null,
       xpHistory: {},
       completedLessons: [],
@@ -326,10 +330,14 @@ export const useStore = create<AppState>()(
           if (ach && !state.unlockedAchievements.includes(ach)) newlyUnlocked.push(ach);
         }
 
+        const today = new Date().toLocaleDateString("en-CA");
+        const newLessonDate = state.lastLessonDate !== today ? today : state.lastLessonDate;
+
         set({
           completedLessons: updatedCompleted,
           unlockedUnits: updatedUnlockedUnits,
           unlockedAchievements: [...state.unlockedAchievements, ...newlyUnlocked],
+          lastLessonDate: newLessonDate,
         });
 
         return { achievementsUnlocked: newlyUnlocked, unlockedUnit };
@@ -405,6 +413,7 @@ export const useStore = create<AppState>()(
           todayXP: s.todayXP,
           todayXPDate: s.todayXPDate,
           dailyGoal: s.dailyGoal,
+          lastLessonDate: s.lastLessonDate,
           lastLifeLostAt: s.lastLifeLostAt,
           xpHistory: s.xpHistory ?? {},
           completedLessons: s.completedLessons,
@@ -430,6 +439,7 @@ export const useStore = create<AppState>()(
           todayXP: data.todayXP ?? state.todayXP,
           todayXPDate: data.todayXPDate ?? state.todayXPDate,
           dailyGoal: data.dailyGoal ?? state.dailyGoal,
+          lastLessonDate: data.lastLessonDate ?? state.lastLessonDate,
           lastLifeLostAt: data.lastLifeLostAt ?? state.lastLifeLostAt,
           xpHistory: data.xpHistory ?? state.xpHistory,
           completedLessons: data.completedLessons ?? state.completedLessons,
@@ -468,6 +478,7 @@ export const useStore = create<AppState>()(
           todayXP: data.todayXP ?? 0,
           todayXPDate: data.todayXPDate ?? null,
           dailyGoal: data.dailyGoal ?? 20,
+          lastLessonDate: data.lastLessonDate ?? null,
           lastLifeLostAt: data.lastLifeLostAt ?? null,
           xpHistory: data.xpHistory ?? {},
           completedLessons: data.completedLessons ?? [],

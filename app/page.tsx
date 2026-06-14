@@ -9,7 +9,7 @@ import { WordOfDay } from "../components/WordOfDay";
 import { NewLessonsBanner } from "../components/NewLessonsBanner";
 import { useStore, getLevelInfo } from "../lib/store";
 import { useContent } from "../lib/content";
-import { Zap, Target, ChevronRight, AlertTriangle } from "lucide-react";
+import { Zap, Target, ChevronRight, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 
@@ -17,6 +17,7 @@ export default function Home() {
   const {
     xp, streak, streakShields, isHydrated,
     todayXP, todayXPDate, dailyGoal, lastActiveDate, completedLessons, unlockedUnits,
+    lastLessonDate,
   } = useStore();
   const [mounted, setMounted] = useState(false);
   const unitsData = useContent((s) => s.units);
@@ -63,6 +64,7 @@ export default function Home() {
   const todayXPDisplay = todayXPDate === today ? todayXP : 0;
   const dailyGoalMet = todayXPDisplay >= dailyGoal;
   const dailyProgressPercent = Math.min(100, (todayXPDisplay / dailyGoal) * 100);
+  const lessonDoneToday = lastLessonDate === today;
   const ringDeg = Math.round((progressPercent / 100) * 360);
   const xpToNext = levelInfo.level < 5 ? levelInfo.max - xp : 0;
 
@@ -185,7 +187,7 @@ export default function Home() {
           </motion.div>
         )}
 
-        {/* Daily goal card */}
+        {/* Daily goal card (XP) */}
         <motion.section
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -213,6 +215,35 @@ export default function Home() {
               className={`h-full rounded-full ${dailyGoalMet ? "bg-gradient-to-r from-emerald-400 to-emerald-500" : "bg-gradient-to-r from-brand-coral to-brand-pink"}`}
             />
           </div>
+        </motion.section>
+
+        {/* Daily lesson card */}
+        <motion.section
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.14 }}
+          className="glass rounded-2xl px-4 py-3.5"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className={`p-1.5 rounded-lg ${lessonDoneToday ? "bg-emerald-100" : "bg-brand-pink/20"}`}>
+                <CheckCircle2 className={`w-3.5 h-3.5 ${lessonDoneToday ? "text-emerald-600" : "text-slate-300"}`} />
+              </div>
+              <span className="text-xs font-bold font-title text-brand-dark">
+                {lessonDoneToday ? "¡Lección de hoy hecha! 🎉" : "Lección del día"}
+              </span>
+            </div>
+            <span className="text-xs font-bold text-slate-400">
+              {lessonDoneToday ? "1 / 1" : "0 / 1"}
+            </span>
+          </div>
+          {!lessonDoneToday && nextLesson && (
+            <Link href={`/leccion/${nextLesson.lesson.id}`}>
+              <div className="mt-2.5 bg-gradient-to-r from-brand-coral to-brand-pink rounded-xl py-2.5 text-center text-white text-sm font-bold font-title active:scale-[0.98] transition-transform">
+                Empezar lección →
+              </div>
+            </Link>
+          )}
         </motion.section>
 
         {/* Lesson map section */}

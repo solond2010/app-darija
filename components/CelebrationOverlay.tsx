@@ -60,6 +60,7 @@ export const CelebrationOverlay: React.FC = () => {
             {current.kind === "streak" && <StreakContent days={current.days} />}
             {current.kind === "unit" && <UnitContent title={current.title} emoji={current.emoji} />}
             {current.kind === "daily" && <DailyContent goal={current.goal} />}
+            {current.kind === "daily_lesson" && <DailyLessonContent />}
             {current.kind === "shield" && <ShieldContent streak={current.streak} />}
 
             <button onClick={dismiss} className="btn-3d-primary w-full py-3 text-sm font-bold mt-1">
@@ -158,6 +159,25 @@ function DailyContent({ goal }: { goal: number }) {
       <h2 className="text-3xl font-extrabold font-title text-gradient-cool leading-none">{goal} XP hoy ✅</h2>
       <p className="text-sm text-slate-500 leading-relaxed">
         ¡Meta de hoy cumplida, Sara! A Amin le hace mucha ilusión verte aquí cada día. 🐱🤍
+      </p>
+    </>
+  );
+}
+
+function DailyLessonContent() {
+  return (
+    <>
+      <Badge gradient="bg-gradient-to-br from-brand-saffron via-brand-coral to-brand-rose">
+        <Sparkles className="w-12 h-12 text-white" />
+      </Badge>
+      <div className="flex items-center gap-1.5 text-brand-coral">
+        <Sparkles className="w-4 h-4" />
+        <span className="text-xs font-bold uppercase tracking-[0.2em]">¡Lección del día!</span>
+        <Sparkles className="w-4 h-4" />
+      </div>
+      <h2 className="text-3xl font-extrabold font-title text-gradient leading-none">Lección completada ✅</h2>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        ¡Una lección al día mantiene a Meshi feliz! 🐱🤍 Vuelve mañana para tu próxima lección.
       </p>
     </>
   );
