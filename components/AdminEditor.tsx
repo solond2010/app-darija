@@ -18,6 +18,7 @@ const TYPES: { value: Exercise["type"]; label: string }[] = [
   { value: "listening-select", label: "Escuchar y elegir" },
   { value: "flashcard-reveal", label: "Tarjeta (flashcard)" },
   { value: "conversation", label: "Conversación" },
+  { value: "listen-type", label: "Escuchar y escribir" },
 ];
 
 function blankExercise(type: Exercise["type"], id: string): Exercise {
@@ -31,6 +32,7 @@ function blankExercise(type: Exercise["type"], id: string): Exercise {
     case "listening-select": return { id, type, question: "", audioText: "", options: ["", ""], answer: "", hint: "" };
     case "flashcard-reveal": return { id, type, front: "", back: "", hint: "" };
     case "conversation": return { id, type, question: "", dialogue: [{ speaker: "Meshi", text: "" }] };
+    case "listen-type": return { id, type, question: "", answer: [""], translation: "", hint: "" };
     default: return { id, type };
   }
 }

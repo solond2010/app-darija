@@ -1,5 +1,5 @@
 import { supabase } from "./supabase";
-import { useStore, progressWeight } from "./store";
+import { useStore, progressWeight, ProgressSnapshot } from "./store";
 import { restoreLostProgress } from "./recovery";
 
 let currentUserId: string | null = null;
@@ -39,7 +39,7 @@ async function push(userId: string) {
   // after a failed read). If the cloud is ahead, restore it locally instead.
   const cloud = await pull(userId);
   if (!cloud.ok) return;
-  if (cloud.data && progressWeight(cloud.data) > progressWeight(snap)) {
+  if (cloud.data && progressWeight(cloud.data as Partial<ProgressSnapshot>) > progressWeight(snap)) {
     useStore.getState().mergeCloud(cloud.data);
     return;
   }
@@ -77,32 +77,14 @@ export async function startSync(userId: string) {
   currentUserId = userId;
 
   const cloud = await pull(userId);
-  const store = useStore.getState();
+  if (cloud.ok && cloud.data) useStore.getState().mergeCloud(cloud.data);
 
-  if (cloud.ok && cloud.data) {
-    const localWeight = progressWeight(store.exportSnapshot());
-    if (localWeight === 0) {
-      // Local state is empty/default (first launch or cache cleared).
-      // Cloud is the source of truth — overwrite unconditionally.
-      store.cloudHydrate(cloud.data);
-    } else {
-      // Both local and cloud have data. MergeCloud keeps the heavier copy
-      // (cloud wins when it has more progress, local wins if the user has
-      // been playing offline and hasn't synced yet).
-      store.mergeCloud(cloud.data);
-    }
-  }
-
-  // Restore from the embedded backup if this account was affected by the old
-  // sync bug. Runs EVEN IF the cloud read failed, so a transient network error
-  // never prevents the rescue.
-  const { data: u } = await supabase.auth.getUser();
-  const recovered = restoreLostProgress(u.user?.email);
-
-  // If the backup was just restored, push it to the cloud immediately.
-  if (recovered && cloud.ok) {
-    lastJSON = "";
-    await push(userId);
+  // One-time rescue for accounts whose progress was wiped by the old sync bug.
+  // Self-disabling (only applies when the account has less progress than the
+  // rescued snapshot). Runs only after a successful read so it can be backed up.
+  if (cloud.ok) {
+    const { data: u } = await supabase.auth.getUser();
+    restoreLostProgress(u.user?.email);
   }
 
   // Only back up to the cloud if we could actually READ it first. After a failed
@@ -111,10 +93,6 @@ export async function startSync(userId: string) {
     lastJSON = "";
     await push(userId);
   }
-
-  // Re-check streak AFTER cloud data was merged (the initial check in AppInit
-  // runs before cloud sync and would miss the restored values).
-  useStore.getState().updateStreakDaily();
 
   unsub = useStore.subscribe(schedule);
   window.addEventListener("visibilitychange", onHide);

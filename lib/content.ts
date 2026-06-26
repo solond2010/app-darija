@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { unitsData as defaultUnits, Unit, CONTENT_DATE } from "../data/lessons";
+import { unitsData as defaultUnits, Unit } from "../data/lessons";
 import { lessonVocabulary as defaultVocab } from "../data/vocabulary";
 import { LearnedWord } from "./store";
 import { withUnitReviews, withRecycling } from "./unitReview";
@@ -87,26 +87,15 @@ export async function loadContent() {
       .eq("id", "main")
       .maybeSingle();
     if (!error && data && Array.isArray(data.units) && data.units.length > 0) {
-      const savedAt = data.updated_at ? Date.parse(data.updated_at as string) : 0;
-      const codeAt = Date.parse(CONTENT_DATE);
-      // Newest wins: if the code curriculum was updated more recently than the last
-      // cloud save, the code wins; otherwise the admin's saved edits win.
-      const codeWins = codeAt > savedAt;
       const cloudUnits = data.units as Unit[];
       const cloudVocab = (data.vocabulary as Vocabulary) ?? {};
-      if (codeWins) {
-        // Code is the single source of truth: use the bundled curriculum exactly,
-        // so Amin can freely add/remove/restructure lessons without the stale cloud
-        // snapshot re-introducing old or duplicate lessons.
-        useContent.getState().setContent(defaultUnits, defaultVocab);
-      } else {
-        // The admin edited more recently via the no-code editor → their copy wins,
-        // with any brand-new code lessons still merged in.
-        useContent.getState().setContent(
-          mergeUnits(defaultUnits, cloudUnits),
-          { ...defaultVocab, ...cloudVocab }
-        );
-      }
+      // Always merge cloud (admin-edited) content over the bundled defaults so
+      // that edits made via the no-code editor are never silently discarded, even
+      // if the code curriculum was updated more recently.
+      useContent.getState().setContent(
+        mergeUnits(defaultUnits, cloudUnits),
+        { ...defaultVocab, ...cloudVocab }
+      );
     } else {
       // No cloud row (or empty): defaults ARE the content. Mark loaded so the
       // editor and lesson pages can proceed.
