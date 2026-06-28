@@ -68,7 +68,7 @@ export const Onboarding: React.FC = () => {
   return (
     <div className="fixed inset-0 z-[80] flex flex-col items-center justify-between px-7 py-10 pt-[max(2.5rem,env(safe-area-inset-top))] pb-[max(2.5rem,env(safe-area-inset-bottom))] text-white overflow-hidden">
       {/* background */}
-      <div className="absolute inset-0 -z-10" style={{ background: "linear-gradient(160deg, #5B5FEF 0%, #FF6B6B 55%, #FF9E2C 110%)" }} />
+      <div className="absolute inset-0 -z-10" style={{ background: "linear-gradient(160deg, #6B7A3F 0%, #4F5A2C 55%, #1A1A1A 115%)" }} />
       <div className="absolute -z-10 -top-16 -right-16 w-64 h-64 bg-white/10 rounded-full" />
       <div className="absolute -z-10 -bottom-24 -left-16 w-72 h-72 bg-white/10 rounded-full" />
 

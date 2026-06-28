@@ -116,7 +116,7 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
           className="relative overflow-hidden rounded-[28px] p-5 sheen glow-coral mt-1"
-          style={{ background: "linear-gradient(135deg, #5B5FEF 0%, #FF6B6B 52%, #FF9E2C 110%)" }}
+          style={{ background: "linear-gradient(135deg, #6B7A3F 0%, #4F5A2C 58%, #2F3619 120%)" }}
         >
           <motion.div style={{ y: blobY }} className="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full pointer-events-none" />
           <motion.div style={{ y: blobY2 }} className="absolute -left-6 -top-6 w-24 h-24 bg-white/10 rounded-full pointer-events-none" />

@@ -40,7 +40,7 @@ export const WordOfDay: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.08 }}
       className="relative overflow-hidden rounded-2xl px-4 py-3.5 border border-brand-majorelle/20"
-      style={{ background: "linear-gradient(120deg, rgba(91,95,239,0.10), rgba(255,107,107,0.08))" }}
+      style={{ background: "linear-gradient(120deg, rgba(107,122,63,0.12), rgba(224,184,75,0.10))" }}
     >
       <div className="flex items-center gap-1.5 mb-1.5">
         <Sparkles className="w-3.5 h-3.5 text-brand-majorelle" />

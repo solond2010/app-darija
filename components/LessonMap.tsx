@@ -59,13 +59,15 @@ export const LessonMap: React.FC = () => {
   // Winding offsets: snake pattern
   const offsetPattern = ["translate-x-0", "-translate-x-10", "translate-x-0", "translate-x-10"];
 
+  // Harmonious variations within the new olive / gold / black / sage palette,
+  // so each unit reads distinct without breaking the overall look.
   const unitGradients = [
-    "from-brand-coral to-[#FF9E9E]",
-    "from-[#7C6FFF] to-[#A89EFF]",
-    "from-brand-mint to-[#72D9C0]",
-    "from-[#FFB347] to-[#FFD180]",
-    "from-[#FF6B9D] to-[#FFB3D0]",
-    "from-[#4ECDC4] to-[#96E8E3]",
+    "from-[#7C8C4A] to-[#5E6B34]",
+    "from-[#2B2B2B] to-[#111111]",
+    "from-[#A8B86A] to-[#7C8C4A]",
+    "from-[#E0B84B] to-[#C99A33]",
+    "from-[#4FAE85] to-[#2F8A63]",
+    "from-[#4F5A2C] to-[#2F3619]",
   ];
 
   return (
@@ -172,10 +174,10 @@ export const LessonMap: React.FC = () => {
                               whileTap={{ scale: 0.93, y: 4 }}
                               className={`w-[78px] h-[78px] rounded-full flex items-center justify-center text-xl font-bold border-[4px] border-white/70 ${
                                 completed
-                                  ? "bg-gradient-to-br from-brand-teal to-[#0A8576] text-white shadow-[0_7px_0_#0a6e62,0_16px_26px_rgba(17,181,164,0.4)]"
+                                  ? "bg-gradient-to-br from-[#4FAE85] to-[#2F8A63] text-white shadow-[0_7px_0_#236b4d,0_16px_26px_rgba(79,174,133,0.4)]"
                                   : isReview
-                                  ? "bg-gradient-to-br from-brand-majorelle to-brand-teal text-white shadow-[0_7px_0_#3d3a8a,0_16px_28px_rgba(124,111,255,0.45)]"
-                                  : "bg-gradient-to-br from-brand-saffron via-brand-coral to-brand-rose text-white shadow-[0_7px_0_#c23a5e,0_16px_30px_rgba(255,107,107,0.5)]"
+                                  ? "bg-gradient-to-br from-[#2B2B2B] to-[#111111] text-[#F2D98C] shadow-[0_7px_0_#000000,0_16px_28px_rgba(0,0,0,0.4)]"
+                                  : "bg-gradient-to-br from-brand-saffron via-brand-coral to-brand-rose text-white shadow-[0_7px_0_#3C4520,0_16px_30px_rgba(107,122,63,0.5)]"
                               }`}
                             >
                               {completed

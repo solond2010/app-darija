@@ -71,7 +71,7 @@ export default function PerfilPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35 }}
           className="relative overflow-hidden rounded-3xl p-5 mt-1 sheen glow-majorelle"
-          style={{ background: "linear-gradient(135deg, #5B5FEF 0%, #A855F7 55%, #FF4D8D 110%)" }}
+          style={{ background: "linear-gradient(135deg, #2B2B2B 0%, #1A1A1A 50%, #0E0E0E 110%)" }}
         >
           <div className="absolute -right-6 -bottom-6 w-24 h-24 bg-white/20 rounded-full pointer-events-none" />
           <div className="absolute -left-4 -top-4 w-16 h-16 bg-white/20 rounded-full pointer-events-none" />

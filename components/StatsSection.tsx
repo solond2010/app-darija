@@ -61,14 +61,14 @@ export const StatsSection: React.FC = () => {
         <div className="flex items-end justify-between gap-1.5 h-24">
           {week.map((d, i) => (
             <div key={i} className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-              <span className={`text-[8px] font-bold ${d.xp > 0 ? "text-brand-coral" : "text-transparent"}`}>{d.xp}</span>
+              <span className={`text-[8px] font-bold ${d.xp > 0 ? "text-brand-amber" : "text-transparent"}`}>{d.xp}</span>
               <motion.div
                 initial={{ height: 0 }}
                 animate={{ height: `${(d.xp / maxXp) * 100}%` }}
                 transition={{ delay: i * 0.05, duration: 0.5, ease: "easeOut" }}
                 className={`w-full rounded-t-lg min-h-[3px] ${
                   d.isToday
-                    ? "bg-gradient-to-t from-brand-coral to-brand-saffron shadow-[0_0_10px_rgba(255,107,107,0.4)]"
+                    ? "bg-gradient-to-t from-brand-coral to-brand-saffron shadow-[0_0_10px_rgba(107,122,63,0.45)]"
                     : d.xp > 0
                     ? "bg-gradient-to-t from-brand-coral/60 to-brand-saffron/60"
                     : "bg-slate-100"

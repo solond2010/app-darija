@@ -11,7 +11,6 @@ import { getRandomMessage } from "../../../data/meshi-messages";
 import { Meshi, MeshiMood } from "../../../components/Suki";
 import { ExerciseRenderer } from "../../../components/ExerciseTypes/ExerciseRenderer";
 import { LessonIntro } from "../../../components/LessonIntro";
-import { SpeakButton } from "../../../components/SpeakButton";
 import { normalizeDarija } from "../../../utils/speech";
 
 // Difficulty ranking so every lesson ramps from recognition (easy) to
@@ -36,7 +35,7 @@ function orderExercises<T extends { type: string }>(exercises: T[]): T[] {
 }
 import { sound } from "../../../utils/sound";
 import { haptics } from "../../../utils/haptics";
-import { X, Sparkles, Star, Flame, Trophy, CheckCircle2, Zap } from "lucide-react";
+import { X, Star, Trophy, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 
@@ -292,29 +291,25 @@ export default function LeccionPage() {
     const totalXP = totalXPEarned + 50 + (isPerfect ? 100 : 0);
     const accuracy = Math.max(0, Math.round(((lesson.exercises.length - errorsCount) / lesson.exercises.length) * 100));
 
-    // "Come back tomorrow" hook: the next lesson + its teaser.
-    const allLessonsFlat = unitsData.flatMap((u) => u.lessons.map((l) => ({ id: l.id, title: l.title, teaser: l.teaser, emoji: u.emoji })));
+    // Keep the next-lesson lookup only for the CTA label.
+    const allLessonsFlat = unitsData.flatMap((u) => u.lessons.map((l) => ({ id: l.id })));
     const curIdx = allLessonsFlat.findIndex((l) => l.id === lessonId);
     const nextLesson = curIdx >= 0 ? allLessonsFlat[curIdx + 1] : null;
-    const teaserText: string | null = (lesson.teaser as string | undefined) || (nextLesson ? `${nextLesson.emoji} ${nextLesson.title}` : null);
-    const vocabCount = lessonVocabulary[lessonId]?.length ?? 0;
-    const elapsedSec = Math.max(1, Math.round((Date.now() - startTimeRef.current) / 1000));
-    const timeLabel = `${Math.floor(elapsedSec / 60)}:${String(elapsedSec % 60).padStart(2, "0")}`;
 
+    // Minimal completion screen: cat + title + two key stats + one CTA.
     return (
       <div className="h-dvh flex flex-col max-w-md mx-auto overflow-hidden">
-        {/* Scrollable content area */}
-        <div className="flex-1 overflow-y-auto no-scrollbar px-5 pt-6 pb-4 flex flex-col gap-5">
+        <div className="flex-1 overflow-y-auto no-scrollbar px-5 pt-8 pb-4 flex flex-col items-center justify-center gap-6">
           {/* Cat + title */}
           <div className="flex flex-col items-center text-center">
             <motion.div initial={{ scale: 0.85, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.45, ease: "backOut" }}>
               <Meshi
                 mood={isPerfect ? "perfect" : "celebrating"}
-                size={160}
+                size={170}
                 showBubble={true}
                 bubbleText={isPerfect
-                  ? "¡Increíble Sara! ¡Una lección perfecta! ¡Eres increíble! 🔥🐱"
-                  : "¡Bravo Sara! ¡Lección completada! ¡Sigue así! 🎉"
+                  ? "¡Increíble Sara! ¡Lección perfecta! 🔥🐱"
+                  : "¡Bravo Sara! ¡Lección completada! 🎉"
                 }
               />
             </motion.div>
@@ -322,110 +317,32 @@ export default function LeccionPage() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-3xl font-bold font-title text-brand-dark mt-3 leading-none"
+              className="text-3xl font-bold font-title text-brand-dark mt-4 leading-none"
             >
-              {isPerfect ? "¡Lección Perfecta! ⭐" : "¡Buen trabajo, Sara!"}
+              {isPerfect ? "¡Lección Perfecta! ⭐" : "¡Buen trabajo!"}
             </motion.h2>
-            <p className="text-sm text-slate-400 mt-1">Lección {lessonId} completada</p>
           </div>
 
-          {/* Stats cards — XP · Precisión · Tiempo */}
+          {/* Two key stats — XP (gold) + Precisión (olive) */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-            className="grid grid-cols-3 gap-2.5"
+            transition={{ delay: 0.28 }}
+            className="grid grid-cols-2 gap-3 w-full max-w-[300px]"
           >
-            <div className="rounded-2xl p-3 flex flex-col items-center text-center text-white glow-coral bg-gradient-to-br from-brand-saffron to-brand-coral">
-              <div className="w-9 h-9 rounded-xl bg-white/25 flex items-center justify-center mb-1.5">
-                <Star className="w-4.5 h-4.5 fill-white text-white" />
+            <div className="rounded-2xl p-4 flex flex-col items-center text-center text-[#3A2C06] glow-gold bg-gradient-to-br from-[#E8C766] to-[#D9A441]">
+              <div className="w-10 h-10 rounded-xl bg-white/30 flex items-center justify-center mb-2">
+                <Star className="w-5 h-5 fill-[#3A2C06] text-[#3A2C06]" />
               </div>
-              <span className="text-[8px] uppercase font-bold tracking-wider opacity-90">XP</span>
-              <span className="text-xl font-bold font-title mt-0.5">+<CountUp to={totalXP} /></span>
+              <span className="text-[9px] uppercase font-bold tracking-wider opacity-80">XP ganado</span>
+              <span className="text-2xl font-bold font-title mt-0.5">+<CountUp to={totalXP} /></span>
             </div>
-            <div className="rounded-2xl p-3 flex flex-col items-center text-center text-white bg-gradient-to-br from-brand-coral to-brand-rose">
-              <div className="w-9 h-9 rounded-xl bg-white/25 flex items-center justify-center mb-1.5">
-                <Trophy className="w-4.5 h-4.5 text-white" />
+            <div className="rounded-2xl p-4 flex flex-col items-center text-center text-white glow-coral bg-gradient-to-br from-brand-saffron to-brand-coral">
+              <div className="w-10 h-10 rounded-xl bg-white/25 flex items-center justify-center mb-2">
+                <Trophy className="w-5 h-5 text-white" />
               </div>
-              <span className="text-[8px] uppercase font-bold tracking-wider opacity-90">Precisión</span>
-              <span className="text-xl font-bold font-title mt-0.5"><CountUp to={accuracy} />%</span>
-            </div>
-            <div className="rounded-2xl p-3 flex flex-col items-center text-center text-white bg-gradient-to-br from-brand-majorelle to-[#8b7dff]">
-              <div className="w-9 h-9 rounded-xl bg-white/25 flex items-center justify-center mb-1.5">
-                <Zap className="w-4.5 h-4.5 fill-white text-white" />
-              </div>
-              <span className="text-[8px] uppercase font-bold tracking-wider opacity-90">Tiempo</span>
-              <span className="text-xl font-bold font-title mt-0.5">{timeLabel}</span>
-            </div>
-          </motion.div>
-
-          {/* New badges */}
-          {unlockedBadges.length > 0 && (
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.35 }}
-              className="bg-gradient-to-r from-brand-lavender to-brand-pink rounded-2xl p-4 border-2 border-white shadow-sm flex items-start gap-3"
-            >
-              <Sparkles className="w-5 h-5 text-brand-coral mt-0.5 flex-shrink-0" />
-              <div>
-                <h4 className="font-bold text-sm font-title text-brand-dark">¡Nuevo logro desbloqueado!</h4>
-                <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
-                  ¡Comprueba tus insignias en el perfil! 🏆
-                </p>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Vocabulary list (skip on review lessons — they have no new words) */}
-          {vocabCount > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="glass rounded-2xl p-4"
-          >
-            <h4 className="text-[10px] font-bold font-title text-slate-400 uppercase tracking-wider mb-3">
-              Vocabulario aprendido · {vocabCount} {vocabCount === 1 ? "palabra" : "palabras"}
-            </h4>
-            <div className="flex flex-wrap gap-2 max-h-44 overflow-y-auto no-scrollbar">
-              {lessonVocabulary[lessonId]?.map((v, i) => (
-                <div key={i} className="bg-brand-saffron/12 border border-brand-saffron/25 rounded-xl pl-2.5 pr-1.5 py-1.5 text-xs font-bold flex items-center gap-1">
-                  <span className="text-brand-coral">{v.darija}</span>
-                  <span className="text-slate-400 font-semibold">· {v.spanish}</span>
-                  <SpeakButton text={v.darija} size={14} className="p-1 text-brand-coral/70" />
-                </div>
-              ))}
-            </div>
-          </motion.div>
-          )}
-
-          {/* Engagement: reward + tomorrow teaser + streak nudge */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="rounded-2xl p-4 bg-gradient-to-br from-brand-majorelle/12 to-brand-coral/10 border border-white/50 flex flex-col gap-2.5"
-          >
-            <div className="flex items-center gap-2.5">
-              <span className="text-xl">🎉</span>
-              <p className="text-sm font-bold font-title text-brand-dark">
-                {vocabCount > 0
-                  ? `¡Has aprendido ${vocabCount} ${vocabCount === 1 ? "frase nueva" : "frases nuevas"}!`
-                  : "¡Repaso completado! Tu memoria está más fuerte. 🧠"}
-              </p>
-            </div>
-            {teaserText && (
-              <div className="flex items-start gap-2.5">
-                <span className="text-xl">🔮</span>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  <b className="text-brand-majorelle">Mañana:</b> {teaserText}
-                </p>
-              </div>
-            )}
-            <div className="flex items-center gap-2.5">
-              <span className="text-xl">🔥</span>
-              <p className="text-xs text-slate-600">¡Vuelve mañana para no perder tu racha!</p>
+              <span className="text-[9px] uppercase font-bold tracking-wider opacity-90">Precisión</span>
+              <span className="text-2xl font-bold font-title mt-0.5"><CountUp to={accuracy} />%</span>
             </div>
           </motion.div>
         </div>
@@ -444,7 +361,7 @@ export default function LeccionPage() {
             }}
             className="w-full py-4 btn-3d-primary font-title text-base"
           >
-            {nextLesson ? "¡Hecho! Nos vemos mañana 🐱🔥" : "¡Listo! Yallah 🐱🔥"}
+            {nextLesson ? "¡Hecho! Continuar 🐱" : "¡Listo! Yallah 🐱"}
           </button>
         </div>
       </div>
@@ -485,7 +402,7 @@ export default function LeccionPage() {
               key={i}
               className={`flex-1 h-2.5 rounded-full transition-colors duration-300 ${
                 i < currentIdx
-                  ? "bg-gradient-to-r from-brand-saffron via-brand-coral to-brand-rose shadow-[0_0_8px_rgba(255,107,107,0.5)]"
+                  ? "bg-gradient-to-r from-brand-saffron via-brand-coral to-brand-rose shadow-[0_0_8px_rgba(107,122,63,0.55)]"
                   : i === currentIdx
                   ? "bg-brand-coral/40"
                   : "bg-slate-200/70"
@@ -503,8 +420,8 @@ export default function LeccionPage() {
               animate={{ scale: 1, opacity: 1, x: 0 }}
               exit={{ scale: 0.5, opacity: 0 }}
               transition={{ type: "spring", stiffness: 480, damping: 16 }}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-extrabold font-title text-white flex-shrink-0 shadow-[0_3px_10px_rgba(255,107,107,0.45)]"
-              style={{ background: "linear-gradient(135deg, #FF9E2C, #FF6B6B)" }}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-extrabold font-title text-white flex-shrink-0 shadow-[0_3px_10px_rgba(107,122,63,0.45)]"
+              style={{ background: "linear-gradient(135deg, #8B9C52, #5E6B34)" }}
             >
               <motion.span
                 key={combo}

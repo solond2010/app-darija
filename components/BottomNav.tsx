@@ -20,7 +20,7 @@ export const BottomNav: React.FC = () => {
   if (pathname.startsWith("/leccion/")) return null;
 
   return (
-    <nav className="fixed bottom-3 left-3 right-3 h-[64px] flex items-center justify-around z-40 max-w-[22rem] mx-auto rounded-[1.6rem] px-1.5 bg-white/95 dark:bg-[#181225]/95 backdrop-blur-xl border border-white/80 dark:border-white/10 shadow-[0_10px_34px_rgba(42,35,66,0.18)]">
+    <nav className="fixed bottom-3 left-3 right-3 h-[64px] flex items-center justify-around z-40 max-w-[22rem] mx-auto rounded-[1.6rem] px-1.5 bg-white/95 dark:bg-[#1A1B12]/95 backdrop-blur-xl border border-white/80 dark:border-white/10 shadow-[0_10px_34px_rgba(35,35,24,0.18)]">
       {navItems.map((item) => {
         const Icon = item.icon;
         const isActive = pathname === item.path;

@@ -74,10 +74,10 @@ export const AchievementsGallery: React.FC = () => {
               transition={{ delay: i * 0.035, type: "spring", stiffness: 320, damping: 22 }}
               className={`relative rounded-2xl p-3 flex flex-col items-center text-center gap-1 overflow-hidden border ${
                 unlocked
-                  ? "border-brand-saffron/30 shadow-[0_4px_16px_rgba(255,158,44,0.18)]"
+                  ? "border-brand-amber/35 shadow-[0_4px_16px_rgba(224,184,75,0.20)]"
                   : "border-slate-100 bg-white/60"
               }`}
-              style={unlocked ? { background: "linear-gradient(150deg, rgba(255,158,44,0.16), rgba(255,107,107,0.12))" } : {}}
+              style={unlocked ? { background: "linear-gradient(150deg, rgba(224,184,75,0.18), rgba(107,122,63,0.12))" } : {}}
             >
               {unlocked && (
                 <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center shadow-sm">

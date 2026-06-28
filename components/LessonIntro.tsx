@@ -57,7 +57,7 @@ export const LessonIntro: React.FC<LessonIntroProps> = ({ words, onStart, onExit
               key={i}
               className={`flex-1 h-2.5 rounded-full transition-colors duration-300 ${
                 i < idx
-                  ? "bg-gradient-to-r from-brand-teal to-[#0A8576]"
+                  ? "bg-gradient-to-r from-brand-saffron via-brand-coral to-brand-rose"
                   : i === idx
                   ? "bg-brand-coral/50"
                   : "bg-slate-200/70"

@@ -57,8 +57,8 @@ export const Header: React.FC = () => {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 300, damping: 18 }}
-              className="relative w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 ring-1 ring-white/70 shadow-[0_4px_14px_rgba(255,107,107,0.25)]"
-              style={{ background: "linear-gradient(135deg, rgba(255,158,44,0.22), rgba(255,107,107,0.18), rgba(91,95,239,0.20))" }}
+              className="relative w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 ring-1 ring-white/70 shadow-[0_4px_14px_rgba(107,122,63,0.25)]"
+              style={{ background: "linear-gradient(135deg, rgba(139,156,82,0.24), rgba(107,122,63,0.20), rgba(26,26,26,0.16))" }}
             >
               <Meshi mood="normal" size={42} showBubble={false} interactive={false} />
             </motion.div>

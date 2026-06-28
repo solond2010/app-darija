@@ -7,7 +7,8 @@ import { Meshi } from "../../components/Suki";
 import { SpeakButton } from "../../components/SpeakButton";
 import { speak } from "../../utils/speech";
 import { useStore, LearnedWord } from "../../lib/store";
-import { Star, RefreshCw, ChevronRight } from "lucide-react";
+import { useCelebration } from "../../lib/celebration";
+import { Star, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
@@ -82,6 +83,28 @@ export default function RepasoPage() {
       return () => clearTimeout(t);
     }
   }, [currentIdx, reviewStack, reviewFinished]);
+
+  // Finishing a review counts toward the daily streak, exactly like a lesson.
+  // incrementStreak is idempotent per day, so re-finishing won't double-count.
+  useEffect(() => {
+    if (!reviewFinished) return;
+    const before = useStore.getState().streak;
+    useStore.getState().incrementStreak();
+    const after = useStore.getState().streak;
+    if (after > before) {
+      useCelebration.getState().push([{ kind: "streak", days: after }]);
+    }
+    // Let the reminder cron know she practiced today.
+    fetch("/api/push/sync", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        streak: after,
+        lastPlayedDate: new Date().toLocaleDateString("en-CA"),
+        playedToday: true,
+      }),
+    }).catch(() => {});
+  }, [reviewFinished]);
 
   const startReview = (category: string) => {
     setSelectedCategory(category);
@@ -212,8 +235,8 @@ export default function RepasoPage() {
               <div className="w-full h-px bg-brand-cream" />
               <div className="flex justify-between items-center text-sm">
                 <span className="text-slate-500 font-semibold">XP ganado</span>
-                <span className="font-bold text-brand-coral flex items-center gap-1">
-                  <Star className="w-4 h-4 fill-brand-coral text-brand-coral" />
+                <span className="font-bold text-brand-amber flex items-center gap-1">
+                  <Star className="w-4 h-4 fill-brand-amber text-brand-amber" />
                   +{xpGained} XP
                 </span>
               </div>

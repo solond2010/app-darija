@@ -22,7 +22,7 @@ export const NewLessonsBanner: React.FC = () => {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.4 }}
       className="relative overflow-hidden rounded-2xl p-4 text-white sheen"
-      style={{ background: "linear-gradient(135deg, #7C6FFF 0%, #FF6B6B 60%, #FF9E2C 115%)" }}
+      style={{ background: "linear-gradient(135deg, #6B7A3F 0%, #4F5A2C 60%, #2F3619 115%)" }}
     >
       <div className="absolute -right-6 -bottom-6 w-24 h-24 bg-white/10 rounded-full pointer-events-none" />
       <div className="relative flex items-center gap-2 mb-2.5">

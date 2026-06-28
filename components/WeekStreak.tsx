@@ -43,9 +43,9 @@ export const WeekStreak: React.FC<{ className?: string }> = ({ className = "" })
           <div
             className={`w-8 h-8 rounded-full grid place-items-center text-sm transition-all ${
               d.active
-                ? "bg-gradient-to-br from-brand-saffron to-brand-coral text-white shadow-[0_5px_12px_rgba(255,107,107,0.4)]"
+                ? "bg-gradient-to-br from-brand-amber to-[#C99A33] text-white shadow-[0_5px_12px_rgba(224,184,75,0.45)]"
                 : "bg-slate-100 text-slate-300"
-            } ${d.isToday ? "ring-[3px] ring-brand-coral/35 ring-offset-2 ring-offset-transparent" : ""}`}
+            } ${d.isToday ? "ring-[3px] ring-brand-amber/40 ring-offset-2 ring-offset-transparent" : ""}`}
           >
             {d.active ? "🔥" : "·"}
           </div>

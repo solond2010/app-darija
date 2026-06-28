@@ -9,8 +9,8 @@ import { haptics } from "../utils/haptics";
 import { sound } from "../utils/sound";
 import { useStore } from "../lib/store";
 
-const WARM = ["#FF9E2C", "#FFC247", "#FF6B6B", "#FF4D8D", "#5B5FEF", "#11B5A4"];
-const FIRE = ["#FF9E2C", "#FFC247", "#FF6B6B", "#E2725B", "#FF4D00"];
+const WARM = ["#8B9C52", "#6B7A3F", "#4F5A2C", "#E0B84B", "#1A1A1A", "#4FAE85"];
+const FIRE = ["#E0B84B", "#E8C766", "#D9A441", "#C99A33", "#1A1A1A"];
 
 export const CelebrationOverlay: React.FC = () => {
   const current = useCelebration((s) => s.queue[0]);
@@ -186,7 +186,7 @@ function DailyLessonContent() {
 function ShieldContent({ streak }: { streak: number }) {
   return (
     <>
-      <Badge gradient="bg-gradient-to-br from-brand-teal via-brand-majorelle to-[#5B5FEF]">
+      <Badge gradient="bg-gradient-to-br from-brand-teal via-brand-terracotta to-[#1A1A1A]">
         <Shield className="w-12 h-12 text-white fill-white/20" />
       </Badge>
       <div className="flex items-center gap-1.5 text-brand-teal">
@@ -205,7 +205,7 @@ function ShieldContent({ streak }: { streak: number }) {
 function StreakContent({ days }: { days: number }) {
   return (
     <>
-      <Badge gradient="bg-gradient-to-br from-brand-amber via-brand-saffron to-[#FF4D00]">
+      <Badge gradient="bg-gradient-to-br from-[#E8C766] via-[#E0B84B] to-[#C99A33]">
         <Flame className="w-12 h-12 text-white fill-yellow-200" />
       </Badge>
       <div className="flex items-center gap-1.5 text-brand-saffron">
