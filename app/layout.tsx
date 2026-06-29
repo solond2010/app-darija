@@ -7,6 +7,7 @@ import { NotificationSetup } from "../components/NotificationSetup";
 import { CelebrationOverlay } from "../components/CelebrationOverlay";
 import { Onboarding } from "../components/Onboarding";
 import { TapFeedback } from "../components/TapFeedback";
+import { BottomNav } from "../components/BottomNav";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -62,6 +63,10 @@ export default function RootLayout({
         <div className="aurora-bg" aria-hidden="true" />
         <AppInit />
         {children}
+        {/* Persistent bottom nav — rendered once here (outside the per-page
+            transition in template.tsx) so it never flickers/disappears on
+            navigation. It hides itself on /leccion/* via its own check. */}
+        <BottomNav />
         <CelebrationOverlay />
         <Onboarding />
         <TapFeedback />

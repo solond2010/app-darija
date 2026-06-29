@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Header } from "../../components/Header";
-import { BottomNav } from "../../components/BottomNav";
 import { Meshi } from "../../components/Suki";
 import { useStore, getLevelInfo } from "../../lib/store";
 import { Flame, Star, BookOpen, CheckCircle, Trash2, Volume2, VolumeX, ShieldAlert, Trophy, Moon, Sun, Target } from "lucide-react";
@@ -305,7 +304,6 @@ export default function PerfilPage() {
         </div>
       </main>
 
-      <BottomNav />
     </div>
   );
 }

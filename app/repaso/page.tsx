@@ -2,15 +2,16 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { Header } from "../../components/Header";
-import { BottomNav } from "../../components/BottomNav";
 import { Meshi } from "../../components/Suki";
 import { SpeakButton } from "../../components/SpeakButton";
 import { speak } from "../../utils/speech";
 import { useStore, LearnedWord } from "../../lib/store";
 import { useCelebration } from "../../lib/celebration";
-import { Star, RefreshCw } from "lucide-react";
+import { useContent } from "../../lib/content";
+import { Star, RefreshCw, Lock, ChevronRight, GraduationCap, Layers } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type Difficulty = "hard" | "ok" | "easy";
 
@@ -20,9 +21,12 @@ interface ReviewCard extends LearnedWord {
 
 export default function RepasoPage() {
   const router = useRouter();
-  const { learnedWords, wordMemory, reviewWord, addXP, isHydrated, setHydrated } = useStore();
+  const { learnedWords, wordMemory, reviewWord, addXP, isHydrated, setHydrated, unlockedUnits, completedLessons } = useStore();
+  const unitsData = useContent((s) => s.units);
   const [mounted, setMounted] = useState(false);
 
+  // Two ways to review: full unit "review lessons" or the quick flashcard deck.
+  const [mode, setMode] = useState<"lecciones" | "tarjetas">("lecciones");
   const [selectedCategory, setSelectedCategory] = useState("Todos");
   const [reviewStack, setReviewStack] = useState<ReviewCard[]>([]);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -167,14 +171,102 @@ export default function RepasoPage() {
   const currentWord = reviewStack[currentIdx];
   const progressPercent = reviewStack.length > 0 ? (currentIdx / reviewStack.length) * 100 : 0;
 
+  // Unit "review lessons": available once the unit is unlocked and has at least
+  // one completed lesson. Each links to its auto-generated review lesson (n.R).
+  const reviewLessons = unitsData.flatMap((u) => {
+    const review = u.lessons.find((l) => l.isReview);
+    if (!review) return [];
+    const done = u.lessons.some((l) => !l.isReview && completedLessons.includes(l.id));
+    return [{ unit: u, review, available: unlockedUnits.includes(u.id) && done }];
+  });
+  const anyReviewAvailable = reviewLessons.some((r) => r.available);
+
   return (
     <div className="min-h-screen pb-20 flex flex-col max-w-md mx-auto relative overflow-hidden">
       <Header />
 
       <main className="flex-1 px-5 pt-3 flex flex-col overflow-y-auto no-scrollbar pb-6">
 
-        {/* Empty state */}
-        {learnedWords.length === 0 ? (
+        {/* Mode switch: review lessons vs flashcard deck */}
+        <div className="flex gap-1.5 p-1 rounded-2xl bg-brand-dark/5 mb-3 mt-1">
+          <button
+            onClick={() => setMode("lecciones")}
+            className={`flex-1 py-2 rounded-xl text-xs font-bold font-title flex items-center justify-center gap-1.5 transition-all ${
+              mode === "lecciones" ? "bg-white text-brand-coral shadow-sm" : "text-slate-400"
+            }`}
+          >
+            <GraduationCap className="w-4 h-4" /> Lecciones
+          </button>
+          <button
+            onClick={() => setMode("tarjetas")}
+            className={`flex-1 py-2 rounded-xl text-xs font-bold font-title flex items-center justify-center gap-1.5 transition-all ${
+              mode === "tarjetas" ? "bg-white text-brand-coral shadow-sm" : "text-slate-400"
+            }`}
+          >
+            <Layers className="w-4 h-4" /> Tarjetas
+          </button>
+        </div>
+
+        {mode === "lecciones" ? (
+          /* ---- Review lessons (per unit) ---- */
+          <div className="flex flex-col gap-3 py-1">
+            <div className="glass rounded-2xl px-3.5 py-2.5 flex items-center gap-2.5">
+              <div className="p-1.5 rounded-lg bg-brand-coral/15 flex-shrink-0">
+                <GraduationCap className="w-3.5 h-3.5 text-brand-coral" />
+              </div>
+              <p className="text-xs font-semibold text-slate-600 leading-snug">
+                Repasa una unidad entera con una mini-lección. ¡Cuenta para tu racha! 🔥
+              </p>
+            </div>
+
+            {!anyReviewAvailable ? (
+              <div className="flex flex-col items-center text-center gap-4 py-10">
+                <Meshi
+                  mood="thinking"
+                  size={150}
+                  showBubble={true}
+                  bubbleText="Completa lecciones de una unidad y aquí podrás repasarla entera. 🐱"
+                />
+                <button onClick={() => router.push("/")} className="py-3.5 px-8 btn-3d-primary font-title text-sm">
+                  Ir a las lecciones →
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2.5">
+                {reviewLessons.map(({ unit, review, available }) =>
+                  available ? (
+                    <Link key={unit.id} href={`/leccion/${review.id}`}>
+                      <div className="glass rounded-2xl px-4 py-3.5 flex items-center gap-3 hover:bg-white/80 transition-all active:scale-[0.98] border-l-4 border-l-brand-coral">
+                        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-saffron to-brand-coral flex items-center justify-center text-xl flex-shrink-0 glow-coral">
+                          {unit.emoji}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Repaso de unidad</p>
+                          <p className="text-sm font-bold font-title text-brand-dark truncate mt-0.5">{unit.title}</p>
+                        </div>
+                        <ChevronRight className="w-5 h-5 text-brand-coral flex-shrink-0" />
+                      </div>
+                    </Link>
+                  ) : (
+                    <div key={unit.id} className="glass rounded-2xl px-4 py-3.5 flex items-center gap-3 opacity-90">
+                      <div className="w-11 h-11 rounded-xl bg-brand-dark/10 flex items-center justify-center flex-shrink-0">
+                        <Lock className="w-4 h-4 text-slate-400" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold font-title text-slate-400 truncate">{unit.title}</p>
+                        <p className="text-[11px] text-slate-400 mt-0.5">Haz lecciones de esta unidad para desbloquear su repaso</p>
+                      </div>
+                      <span className="bg-slate-50 text-slate-400 text-[9px] font-bold px-2 py-0.5 rounded-full border border-slate-100 flex-shrink-0">
+                        Bloqueada
+                      </span>
+                    </div>
+                  )
+                )}
+              </div>
+            )}
+          </div>
+
+        ) : learnedWords.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center gap-5 py-10">
             <Meshi
               mood="thinking"
@@ -402,7 +494,6 @@ export default function RepasoPage() {
         )}
       </main>
 
-      <BottomNav />
     </div>
   );
 }

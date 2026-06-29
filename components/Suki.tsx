@@ -21,12 +21,13 @@ interface MeshiProps {
   interactive?: boolean;
 }
 
-const BLINK_POSITIONS: Record<string, { cx: number; cy: number; rx: number }[]> = {
-  default: [
-    { cx: 50, cy: 58, rx: 10 },
-    { cx: 95, cy: 58, rx: 10 },
-  ],
-};
+// ── Palette (warm + cute, fits the olive theme) ──
+const FUR = "#F8EFDC";       // cream fur
+const LINE = "#3B352B";      // warm dark outline
+const BLUSH = "#EBA39A";     // cheek blush
+const EAR_IN = "#F2C7B8";    // inner ear
+const FEZ = "#D6584F";       // Moroccan fez (tarbouche)
+const NOSE = "#E0897F";      // little nose
 
 export const Meshi: React.FC<MeshiProps> = ({
   mood,
@@ -107,13 +108,75 @@ export const Meshi: React.FC<MeshiProps> = ({
       ? { rotate: [-6, 6, -6], transition: { repeat: Infinity, duration: 2.2 } }
       : { rotate: [-9, 9, -9], transition: { repeat: Infinity, duration: 1.1 } };
 
-  // Blink overlay (covers eyes with closed arcs)
+  // ── Shared cute parts (round head, soft ears, cheeks, body) ──
+  // Eyes sit at x≈60 / x≈90, y≈68 — close together and large = kawaii.
+  const ears = (
+    <g stroke={LINE} strokeWidth="3" strokeLinejoin="round">
+      <path d="M 47 44 Q 33 38 34 22 Q 48 24 58 40 Z" fill={FUR} />
+      <path d="M 48 41 Q 39 36 40 27 Q 49 29 55 39 Z" fill={EAR_IN} stroke="none" />
+      <path d="M 103 44 Q 117 38 116 22 Q 102 24 92 40 Z" fill={FUR} />
+      <path d="M 102 41 Q 111 36 110 27 Q 101 29 95 39 Z" fill={EAR_IN} stroke="none" />
+    </g>
+  );
+
+  const head = (
+    <>
+      <ellipse cx="75" cy="70" rx="47" ry="42" fill={FUR} stroke={LINE} strokeWidth="3" />
+      <ellipse cx="50" cy="80" rx="7.5" ry="4.5" fill={BLUSH} opacity="0.75" />
+      <ellipse cx="100" cy="80" rx="7.5" ry="4.5" fill={BLUSH} opacity="0.75" />
+    </>
+  );
+
+  const nose = (
+    <path d="M 71 73 L 79 73 L 75 78 Z" fill={NOSE} stroke={LINE} strokeWidth="2" strokeLinejoin="round" />
+  );
+
+  const whiskers = (
+    <g stroke={LINE} strokeWidth="2" strokeLinecap="round" opacity="0.85">
+      <line x1="30" y1="72" x2="14" y2="69" />
+      <line x1="30" y1="78" x2="15" y2="80" />
+      <line x1="120" y1="72" x2="136" y2="69" />
+      <line x1="120" y1="78" x2="135" y2="80" />
+    </g>
+  );
+
+  const body = (
+    <>
+      <path d="M 47 98 Q 39 122 45 140 L 105 140 Q 111 122 103 98 Z" fill={FUR} stroke={LINE} strokeWidth="3" strokeLinejoin="round" />
+      <ellipse cx="75" cy="126" rx="17" ry="20" fill="#FFFDF6" opacity="0.7" />
+      <ellipse cx="49" cy="104" rx="7" ry="11" fill={FUR} stroke={LINE} strokeWidth="2.5" transform="rotate(-16 49 104)" />
+      <ellipse cx="101" cy="104" rx="7" ry="11" fill={FUR} stroke={LINE} strokeWidth="2.5" transform="rotate(16 101 104)" />
+    </>
+  );
+
+  const fez = (
+    <g stroke={LINE} strokeWidth="3" strokeLinejoin="round">
+      <path d="M 60 30 L 90 30 L 86 14 L 64 14 Z" fill={FEZ} />
+      <ellipse cx="75" cy="30" rx="15" ry="3.5" fill={FEZ} />
+      <path d="M 75 14 L 75 8" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="75" cy="7" r="2.5" fill={LINE} stroke="none" />
+    </g>
+  );
+
+  // Big round open eyes with two shine dots — the default cute look.
+  const eyesOpen = (
+    <g>
+      <ellipse cx="60" cy="68" rx="9.5" ry="11" fill={LINE} />
+      <ellipse cx="90" cy="68" rx="9.5" ry="11" fill={LINE} />
+      <circle cx="56.5" cy="63.5" r="3.3" fill="#fff" />
+      <circle cx="63" cy="72" r="1.7" fill="#fff" />
+      <circle cx="86.5" cy="63.5" r="3.3" fill="#fff" />
+      <circle cx="93" cy="72" r="1.7" fill="#fff" />
+    </g>
+  );
+
+  // Blink overlay matches the open-eye centers.
   const blinkOverlay = isBlinking ? (
     <g>
-      <ellipse cx="50" cy="58" rx="11" ry="5" fill="#FAF0DD" />
-      <ellipse cx="95" cy="58" rx="11" ry="5" fill="#FAF0DD" />
-      <path d="M 40 58 Q 50 64 60 58" fill="none" stroke="#2D3748" strokeWidth="3.5" strokeLinecap="round" />
-      <path d="M 85 58 Q 95 64 105 58" fill="none" stroke="#2D3748" strokeWidth="3.5" strokeLinecap="round" />
+      <ellipse cx="60" cy="68" rx="11" ry="6" fill={FUR} />
+      <ellipse cx="90" cy="68" rx="11" ry="6" fill={FUR} />
+      <path d="M 50 68 Q 60 74 70 68" fill="none" stroke={LINE} strokeWidth="3.5" strokeLinecap="round" />
+      <path d="M 80 68 Q 90 74 100 68" fill="none" stroke={LINE} strokeWidth="3.5" strokeLinecap="round" />
     </g>
   ) : null;
 
@@ -121,197 +184,110 @@ export const Meshi: React.FC<MeshiProps> = ({
     switch (mood) {
       case "celebrating":
         return (
-          <motion.g
-            animate={{ y: [0, -16, 0], rotate: [0, 5, -5, 0] }}
-            transition={{ repeat: Infinity, duration: 0.75 }}
-          >
-            {/* Fez */}
-            <path d="M 65 15 L 85 15 L 90 35 L 60 35 Z" fill="#FF6B6B" stroke="#2D3748" strokeWidth="3" />
-            <path d="M 75 15 L 75 10 L 85 18" fill="none" stroke="#2D3748" strokeWidth="2.5" strokeLinecap="round" />
-            <circle cx="85" cy="18" r="2" fill="#2D3748" />
-            {/* Sparkles on fez */}
-            <motion.text x="52" y="18" fontSize="10" animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }}>✨</motion.text>
-
-            {/* Ears */}
-            <path d="M 35 45 L 20 20 L 50 35 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-            <path d="M 38 42 L 27 25 L 47 34 Z" fill="#FFB4B4" />
-            <path d="M 115 45 L 130 20 L 100 35 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-            <path d="M 112 42 L 123 25 L 103 34 Z" fill="#FFB4B4" />
-
-            {/* Head */}
-            <ellipse cx="75" cy="65" rx="45" ry="32" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-            <ellipse cx="48" cy="72" rx="7" ry="4" fill="#FFB4B4" opacity="0.8" />
-            <ellipse cx="102" cy="72" rx="7" ry="4" fill="#FFB4B4" opacity="0.8" />
-
-            {/* Eyes (Happy ^ ^) */}
-            <path d="M 45 60 Q 52 50 60 60" fill="none" stroke="#2D3748" strokeWidth="3.5" strokeLinecap="round" />
-            <path d="M 90 60 Q 98 50 106 60" fill="none" stroke="#2D3748" strokeWidth="3.5" strokeLinecap="round" />
-            {blinkOverlay}
-
-            {/* Nose & Mouth */}
-            <polygon points="75,66 72,62 78,62" fill="#FF6B6B" />
-            <path d="M 75 66 Q 71 70 67 68 Q 63 70 67 76 Q 75 80 83 76 Q 87 70 83 68 Q 79 70 75 66 Z" fill="#D64545" stroke="#2D3748" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-
-            {/* Whiskers */}
-            <line x1="28" y1="65" x2="12" y2="63" stroke="#2D3748" strokeWidth="2.5" strokeLinecap="round" />
-            <line x1="28" y1="71" x2="14" y2="73" stroke="#2D3748" strokeWidth="2.5" strokeLinecap="round" />
-            <line x1="122" y1="65" x2="138" y2="63" stroke="#2D3748" strokeWidth="2.5" strokeLinecap="round" />
-            <line x1="122" y1="71" x2="136" y2="73" stroke="#2D3748" strokeWidth="2.5" strokeLinecap="round" />
-
-            {/* Body */}
-            <path d="M 45 92 Q 40 120 40 135 L 110 135 Q 110 120 105 92 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-            <ellipse cx="40" cy="98" rx="8" ry="12" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" transform="rotate(-30 40 98)" />
-            <ellipse cx="110" cy="98" rx="8" ry="12" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" transform="rotate(30 110 98)" />
+          <motion.g animate={{ y: [0, -16, 0], rotate: [0, 5, -5, 0] }} transition={{ repeat: Infinity, duration: 0.75 }}>
+            {fez}
+            <motion.text x="50" y="20" fontSize="11" animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }}>✨</motion.text>
+            {ears}
+            {head}
+            {/* Happy closed eyes ^ ^ */}
+            <path d="M 51 70 Q 60 60 69 70" fill="none" stroke={LINE} strokeWidth="4" strokeLinecap="round" />
+            <path d="M 81 70 Q 90 60 99 70" fill="none" stroke={LINE} strokeWidth="4" strokeLinecap="round" />
+            {nose}
+            {/* Open happy smile */}
+            <path d="M 66 77 Q 75 88 84 77 Q 75 82 66 77 Z" fill="#B23A3A" stroke={LINE} strokeWidth="2.5" strokeLinejoin="round" />
+            {whiskers}
+            {body}
           </motion.g>
         );
 
       case "sad":
         return (
-          <motion.g
-            animate={{ y: [0, 5, 0] }}
-            transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-          >
-            <g transform="rotate(-8 75 25)">
-              <path d="M 65 15 L 85 15 L 90 35 L 60 35 Z" fill="#FF6B6B" stroke="#2D3748" strokeWidth="3" />
-              <path d="M 75 15 L 75 10 L 85 18" fill="none" stroke="#2D3748" strokeWidth="2.5" />
-            </g>
-            <path d="M 35 48 L 15 32 L 48 38 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-            <path d="M 38 45 L 22 34 L 45 38 Z" fill="#FFB4B4" />
-            <path d="M 115 48 L 135 32 L 102 38 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-            <path d="M 112 45 L 128 34 L 105 38 Z" fill="#FFB4B4" />
-
-            <ellipse cx="75" cy="65" rx="45" ry="32" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-
-            {/* Sad eyes */}
-            <path d="M 47 55 Q 53 63 60 56" fill="none" stroke="#2D3748" strokeWidth="3.5" strokeLinecap="round" />
-            <path d="M 90 56 Q 97 63 103 55" fill="none" stroke="#2D3748" strokeWidth="3.5" strokeLinecap="round" />
+          <motion.g animate={{ y: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}>
+            <g transform="rotate(-8 75 22)">{fez}</g>
+            {ears}
+            {head}
+            {/* Worried eyes */}
+            <ellipse cx="60" cy="69" rx="8.5" ry="10" fill={LINE} />
+            <ellipse cx="90" cy="69" rx="8.5" ry="10" fill={LINE} />
+            <circle cx="57" cy="65" r="3" fill="#fff" />
+            <circle cx="87" cy="65" r="3" fill="#fff" />
+            {/* sad brows */}
+            <path d="M 50 58 Q 58 55 67 60" fill="none" stroke={LINE} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M 83 60 Q 92 55 100 58" fill="none" stroke={LINE} strokeWidth="2.5" strokeLinecap="round" />
             {blinkOverlay}
-
-            {/* Animated tear */}
-            <motion.path
-              d="M 48 65 Q 48 76 52 76 Q 56 76 52 65 Z"
-              fill="#64B5F6"
-              animate={{ y: [0, 4, 8], opacity: [1, 1, 0] }}
-              transition={{ repeat: Infinity, duration: 1.8, ease: "easeIn" }}
-            />
-
-            <polygon points="75,66 72,62 78,62" fill="#FF6B6B" />
-            <path d="M 70 75 Q 75 70 80 75" fill="none" stroke="#2D3748" strokeWidth="3" strokeLinecap="round" />
-
-            <line x1="28" y1="67" x2="13" y2="70" stroke="#2D3748" strokeWidth="2.5" />
-            <line x1="28" y1="73" x2="15" y2="78" stroke="#2D3748" strokeWidth="2.5" />
-            <line x1="122" y1="67" x2="137" y2="70" stroke="#2D3748" strokeWidth="2.5" />
-            <line x1="122" y1="73" x2="115" y2="78" stroke="#2D3748" strokeWidth="2.5" />
-
-            <path d="M 45 92 Q 40 120 40 135 L 110 135 Q 110 120 105 92 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
+            {/* tear */}
+            <motion.path d="M 58 78 Q 58 88 62 88 Q 66 88 62 78 Z" fill="#64B5F6"
+              animate={{ y: [0, 4, 8], opacity: [1, 1, 0] }} transition={{ repeat: Infinity, duration: 1.8, ease: "easeIn" }} />
+            {nose}
+            <path d="M 69 82 Q 75 77 81 82" fill="none" stroke={LINE} strokeWidth="3" strokeLinecap="round" />
+            {whiskers}
+            {body}
           </motion.g>
         );
 
       case "sleeping":
         return (
-          <motion.g
-            animate={{ scaleY: [1, 0.97, 1] }}
-            transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
-          >
-            <path d="M 65 15 L 85 15 L 90 35 L 60 35 Z" fill="#FF6B6B" stroke="#2D3748" strokeWidth="3" />
-            <path d="M 75 15 L 75 10 L 85 18" fill="none" stroke="#2D3748" strokeWidth="2.5" />
-            <path d="M 35 45 L 20 20 L 50 35 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-            <path d="M 115 45 L 130 20 L 100 35 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-
-            <ellipse cx="75" cy="65" rx="45" ry="32" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-
-            {/* Sleeping eyes (—) */}
-            <line x1="43" y1="58" x2="58" y2="58" stroke="#2D3748" strokeWidth="3.5" strokeLinecap="round" />
-            <line x1="91" y1="58" x2="106" y2="58" stroke="#2D3748" strokeWidth="3.5" strokeLinecap="round" />
-
-            <polygon points="75,64 73,61 77,61" fill="#FF6B6B" />
-            <circle cx="75" cy="72" r="4.5" fill="none" stroke="#2D3748" strokeWidth="2.5" />
-
-            <line x1="28" y1="65" x2="13" y2="65" stroke="#2D3748" strokeWidth="2" />
-            <line x1="122" y1="65" x2="137" y2="65" stroke="#2D3748" strokeWidth="2" />
-
-            {/* Zzz floating */}
-            <motion.text x="112" y="38" fontSize="13" fontWeight="bold" fill="#FF6B6B"
-              animate={{ opacity: [0, 1, 0], y: [38, 22, 8], scale: [0.7, 1.1, 0.7] }}
-              transition={{ repeat: Infinity, duration: 2.8 }}
-              style={{ fontFamily: "var(--font-fredoka)" }}
-            >Zzz</motion.text>
-
-            <path d="M 45 92 Q 40 120 40 135 L 110 135 Q 110 120 105 92 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
+          <motion.g animate={{ scaleY: [1, 0.97, 1] }} transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}>
+            {fez}
+            {ears}
+            {head}
+            {/* gentle closed eyes */}
+            <path d="M 50 69 Q 60 75 70 69" fill="none" stroke={LINE} strokeWidth="3.5" strokeLinecap="round" />
+            <path d="M 80 69 Q 90 75 100 69" fill="none" stroke={LINE} strokeWidth="3.5" strokeLinecap="round" />
+            {nose}
+            <path d="M 70 80 Q 75 84 80 80" fill="none" stroke={LINE} strokeWidth="2.5" strokeLinecap="round" />
+            {whiskers}
+            <motion.text x="110" y="40" fontSize="14" fontWeight="bold" fill={FEZ}
+              animate={{ opacity: [0, 1, 0], y: [40, 24, 10], scale: [0.7, 1.1, 0.7] }}
+              transition={{ repeat: Infinity, duration: 2.8 }} style={{ fontFamily: "var(--font-fredoka)" }}>Zzz</motion.text>
+            {body}
           </motion.g>
         );
 
       case "perfect":
         return (
-          <motion.g
-            animate={{ scale: [1, 1.06, 1] }}
-            transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }}
-          >
-            {/* Crown */}
-            <path d="M 50 18 L 60 5 L 75 13 L 90 5 L 100 18 Z" fill="#FFD700" stroke="#2D3748" strokeWidth="2" />
-            <path d="M 65 15 L 85 15 L 90 35 L 60 35 Z" fill="#FF6B6B" stroke="#2D3748" strokeWidth="3" />
-            <path d="M 75 15 L 75 10 L 85 18" fill="none" stroke="#2D3748" strokeWidth="2.5" />
-
-            <path d="M 35 45 L 20 20 L 50 35 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-            <path d="M 115 45 L 130 20 L 100 35 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-
-            <ellipse cx="75" cy="65" rx="45" ry="32" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-            <ellipse cx="48" cy="72" rx="7" ry="4" fill="#FFB4B4" opacity="0.8" />
-            <ellipse cx="102" cy="72" rx="7" ry="4" fill="#FFB4B4" opacity="0.8" />
-
+          <motion.g animate={{ scale: [1, 1.06, 1] }} transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }}>
+            {/* Crown over the fez */}
+            <path d="M 52 16 L 62 4 L 75 11 L 88 4 L 98 16 Z" fill="#E0B84B" stroke={LINE} strokeWidth="2" strokeLinejoin="round" />
+            {fez}
+            {ears}
+            {head}
             {/* Star eyes */}
-            <polygon points="52,48 55,54 61,55 56,59 58,65 52,62 46,65 48,59 43,55 49,54" fill="#FFD700" stroke="#2D3748" strokeWidth="2" />
-            <polygon points="98,48 101,54 107,55 102,59 104,65 98,62 92,65 94,59 89,55 95,54" fill="#FFD700" stroke="#2D3748" strokeWidth="2" />
-
-            <polygon points="75,66 72,62 78,62" fill="#FF6B6B" />
-            <path d="M 68 70 Q 75 78 82 70" fill="none" stroke="#2D3748" strokeWidth="3.5" strokeLinecap="round" />
-
-            <line x1="28" y1="65" x2="13" y2="63" stroke="#2D3748" strokeWidth="2.5" />
-            <line x1="28" y1="71" x2="15" y2="73" stroke="#2D3748" strokeWidth="2.5" />
-            <line x1="122" y1="65" x2="137" y2="63" stroke="#2D3748" strokeWidth="2.5" />
-            <line x1="122" y1="71" x2="135" y2="73" stroke="#2D3748" strokeWidth="2.5" />
-
-            <path d="M 45 92 Q 40 120 40 135 L 110 135 Q 110 120 105 92 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
+            <g transform="translate(8,11)">
+              <polygon points="52,48 55,54 61,55 56,59 58,65 52,62 46,65 48,59 43,55 49,54" fill="#E0B84B" stroke={LINE} strokeWidth="2" strokeLinejoin="round" />
+            </g>
+            <g transform="translate(-8,11)">
+              <polygon points="98,48 101,54 107,55 102,59 104,65 98,62 92,65 94,59 89,55 95,54" fill="#E0B84B" stroke={LINE} strokeWidth="2" strokeLinejoin="round" />
+            </g>
+            {nose}
+            <path d="M 66 77 Q 75 87 84 77 Q 75 82 66 77 Z" fill="#B23A3A" stroke={LINE} strokeWidth="2.5" strokeLinejoin="round" />
+            {whiskers}
+            {body}
           </motion.g>
         );
 
       case "thinking":
         return (
-          <motion.g
-            animate={{ rotate: [0, 3, -3, 0] }}
-            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-          >
-            <path d="M 65 15 L 85 15 L 90 35 L 60 35 Z" fill="#FF6B6B" stroke="#2D3748" strokeWidth="3" />
-            <path d="M 75 15 L 75 10 L 85 18" fill="none" stroke="#2D3748" strokeWidth="2.5" />
-
-            <path d="M 35 45 L 20 20 L 50 35 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-            <path d="M 115 45 L 130 20 L 100 35 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-
-            <ellipse cx="75" cy="65" rx="45" ry="32" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-
-            {/* Thinking eyes (glancing up-right) */}
-            <circle cx="50" cy="58" r="8" fill="#2D3748" />
-            <circle cx="95" cy="58" r="8" fill="#2D3748" />
-            <circle cx="53" cy="55" r="3.5" fill="white" />
-            <circle cx="98" cy="55" r="3.5" fill="white" />
+          <motion.g animate={{ rotate: [0, 3, -3, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}>
+            {fez}
+            {ears}
+            {head}
+            {/* Eyes glancing up */}
+            <ellipse cx="60" cy="68" rx="9.5" ry="11" fill={LINE} />
+            <ellipse cx="90" cy="68" rx="9.5" ry="11" fill={LINE} />
+            <circle cx="62" cy="63" r="3.3" fill="#fff" />
+            <circle cx="92" cy="63" r="3.3" fill="#fff" />
             {blinkOverlay}
-
-            <polygon points="75,66 72,62 78,62" fill="#FF6B6B" />
-            <path d="M 70 71 Q 74 74 78 71" fill="none" stroke="#2D3748" strokeWidth="3" strokeLinecap="round" />
-
-            <line x1="28" y1="65" x2="13" y2="63" stroke="#2D3748" strokeWidth="2" />
-            <line x1="122" y1="65" x2="137" y2="63" stroke="#2D3748" strokeWidth="2" />
-
-            {/* Thinking bubbles */}
-            <motion.circle cx="135" cy="45" r="4" fill="#E8D5FF" stroke="#2D3748" strokeWidth="1.5"
+            {nose}
+            <path d="M 70 80 Q 74 83 78 80" fill="none" stroke={LINE} strokeWidth="3" strokeLinecap="round" />
+            {whiskers}
+            {/* thought bubbles */}
+            <motion.circle cx="128" cy="44" r="4" fill="#E7E3D0" stroke={LINE} strokeWidth="1.5"
               animate={{ scale: [0.8, 1.2, 0.8] }} transition={{ repeat: Infinity, duration: 1.5 }} />
-            <motion.circle cx="145" cy="33" r="7" fill="#E8D5FF" stroke="#2D3748" strokeWidth="2"
+            <motion.circle cx="140" cy="32" r="7" fill="#E7E3D0" stroke={LINE} strokeWidth="2"
               animate={{ scale: [1, 0.8, 1] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.3 }} />
-            <motion.text x="142" y="37" fontSize="12" fontWeight="bold" fill="#2D3748"
-              style={{ fontFamily: "var(--font-fredoka)" }}>?</motion.text>
-
-            <path d="M 45 92 Q 40 120 40 135 L 110 135 Q 110 120 105 92 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-            <ellipse cx="65" cy="98" rx="8" ry="10" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" transform="rotate(-40 65 98)" />
+            <text x="137" y="36" fontSize="11" fontWeight="bold" fill={LINE} style={{ fontFamily: "var(--font-fredoka)" }}>?</text>
+            {body}
           </motion.g>
         );
 
@@ -319,49 +295,28 @@ export const Meshi: React.FC<MeshiProps> = ({
       case "normal":
       default:
         return (
-          <motion.g
-            animate={{ y: [0, -4, 0] }}
-            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-          >
-            <path d="M 65 15 L 85 15 L 90 35 L 60 35 Z" fill="#FF6B6B" stroke="#2D3748" strokeWidth="3" />
-            <path d="M 75 15 L 75 10 L 85 18" fill="none" stroke="#2D3748" strokeWidth="2.5" strokeLinecap="round" />
-            <circle cx="85" cy="18" r="2" fill="#2D3748" />
-
-            <path d="M 35 45 L 20 20 L 50 35 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-            <path d="M 38 42 L 27 25 L 47 34 Z" fill="#FFB4B4" />
-            <path d="M 115 45 L 130 20 L 100 35 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-            <path d="M 112 42 L 123 25 L 103 34 Z" fill="#FFB4B4" />
-
-            <ellipse cx="75" cy="65" rx="45" ry="32" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-            <ellipse cx="48" cy="72" rx="7" ry="4" fill="#FFB4B4" opacity="0.6" />
-            <ellipse cx="102" cy="72" rx="7" ry="4" fill="#FFB4B4" opacity="0.6" />
-
-            {/* Eyes */}
-            <circle cx="50" cy="58" r="8" fill="#2D3748" />
-            <circle cx="95" cy="58" r="8" fill="#2D3748" />
-            <circle cx="48" cy="55" r="2.5" fill="white" />
-            <circle cx="93" cy="55" r="2.5" fill="white" />
-
-            {/* Wink if cheering */}
-            {mood === "cheering" && (
+          <motion.g animate={{ y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}>
+            {fez}
+            {ears}
+            {head}
+            {mood === "cheering" ? (
               <g>
-                <circle cx="95" cy="58" r="9" fill="#FAF0DD" />
-                <path d="M 88 58 Q 95 65 102 58" fill="none" stroke="#2D3748" strokeWidth="3.5" strokeLinecap="round" />
+                {/* left eye open, right eye winking */}
+                <ellipse cx="60" cy="68" rx="9.5" ry="11" fill={LINE} />
+                <circle cx="56.5" cy="63.5" r="3.3" fill="#fff" />
+                <circle cx="63" cy="72" r="1.7" fill="#fff" />
+                <path d="M 81 69 Q 90 62 99 69" fill="none" stroke={LINE} strokeWidth="4" strokeLinecap="round" />
               </g>
+            ) : (
+              eyesOpen
             )}
             {blinkOverlay}
-
-            <polygon points="75,66 72,62 78,62" fill="#FF6B6B" />
-            <path d="M 75 66 Q 71 70 67 67 Q 63 64 67 67 Q 71 70 75 66 Q 79 70 83 67 Q 87 64 83 67 Q 79 70 75 66 Z" fill="none" stroke="#2D3748" strokeWidth="2.5" strokeLinecap="round" />
-
-            <line x1="28" y1="65" x2="13" y2="62" stroke="#2D3748" strokeWidth="2" strokeLinecap="round" />
-            <line x1="28" y1="71" x2="15" y2="72" stroke="#2D3748" strokeWidth="2" strokeLinecap="round" />
-            <line x1="122" y1="65" x2="137" y2="62" stroke="#2D3748" strokeWidth="2" strokeLinecap="round" />
-            <line x1="122" y1="71" x2="135" y2="72" stroke="#2D3748" strokeWidth="2" strokeLinecap="round" />
-
-            <path d="M 45 92 Q 40 120 40 135 L 110 135 Q 110 120 105 92 Z" fill="#FAF0DD" stroke="#2D3748" strokeWidth="3" />
-            <ellipse cx="48" cy="98" rx="6" ry="10" fill="#FAF0DD" stroke="#2D3748" strokeWidth="2.5" transform="rotate(-15 48 98)" />
-            <ellipse cx="102" cy="98" rx="6" ry="10" fill="#FAF0DD" stroke="#2D3748" strokeWidth="2.5" transform="rotate(15 102 98)" />
+            {nose}
+            {/* cute ω mouth */}
+            <path d="M 75 78 Q 70 84 65 79" fill="none" stroke={LINE} strokeWidth="2.8" strokeLinecap="round" />
+            <path d="M 75 78 Q 80 84 85 79" fill="none" stroke={LINE} strokeWidth="2.8" strokeLinecap="round" />
+            {whiskers}
+            {body}
           </motion.g>
         );
     }
@@ -380,26 +335,14 @@ export const Meshi: React.FC<MeshiProps> = ({
         aria-label={interactive ? "Acariciar a Meshi" : undefined}
       >
         <svg viewBox="0 0 160 150" width="100%" height="100%" style={{ overflow: "visible" }}>
-          {renderCat()}
-
-          {/* Tail — always visible, wags based on mood */}
-          <motion.g
-            style={{ transformOrigin: "108px 128px" }}
-            animate={tailAnim}
-          >
-            <path
-              d="M 108 128 C 130 118 148 108 152 92 C 155 80 145 74 138 78"
-              fill="none"
-              stroke="#2D3748"
-              strokeWidth="5"
-              strokeLinecap="round"
-            />
-            <path
-              d="M 108 128 C 129 119 146 109 150 93 C 153 81 143 75 136 79"
-              fill="#FAF0DD"
-              strokeWidth="0"
-            />
+          {/* Tail — behind the body, wags based on mood */}
+          <motion.g style={{ transformOrigin: "104px 132px" }} animate={tailAnim}>
+            <path d="M 104 132 C 128 124 146 112 150 94 C 153 82 142 76 135 81"
+              fill="none" stroke={LINE} strokeWidth="7" strokeLinecap="round" />
+            <path d="M 104 132 C 127 125 144 113 148 95 C 151 83 140 78 133 82"
+              fill="none" stroke={FUR} strokeWidth="4" strokeLinecap="round" />
           </motion.g>
+          {renderCat()}
         </svg>
 
         {/* Floating hearts on pet */}
@@ -428,10 +371,10 @@ export const Meshi: React.FC<MeshiProps> = ({
           initial={{ opacity: 0, scale: 0.85, x: -8 }}
           animate={{ opacity: 1, scale: 1, x: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 22 }}
-          className="relative flex-1 min-w-0 bg-white text-brand-dark p-3 rounded-2xl shadow-md border-2 border-[#FAF0DD] font-medium text-sm leading-relaxed"
+          className="relative flex-1 min-w-0 bg-white text-brand-dark p-3 rounded-2xl shadow-md border-2 border-brand-beige font-medium text-sm leading-relaxed"
         >
           {/* Bubble tail */}
-          <div className="absolute left-0 top-1/2 -translate-x-[9px] -translate-y-1/2 w-4 h-4 bg-white border-l-2 border-b-2 border-[#FAF0DD] rotate-45" />
+          <div className="absolute left-0 top-1/2 -translate-x-[9px] -translate-y-1/2 w-4 h-4 bg-white border-l-2 border-b-2 border-brand-beige rotate-45" />
           <p className="break-words">
             {displayedText}
             {displayedText.length < bubbleText.length && (

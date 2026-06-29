@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import { Header } from "../components/Header";
-import { BottomNav } from "../components/BottomNav";
 import { LessonMap } from "../components/LessonMap";
 import { WeekStreak } from "../components/WeekStreak";
 import { WordOfDay } from "../components/WordOfDay";
@@ -263,7 +262,6 @@ export default function Home() {
         </motion.section>
       </main>
 
-      <BottomNav />
     </div>
   );
 }

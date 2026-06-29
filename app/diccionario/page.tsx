@@ -3,11 +3,10 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useContent } from "../../lib/content";
 import { Header } from "../../components/Header";
-import { BottomNav } from "../../components/BottomNav";
 import { Meshi } from "../../components/Suki";
 import { SpeakButton } from "../../components/SpeakButton";
 import { useStore, LearnedWord } from "../../lib/store";
-import { Search, Check, Info, BookOpen, AlertCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { Search, Check, Info, BookOpen, AlertCircle, ChevronDown, ChevronUp, Lock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 
@@ -85,7 +84,7 @@ export default function DiccionarioPage() {
             mood="normal"
             size={80}
             showBubble={true}
-            bubbleText="¡Sara! Aquí tienes todo tu glosario de Darija. 🐱📚"
+            bubbleText="¡Sara! Cada palabra se desbloquea cuando la aprendes en una lección. 🐱🔓"
           />
         </section>
 
@@ -154,21 +153,41 @@ export default function DiccionarioPage() {
           ) : (
             filteredVocabulary.map((word, idx) => {
               const learned = hasLearnedWord(word.darija);
-              const isExpanded = expandedIdx === idx;
 
+              // Locked word: not learned yet. Hide the word + translation so the
+              // glossary unlocks as Sara completes lessons.
+              if (!learned) {
+                return (
+                  <div
+                    key={idx}
+                    className="glass rounded-2xl overflow-hidden px-4 py-3.5 flex items-center gap-3 opacity-90"
+                  >
+                    <div className="w-9 h-9 rounded-xl bg-brand-dark/10 flex items-center justify-center flex-shrink-0">
+                      <Lock className="w-4 h-4 text-slate-400" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="h-3.5 w-28 max-w-[55%] rounded-full bg-slate-200/80" />
+                      <p className="text-[11px] font-semibold text-slate-400 mt-1.5">
+                        Aprende la lección {word.lessonId} para desbloquearla
+                      </p>
+                    </div>
+                    <span className="bg-slate-50 text-slate-400 text-[9px] font-bold px-2 py-0.5 rounded-full border border-slate-100 flex-shrink-0">
+                      Bloqueada
+                    </span>
+                  </div>
+                );
+              }
+
+              const isExpanded = expandedIdx === idx;
               return (
                 <motion.div
                   key={idx}
                   layout
-                  className={`glass rounded-2xl overflow-hidden transition-all cursor-pointer ${
-                    learned ? "ring-1 ring-brand-teal/40" : ""
-                  }`}
+                  className="glass rounded-2xl overflow-hidden transition-all cursor-pointer ring-1 ring-brand-teal/40"
                   onClick={() => setExpandedIdx(isExpanded ? null : idx)}
                 >
                   {/* Card header - always visible */}
-                  <div className={`px-4 pt-3.5 pb-3 flex items-center gap-3 ${
-                    learned ? "border-l-[3px] border-l-brand-mint" : ""
-                  }`}>
+                  <div className="px-4 pt-3.5 pb-3 flex items-center gap-3 border-l-[3px] border-l-brand-mint">
                     <SpeakButton text={word.darija} size={20} className="p-2 bg-brand-pink/15 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <h4 className="text-base font-bold font-title text-brand-dark truncate">
@@ -179,16 +198,10 @@ export default function DiccionarioPage() {
                       </p>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      {learned ? (
-                        <span className="bg-emerald-50 text-emerald-600 text-[9px] font-bold px-2 py-0.5 rounded-full border border-emerald-100 flex items-center gap-0.5">
-                          <Check className="w-2.5 h-2.5 stroke-[3]" />
-                          Aprendida
-                        </span>
-                      ) : (
-                        <span className="bg-slate-50 text-slate-400 text-[9px] font-bold px-2 py-0.5 rounded-full border border-slate-100">
-                          Por aprender
-                        </span>
-                      )}
+                      <span className="bg-emerald-50 text-emerald-600 text-[9px] font-bold px-2 py-0.5 rounded-full border border-emerald-100 flex items-center gap-0.5">
+                        <Check className="w-2.5 h-2.5 stroke-[3]" />
+                        Aprendida
+                      </span>
                       {isExpanded
                         ? <ChevronUp className="w-4 h-4 text-slate-400 flex-shrink-0" />
                         : <ChevronDown className="w-4 h-4 text-slate-400 flex-shrink-0" />
@@ -233,7 +246,6 @@ export default function DiccionarioPage() {
         </div>
       </main>
 
-      <BottomNav />
     </div>
   );
 }

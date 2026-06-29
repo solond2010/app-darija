@@ -35,7 +35,7 @@ function orderExercises<T extends { type: string }>(exercises: T[]): T[] {
 }
 import { sound } from "../../../utils/sound";
 import { haptics } from "../../../utils/haptics";
-import { X, Star, Trophy, CheckCircle2 } from "lucide-react";
+import { X, Star, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 
@@ -289,14 +289,13 @@ export default function LeccionPage() {
   if (isLessonFinished) {
     const isPerfect = errorsCount === 0;
     const totalXP = totalXPEarned + 50 + (isPerfect ? 100 : 0);
-    const accuracy = Math.max(0, Math.round(((lesson.exercises.length - errorsCount) / lesson.exercises.length) * 100));
 
     // Keep the next-lesson lookup only for the CTA label.
     const allLessonsFlat = unitsData.flatMap((u) => u.lessons.map((l) => ({ id: l.id })));
     const curIdx = allLessonsFlat.findIndex((l) => l.id === lessonId);
     const nextLesson = curIdx >= 0 ? allLessonsFlat[curIdx + 1] : null;
 
-    // Minimal completion screen: cat + title + two key stats + one CTA.
+    // Minimal completion screen: cat + title + one XP pill + one CTA.
     return (
       <div className="h-dvh flex flex-col max-w-md mx-auto overflow-hidden">
         <div className="flex-1 overflow-y-auto no-scrollbar px-5 pt-8 pb-4 flex flex-col items-center justify-center gap-6">
@@ -323,27 +322,15 @@ export default function LeccionPage() {
             </motion.h2>
           </div>
 
-          {/* Two key stats — XP (gold) + Precisión (olive) */}
+          {/* Single XP pill (gold) */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.28 }}
-            className="grid grid-cols-2 gap-3 w-full max-w-[300px]"
+            className="flex items-center gap-2.5 px-6 py-3 rounded-full text-[#3A2C06] glow-gold bg-gradient-to-br from-[#E8C766] to-[#D9A441]"
           >
-            <div className="rounded-2xl p-4 flex flex-col items-center text-center text-[#3A2C06] glow-gold bg-gradient-to-br from-[#E8C766] to-[#D9A441]">
-              <div className="w-10 h-10 rounded-xl bg-white/30 flex items-center justify-center mb-2">
-                <Star className="w-5 h-5 fill-[#3A2C06] text-[#3A2C06]" />
-              </div>
-              <span className="text-[9px] uppercase font-bold tracking-wider opacity-80">XP ganado</span>
-              <span className="text-2xl font-bold font-title mt-0.5">+<CountUp to={totalXP} /></span>
-            </div>
-            <div className="rounded-2xl p-4 flex flex-col items-center text-center text-white glow-coral bg-gradient-to-br from-brand-saffron to-brand-coral">
-              <div className="w-10 h-10 rounded-xl bg-white/25 flex items-center justify-center mb-2">
-                <Trophy className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-[9px] uppercase font-bold tracking-wider opacity-90">Precisión</span>
-              <span className="text-2xl font-bold font-title mt-0.5"><CountUp to={accuracy} />%</span>
-            </div>
+            <Star className="w-6 h-6 fill-[#3A2C06] text-[#3A2C06]" />
+            <span className="text-2xl font-bold font-title">+<CountUp to={totalXP} /> XP</span>
           </motion.div>
         </div>
 
