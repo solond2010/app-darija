@@ -54,37 +54,14 @@ h1, h2, h3, h4, h5, h6, .font-title {
   letter-spacing: -0.01em;
 }
 
-/* ───────────────────────── Aurora background ───────────────────────── */
-/* A soft, slowly drifting mesh of Moroccan-toned light. Sits behind the app. */
+/* ───────────────────────── App background ───────────────────────── */
+/* Flat, solid background — no gradients, pattern or animation. */
 .aurora-bg {
   position: fixed;
-  inset: -20% -20% -20% -20%;
+  inset: 0;
   z-index: -10;
   pointer-events: none;
-  background:
-    radial-gradient(38% 42% at 18% 12%, rgba(139, 156, 82, 0.30) 0%, transparent 60%),
-    radial-gradient(34% 40% at 88% 8%, rgba(224, 184, 75, 0.20) 0%, transparent 60%),
-    radial-gradient(46% 50% at 82% 78%, rgba(79, 90, 44, 0.24) 0%, transparent 62%),
-    radial-gradient(40% 44% at 8% 82%, rgba(107, 122, 63, 0.22) 0%, transparent 60%),
-    radial-gradient(60% 60% at 50% 50%, rgba(107, 122, 63, 0.10) 0%, transparent 70%);
-  filter: saturate(1.05);
-  animation: aurora-drift 24s ease-in-out infinite alternate;
-}
-
-/* Subtle Moroccan zellige geometry overlaid on top of the aurora */
-.aurora-bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%232A2342' stroke-width='1.1'%3E%3Cpath d='M30 0 L60 30 L30 60 L0 30 Z'/%3E%3Cpath d='M30 14 L46 30 L30 46 L14 30 Z'/%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 60px 60px;
-}
-
-@keyframes aurora-drift {
-  0%   { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
-  50%  { transform: translate3d(2%, -2%, 0) rotate(2deg) scale(1.06); }
-  100% { transform: translate3d(-2%, 2%, 0) rotate(-2deg) scale(1.04); }
+  background: #F4F2E8;
 }
 
 /* ───────────────────────── Glassmorphism ───────────────────────── */
@@ -327,19 +304,9 @@ h1, h2, h3, h4, h5, h6, .font-title {
 
 .dark body { background: #14150F; color: #ECEAD9; }
 
-/* Aurora becomes a deep "olive night" */
+/* Flat deep "olive night" background in dark mode */
 .dark .aurora-bg {
-  background:
-    radial-gradient(40% 44% at 16% 10%, rgba(139, 156, 82, 0.18) 0%, transparent 60%),
-    radial-gradient(36% 42% at 88% 6%, rgba(224, 184, 75, 0.14) 0%, transparent 60%),
-    radial-gradient(50% 54% at 84% 80%, rgba(79, 90, 44, 0.30) 0%, transparent 62%),
-    radial-gradient(44% 48% at 6% 84%, rgba(107, 122, 63, 0.22) 0%, transparent 60%),
-    radial-gradient(70% 70% at 50% 50%, rgba(20, 21, 15, 0) 0%, #14150F 78%);
-  filter: saturate(1.1);
-}
-.dark .aurora-bg::after {
-  opacity: 0.06;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23FFFFFF' stroke-width='1.1'%3E%3Cpath d='M30 0 L60 30 L30 60 L0 30 Z'/%3E%3Cpath d='M30 14 L46 30 L30 46 L14 30 Z'/%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/svg%3E");
+  background: #14150F;
 }
 
 /* Glass surfaces */
