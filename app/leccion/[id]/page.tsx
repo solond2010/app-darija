@@ -424,10 +424,10 @@ export default function LeccionPage() {
         </AnimatePresence>
       </header>
 
-      {/* Meshi strip */}
-      <section className="px-3 pt-2 pb-1.5 flex-shrink-0">
-        <div className="glass rounded-2xl px-2 py-1 flex items-center overflow-hidden">
-          <Meshi mood={meshiMood} size={60} showBubble={true} bubbleText={meshiSpeech} interactive={false} />
+      {/* Meshi strip — a small "coach tip" card */}
+      <section className="px-3 pt-2.5 pb-1.5 flex-shrink-0">
+        <div className="glass rounded-2xl px-2.5 py-2 flex items-center overflow-hidden">
+          <Meshi mood={meshiMood} size={64} showBubble={true} bubbleText={meshiSpeech} interactive={false} />
         </div>
       </section>
 
@@ -538,7 +538,7 @@ export default function LeccionPage() {
                   ? isCardFlipped
                   : selectedAns !== null && (!Array.isArray(selectedAns) || selectedAns.length > 0))
                   ? "btn-3d-primary"
-                  : "bg-slate-200 text-slate-400 cursor-not-allowed border-b-0"
+                  : "bg-brand-beige text-slate-400 cursor-not-allowed border-2 border-transparent"
               }`}
             >
               {currentExercise.type === "flashcard-reveal" ? "GIRAR CARTA 🔄" : "COMPROBAR"}
