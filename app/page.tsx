@@ -162,84 +162,58 @@ export default function Home() {
         {/* Word of the day (rotates daily, from the lesson vocabulary) */}
         <WordOfDay />
 
-        {/* Continue lesson button */}
-        {nextLesson && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: 0.05 }}
-          >
+        {/* "Hoy" — single unified status card (goal + lesson + CTA), replacing
+            the three separate/overlapping cards this used to be split into. */}
+        <motion.section
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.08 }}
+          className="glass rounded-3xl p-4 flex flex-col gap-3.5"
+        >
+          <div className="flex items-center justify-between">
+            <h4 className="text-[10px] font-bold font-title text-slate-400 uppercase tracking-[0.18em]">Hoy</h4>
+            {lessonDoneToday && (
+              <span className="flex items-center gap-1 text-[11px] font-bold font-title text-emerald-600">
+                <CheckCircle2 className="w-3.5 h-3.5" /> Lección hecha
+              </span>
+            )}
+          </div>
+
+          {/* Daily XP goal */}
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="flex items-center gap-1.5 text-xs font-bold font-title text-brand-dark">
+                <Target className={`w-3.5 h-3.5 ${dailyGoalMet ? "text-emerald-500" : "text-brand-coral"}`} />
+                {dailyGoalMet ? "Meta diaria cumplida 🎉" : "Meta diaria"}
+              </span>
+              <span className="text-xs font-bold text-slate-400">{todayXPDisplay} / {dailyGoal} XP</span>
+            </div>
+            <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${dailyProgressPercent}%` }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className={`h-full rounded-full ${dailyGoalMet ? "bg-gradient-to-r from-emerald-400 to-emerald-500" : "bg-gradient-to-r from-brand-coral to-brand-saffron"}`}
+              />
+            </div>
+          </div>
+
+          {/* Continue / start lesson CTA */}
+          {nextLesson && (
             <Link href={`/leccion/${nextLesson.lesson.id}`}>
-              <div className="glass rounded-2xl px-4 py-3.5 flex items-center gap-3 hover:bg-white/80 transition-all active:scale-[0.98] border-l-4 border-l-brand-coral">
-                <div className="bg-gradient-to-br from-brand-saffron to-brand-coral rounded-xl p-2.5 flex-shrink-0 glow-coral">
-                  <Zap className="w-4.5 h-4.5 text-white fill-white" />
+              <div className="rounded-2xl px-4 py-3 flex items-center gap-3 bg-gradient-to-br from-brand-saffron to-brand-coral hover:brightness-105 transition-all active:scale-[0.98] glow-coral">
+                <div className="bg-white/25 rounded-xl p-2 flex-shrink-0">
+                  <Zap className="w-4 h-4 text-white fill-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Continuar</p>
-                  <p className="text-sm font-bold font-title text-brand-dark truncate mt-0.5">
+                  <p className="text-[9px] text-white/80 font-bold uppercase tracking-wider leading-none">
+                    {lessonDoneToday ? "Siguiente lección" : "Continuar"}
+                  </p>
+                  <p className="text-sm font-bold font-title text-white truncate mt-1">
                     {nextLesson.unit.emoji} {nextLesson.lesson.title}
                   </p>
                 </div>
-                <ChevronRight className="w-4.5 h-4.5 text-brand-coral flex-shrink-0" />
-              </div>
-            </Link>
-          </motion.div>
-        )}
-
-        {/* Daily goal card (XP) */}
-        <motion.section
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="glass rounded-2xl px-4 py-3.5"
-        >
-          <div className="flex items-center justify-between mb-2.5">
-            <div className="flex items-center gap-2">
-              <div className={`p-1.5 rounded-lg ${dailyGoalMet ? "bg-emerald-100" : "bg-brand-pink/20"}`}>
-                <Target className={`w-3.5 h-3.5 ${dailyGoalMet ? "text-emerald-600" : "text-brand-coral"}`} />
-              </div>
-              <span className="text-xs font-bold font-title text-brand-dark">
-                {dailyGoalMet ? "¡Meta diaria cumplida! 🎉" : "Meta diaria"}
-              </span>
-            </div>
-            <span className="text-xs font-bold text-slate-400">
-              {todayXPDisplay} / {dailyGoal} XP
-            </span>
-          </div>
-          <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${dailyProgressPercent}%` }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className={`h-full rounded-full ${dailyGoalMet ? "bg-gradient-to-r from-emerald-400 to-emerald-500" : "bg-gradient-to-r from-brand-coral to-brand-pink"}`}
-            />
-          </div>
-        </motion.section>
-
-        {/* Daily lesson card */}
-        <motion.section
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.14 }}
-          className="glass rounded-2xl px-4 py-3.5"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className={`p-1.5 rounded-lg ${lessonDoneToday ? "bg-emerald-100" : "bg-brand-pink/20"}`}>
-                <CheckCircle2 className={`w-3.5 h-3.5 ${lessonDoneToday ? "text-emerald-600" : "text-slate-300"}`} />
-              </div>
-              <span className="text-xs font-bold font-title text-brand-dark">
-                {lessonDoneToday ? "¡Lección de hoy hecha! 🎉" : "Lección del día"}
-              </span>
-            </div>
-            <span className="text-xs font-bold text-slate-400">
-              {lessonDoneToday ? "1 / 1" : "0 / 1"}
-            </span>
-          </div>
-          {!lessonDoneToday && nextLesson && (
-            <Link href={`/leccion/${nextLesson.lesson.id}`}>
-              <div className="mt-2.5 bg-gradient-to-r from-brand-coral to-brand-pink rounded-xl py-2.5 text-center text-white text-sm font-bold font-title active:scale-[0.98] transition-transform">
-                Empezar lección →
+                <ChevronRight className="w-4.5 h-4.5 text-white flex-shrink-0" />
               </div>
             </Link>
           )}

@@ -30,22 +30,22 @@ export const BottomNav: React.FC = () => {
             key={item.path}
             href={item.path}
             onClick={() => haptics.tap()}
-            className="flex flex-col items-center justify-center w-full h-full gap-0.5 transition-all active:scale-90"
+            className="relative flex flex-col items-center justify-center w-full h-full active:scale-90 transition-transform"
           >
-            <motion.div
-              animate={isActive ? { y: -2 } : { y: 0 }}
-              transition={{ type: "spring", stiffness: 400, damping: 20 }}
-              className={`flex flex-col items-center gap-0.5 px-3.5 py-1.5 rounded-2xl transition-colors duration-200 ${
-                isActive
-                  ? "bg-gradient-to-br from-brand-saffron via-brand-coral to-brand-rose text-white glow-coral"
-                  : "text-slate-400 hover:text-brand-coral"
-              }`}
-            >
-              <Icon className={`w-5 h-5 transition-all ${isActive ? "stroke-[2.5]" : "stroke-2"}`} />
-              <span className={`text-[9px] font-title font-bold leading-none ${isActive ? "opacity-100" : "opacity-70"}`}>
+            {/* Shared sliding pill — animates smoothly between tabs via layoutId */}
+            {isActive && (
+              <motion.div
+                layoutId="bottom-nav-pill"
+                transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                className="absolute w-[74%] h-[72%] rounded-2xl bg-gradient-to-br from-brand-saffron via-brand-coral to-brand-rose glow-coral"
+              />
+            )}
+            <div className="relative flex flex-col items-center gap-0.5 py-1.5">
+              <Icon className={`w-5 h-5 transition-colors duration-150 ${isActive ? "text-white stroke-[2.5]" : "text-slate-400 stroke-2"}`} />
+              <span className={`text-[9px] font-title font-bold leading-none transition-colors duration-150 ${isActive ? "text-white opacity-100" : "text-slate-400 opacity-70"}`}>
                 {item.label}
               </span>
-            </motion.div>
+            </div>
           </Link>
         );
       })}
