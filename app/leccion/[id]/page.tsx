@@ -239,12 +239,13 @@ export default function LeccionPage() {
 
     const words = lessonVocabulary[lessonId];
     if (words) addLearnedWords(words);
+    const brandConfettiColors = ["#8B9C52", "#6B7A3F", "#4F5A2C", "#E0B84B", "#1A1A1A"];
     if (gotPerfect) {
       if (soundsEnabled) sound.playFanfare();
-      confetti({ particleCount: 160, spread: 80, origin: { y: 0.55 } });
+      confetti({ particleCount: 160, spread: 80, origin: { y: 0.55 }, colors: brandConfettiColors });
     } else {
       // A little spark for every completion too.
-      confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
+      confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 }, colors: brandConfettiColors });
     }
 
     // Queue full-screen celebrations: level-up first, then each new achievement.
