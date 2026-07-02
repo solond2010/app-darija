@@ -16,6 +16,7 @@ export interface AppState {
   userName: string;
   xp: number;
   streak: number;
+  longestStreak: number; // best streak ever reached, for bragging rights in the profile
   streakShields: number; // free "shields" that save the streak if a day is missed
   lives: number;
   lastActiveDate: string | null; // Format: YYYY-MM-DD
@@ -75,6 +76,7 @@ export interface ProgressSnapshot {
   userName: string;
   xp: number;
   streak: number;
+  longestStreak?: number;
   streakShields?: number;
   lives: number;
   lastActiveDate: string | null;
@@ -124,6 +126,7 @@ export const useStore = create<AppState>()(
       userName: "Sara",
       xp: 0,
       streak: 0,
+      longestStreak: 0,
       streakShields: 1,
       lives: 5,
       lastActiveDate: null,
@@ -204,7 +207,7 @@ export const useStore = create<AppState>()(
                   lastActiveDate: `${y.getFullYear()}-${String(y.getMonth() + 1).padStart(2, "0")}-${String(y.getDate()).padStart(2, "0")}`,
                 };
               }
-              return { streak: 1, lastActiveDate: today };
+              return { streak: 1, lastActiveDate: today, longestStreak: Math.max(state.longestStreak ?? 0, 1) };
             }
           }
 
@@ -229,6 +232,7 @@ export const useStore = create<AppState>()(
 
           return {
             streak: newStreak,
+            longestStreak: Math.max(state.longestStreak ?? 0, newStreak),
             streakShields,
             lastActiveDate: today,
             unlockedAchievements: [...state.unlockedAchievements, ...newlyUnlocked],
@@ -385,6 +389,7 @@ export const useStore = create<AppState>()(
         set({
           xp: 0,
           streak: 0,
+          longestStreak: 0,
           streakShields: 1,
           lives: 5,
           lastActiveDate: null,
@@ -406,6 +411,7 @@ export const useStore = create<AppState>()(
           userName: s.userName,
           xp: s.xp,
           streak: s.streak,
+          longestStreak: s.longestStreak,
           streakShields: s.streakShields,
           lives: s.lives,
           lastActiveDate: s.lastActiveDate,
@@ -432,6 +438,7 @@ export const useStore = create<AppState>()(
           userName: data.userName ?? state.userName,
           xp: data.xp ?? state.xp,
           streak: data.streak ?? state.streak,
+          longestStreak: Math.max(data.longestStreak ?? 0, state.longestStreak ?? 0, data.streak ?? 0),
           streakShields: data.streakShields ?? state.streakShields,
           lives: data.lives ?? state.lives,
           lastActiveDate: data.lastActiveDate ?? state.lastActiveDate,
@@ -471,6 +478,7 @@ export const useStore = create<AppState>()(
           userName: data.userName ?? "Sara",
           xp: data.xp ?? 0,
           streak: data.streak ?? 0,
+          longestStreak: Math.max(data.longestStreak ?? 0, data.streak ?? 0),
           streakShields: data.streakShields ?? 1,
           lives: data.lives ?? 5,
           lastActiveDate: data.lastActiveDate ?? null,

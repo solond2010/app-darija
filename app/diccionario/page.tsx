@@ -6,7 +6,7 @@ import { Header } from "../../components/Header";
 import { Meshi } from "../../components/Suki";
 import { SpeakButton } from "../../components/SpeakButton";
 import { useStore, LearnedWord } from "../../lib/store";
-import { Search, Check, Info, BookOpen, AlertCircle, ChevronDown, ChevronUp, Lock } from "lucide-react";
+import { Search, Check, Info, AlertCircle, ChevronDown, ChevronUp, Lock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 
@@ -72,6 +72,9 @@ export default function DiccionarioPage() {
 
   const learnedCount = filteredVocabulary.filter((v) => hasLearnedWord(v.darija)).length;
 
+  const dictProgressPercent = allVocab.length > 0 ? Math.round((learnedWords.length / allVocab.length) * 100) : 0;
+  const dictProgressDeg = Math.round((dictProgressPercent / 100) * 360);
+
   return (
     <div className="min-h-screen pb-20 flex flex-col max-w-md mx-auto relative overflow-hidden">
       <Header />
@@ -88,21 +91,27 @@ export default function DiccionarioPage() {
           />
         </section>
 
-        {/* Stats strip */}
-        <div className="flex gap-2">
-          <div className="flex-1 glass rounded-2xl px-3 py-2.5 flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-brand-coral flex-shrink-0" />
-            <div>
-              <p className="text-[9px] font-bold uppercase text-slate-400 tracking-wider">Total</p>
-              <p className="text-sm font-bold font-title text-brand-dark leading-none">{allVocab.length} palabras</p>
+        {/* Unlock progress — a ring showing how much of the glossary is open */}
+        <div className="glass rounded-2xl px-4 py-3.5 flex items-center gap-4">
+          <div
+            className="relative w-14 h-14 rounded-full grid place-items-center flex-shrink-0"
+            style={{ background: `conic-gradient(#8B9C52 0deg ${dictProgressDeg}deg, rgba(107,122,63,0.12) ${dictProgressDeg}deg 360deg)` }}
+          >
+            <div className="w-11 h-11 rounded-full bg-white grid place-items-center text-center">
+              <span className="text-[11px] font-bold font-title text-brand-coral">{dictProgressPercent}%</span>
             </div>
           </div>
-          <div className="flex-1 glass rounded-2xl px-3 py-2.5 flex items-center gap-2">
-            <Check className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-            <div>
-              <p className="text-[9px] font-bold uppercase text-slate-400 tracking-wider">Aprendidas</p>
-              <p className="text-sm font-bold font-title text-brand-dark leading-none">{learnedWords.length}</p>
+          <div className="flex-1 min-w-0">
+            <p className="text-[9px] font-bold uppercase text-slate-400 tracking-wider">Palabras desbloqueadas</p>
+            <p className="text-lg font-bold font-title text-brand-dark leading-tight mt-0.5">
+              {learnedWords.length} <span className="text-slate-400 text-sm font-semibold">/ {allVocab.length}</span>
+            </p>
+          </div>
+          <div className="flex flex-col items-center gap-1 flex-shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center">
+              <Check className="w-4 h-4 text-emerald-500" />
             </div>
+            <span className="text-[9px] font-bold text-emerald-600">Aprendidas</span>
           </div>
         </div>
 

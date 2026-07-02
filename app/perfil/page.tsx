@@ -19,7 +19,7 @@ import { StatsSection } from "../../components/StatsSection";
 
 export default function PerfilPage() {
   const {
-    xp, streak, completedLessons, learnedWords, unlockedAchievements,
+    xp, streak, longestStreak, completedLessons, learnedWords, unlockedAchievements,
     soundsEnabled, toggleSounds, resetProgress, isHydrated, setHydrated,
     dailyGoal, setDailyGoal,
   } = useStore();
@@ -135,7 +135,14 @@ export default function PerfilPage() {
             transition={{ duration: 0.35, delay: 0.1 }}
             className="flex flex-col gap-2"
           >
-            <h4 className="text-[10px] font-bold font-title text-slate-400 uppercase tracking-[0.15em] pl-1">Tu semana</h4>
+            <div className="flex items-center justify-between pl-1">
+              <h4 className="text-[10px] font-bold font-title text-slate-400 uppercase tracking-[0.15em]">Tu semana</h4>
+              {longestStreak > 0 && (
+                <span className="text-[11px] font-bold font-title text-brand-amber flex items-center gap-1">
+                  🏅 Récord: {longestStreak} {longestStreak === 1 ? "día" : "días"}
+                </span>
+              )}
+            </div>
             <WeekStreak />
           </motion.section>
         )}
